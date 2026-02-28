@@ -1,0 +1,9 @@
+openai
+tavily-python
+pydantic
+python-dotenv
+playwright
+langchain
+langchain-community
+langgraph
+langchain-ollama
