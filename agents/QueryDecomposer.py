@@ -6,14 +6,11 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_groq import ChatGroq
-from dotenv import load_dotenv
+from langchain_ollama import ChatOllama
 
 # Import QueryAnalyzer from Step 1 (entity.py)
 sys.path.append(os.path.dirname(__file__))
 from entity import QueryAnalyzer
-
-load_dotenv()
 
 # ---------------------------------------------------------------------------
 # Pydantic Output Schema
@@ -50,8 +47,8 @@ class QueryDecomposer:
         "purchase":       "Break into: pricing subquery, availability subquery, review subquery, alternative subquery",
     }
 
-    def __init__(self, model_name: str = "llama-3.3-70b-versatile", temperature: float = 0.2):
-        self.llm = ChatGroq(model=model_name, temperature=temperature)
+    def __init__(self, model_name: str = "llama3.2", temperature: float = 0.2):
+        self.llm = ChatOllama(model=model_name, temperature=temperature)
         self.parser = JsonOutputParser(pydantic_object=DecomposedQueries)
         self.chain = self._build_chain()
 
