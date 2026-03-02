@@ -6,7 +6,11 @@ from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_ollama import ChatOllama
+
+# Import shared LLM factory from config
+sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+from config import get_llm
+from models.schemas import DecomposedQueries,SubQuery
 
 # Import QueryAnalyzer from Step 1 (entity.py)
 sys.path.append(os.path.dirname(__file__))
@@ -16,14 +20,6 @@ from entity import QueryAnalyzer
 # Pydantic Output Schema
 # ---------------------------------------------------------------------------
 
-class SubQuery(BaseModel):
-    subquery: str = Field(..., description="A focused, specific search subquery")
-    purpose: str = Field(..., description="What this subquery is trying to find")
-    entity_focus: Optional[str] = Field(None, description="Primary entity this subquery targets")
-
-class DecomposedQueries(BaseModel):
-    subqueries: List[SubQuery] = Field(..., description="3-5 non-overlapping focused subqueries")
-    strategy: str = Field(..., description="Overall decomposition strategy used (e.g. criteria-based, entity-based)")
 
 # ---------------------------------------------------------------------------
 # QueryDecomposer
@@ -47,8 +43,8 @@ class QueryDecomposer:
         "purchase":       "Break into: pricing subquery, availability subquery, review subquery, alternative subquery",
     }
 
-    def __init__(self, model_name: str = "llama3.2", temperature: float = 0.2):
-        self.llm = ChatOllama(model=model_name, temperature=temperature)
+    def __init__(self):
+        self.llm = get_llm()
         self.parser = JsonOutputParser(pydantic_object=DecomposedQueries)
         self.chain = self._build_chain()
 

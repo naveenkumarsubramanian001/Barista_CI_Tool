@@ -1,11 +1,17 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Any
 from pydantic import BaseModel, Field
 from datetime import datetime
 
 # --- Agent Outputs ---
 
+class SubQuery(BaseModel):
+    subquery: str = Field(..., description="A focused, specific search subquery")
+    purpose: str = Field(..., description="What this subquery is trying to find")
+    entity_focus: Optional[str] = Field(None, description="Primary entity this subquery targets")
+
 class DecomposedQueries(BaseModel):
-    subqueries: List[str] = Field(..., description="List of 3-6 focused subqueries with time awareness.")
+    subqueries: List[SubQuery] = Field(..., description="3-5 non-overlapping focused subqueries")
+    strategy: str = Field(..., description="Overall decomposition strategy used (e.g. criteria-based, entity-based)")
 
 class Article(BaseModel):
     title: str

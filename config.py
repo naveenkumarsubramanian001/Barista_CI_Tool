@@ -5,7 +5,7 @@ from langchain_ollama import ChatOllama
 load_dotenv()
 
 # --- Config ---
-MODEL_NAME = "qwen3:4b"  # As requested across Phase 2
+MODEL_NAME = "qwen2.5:7b"  # As requested across Phase 2
 TEMPERATURE = 0.1
 
 # --- LLM Instance ---
