@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END, START
 from models.schemas import ResearchState
-from agents.decomposer import decomposer_agent
+from agents.QueryDecomposer import decomposer_agent
 from agents.search_agent import search_agent
 from agents.summariser import summariser_agent
 from agents.discriminators import (

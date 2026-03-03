@@ -14,7 +14,38 @@ from models.schemas import DecomposedQueries,SubQuery
 
 # Import QueryAnalyzer from Step 1 (entity.py)
 sys.path.append(os.path.dirname(__file__))
-from entity import QueryAnalyzer
+from utils.entity import QueryAnalyzer
+from models.schemas import ResearchState
+
+# ---------------------------------------------------------------------------
+# LangGraph Node Interface
+# ---------------------------------------------------------------------------
+
+def decomposer_agent(state: ResearchState) -> ResearchState:
+    """
+    LangGraph Node for Query Decomposition.
+    """
+    query = state.get("original_query", "")
+    if not query:
+        state["error"] = "No original query found in state."
+        return state
+
+    # Step 1: Analyze (Entities/Intent)
+    analyzer = QueryAnalyzer()
+    analysis = analyzer.analyze(query)
+
+    decomposer = QueryDecomposer()
+    
+    # Inject feedback from state into analysis for the decomposer
+    analysis["feedback"] = state.get("validation_feedback", "")
+    
+    result = decomposer.decompose(analysis)
+
+    # Update State
+    subqueries = [sq.get("subquery") if isinstance(sq, dict) else sq for sq in result.get("subqueries", [])]
+    state["subqueries"] = subqueries
+    
+    return state
 
 # ---------------------------------------------------------------------------
 # Pydantic Output Schema
@@ -76,6 +107,7 @@ class QueryDecomposer:
             "Detected Entities:\n{entities}\n"
             "Constraints     : {constraints}\n"
             "Key Terms       : {key_terms}\n\n"
+            "PREVIOUS FEEDBACK (If any): {feedback}\n\n"
             "Generate 3-5 focused subqueries as valid JSON."
         )
 
@@ -138,6 +170,7 @@ class QueryDecomposer:
             "entities":          json.dumps(entities, indent=2),
             "constraints":       json.dumps(entity_output.get("constraints") or {}, indent=2),
             "key_terms":         ", ".join(key_terms) if key_terms else "none detected",
+            "feedback":          entity_output.get("feedback", "None. This is the first attempt."),
             "format_instructions": self.parser.get_format_instructions(),
         }
 

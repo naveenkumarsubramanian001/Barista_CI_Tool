@@ -49,6 +49,16 @@ class ResearchState(TypedDict):
     articles: List[Article]
     top_articles: List[Article]
     final_report: Optional[Dict]
+
+    # Validation
     validation_feedback: str
+    validation_passed: bool
+    validation_metrics: Dict[str, float]
+    decomposition_score: float
+    redundancy_pairs: List[List[str]]
+    coverage_gaps: List[str]
+    semantic_warnings: List[str]
+
+    # Control
     retry_counts: Dict[str, int]
     error: Optional[str]

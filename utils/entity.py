@@ -5,7 +5,7 @@ import json
 class QueryAnalyzer:
     def __init__(self):
         # Load spaCy NER model
-        self.nlp = spacy.load("en_core_web_trf")
+        self.nlp = spacy.load("en_core_web_sm")
         
         # Load zero-shot classifier for intent detection
         self.classifier = pipeline(
