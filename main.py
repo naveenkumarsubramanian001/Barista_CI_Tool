@@ -1,7 +1,11 @@
 import json
 from graph.workflow import build_graph
 
-def main():
+import json
+import asyncio
+from graph.workflow import build_graph
+
+async def main():
     query = "Im going to launch smartphone for 10000 rupee i want to know about my competetor nothing's advancements and news in this segment since the last 6 months"
     
     app = build_graph()
@@ -12,6 +16,8 @@ def main():
         "articles": [],
         "top_articles": [],
         "final_report": None,
+        "company_domains": [],
+        "trusted_domains": [],
         "validation_feedback": "",
         "retry_counts": {
             "decomposer": 0,
@@ -21,14 +27,11 @@ def main():
         "error": None
     }
     
-    print("\n🚀 Starting LangGraph Workflow...")
+    print("\n🚀 Starting LangGraph Workflow (Async enabled)...")
     
     # Execute the workflow
-    # We use invoke to get the final result. For a simple prototype, this is cleaner.
-    # If we wanted to see live updates, we'd use stream properly.
-    
     config = {"configurable": {"thread_id": "1"}}
-    final_output = app.invoke(initial_state, config=config)
+    final_output = await app.ainvoke(initial_state, config=config)
     
     if final_output.get("final_report"):
         print("\n--- FINAL RESEARCH REPORT ---\n")
@@ -43,4 +46,4 @@ def main():
             print(f"Error: {final_output['error']}")
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

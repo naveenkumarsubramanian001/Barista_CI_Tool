@@ -13,6 +13,23 @@ class DecomposedQueries(BaseModel):
     subqueries: List[SubQuery] = Field(..., description="3-5 non-overlapping focused subqueries")
     strategy: str = Field(..., description="Overall decomposition strategy used (e.g. criteria-based, entity-based)")
 
+class CompanyCheck(BaseModel):
+    is_company: bool
+
+class CompanyList(BaseModel):
+    companies: List[str] = Field(..., description="List of validated company or organization names")
+
+class SuggestedCompanies(BaseModel):
+    companies: List[str] = Field(..., description="List of top 5 relevant company names for the given industry/context")
+
+class OfficialDomainSelection(BaseModel):
+    official_url: Optional[str] = Field(None, description="The most likely official website URL from the candidates list")
+    is_official: bool = Field(..., description="Whether the selected URL is truly an official company website or just a relevant page")
+
+class CategorySelection(BaseModel):
+    category: str = Field(..., description="The most relevant category for the query from the list of available categories.")
+
+
 class Article(BaseModel):
     title: str
     url: str
@@ -49,6 +66,8 @@ class ResearchState(TypedDict):
     articles: List[Article]
     top_articles: List[Article]
     final_report: Optional[Dict]
+    company_domains: List[str]
+    trusted_domains: List[str]
 
     # Validation
     validation_feedback: str

@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import re
 
-def is_within_last_14_days(date_str: str) -> bool:
+def is_within_range(date_str: str, days: int) -> bool:
     if not date_str:
         return False
     
@@ -42,10 +42,13 @@ def is_within_last_14_days(date_str: str) -> bool:
         return False
         
     now = datetime.now()
-    fourteen_days_ago = now - timedelta(days=14)
+    range_ago = now - timedelta(days=days)
     
     # Buffer for timezones/delays
-    return fourteen_days_ago <= found_date <= (now + timedelta(days=1))
+    return range_ago <= found_date <= (now + timedelta(days=1))
+
+def is_within_last_14_days(date_str: str) -> bool:
+    return is_within_range(date_str, 14)
 
 def get_current_date_iso() -> str:
     return datetime.now().strftime('%Y-%m-%d')
