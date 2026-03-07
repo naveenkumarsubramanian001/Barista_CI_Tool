@@ -166,20 +166,195 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
     
 def search_discriminator(state: ResearchState) -> ResearchState:
     """
-    Validates search results for date range and relevance.
+    Research-Grade Search Result Discriminator.
+    Evaluates each article for relevance, source credibility, content quality,
+    and recency — then filters to keep only the most accurate and reliable results.
+
+    Pipeline:
+      1. Structural checks (empty results, min threshold)
+      2. Embedding-based relevance scoring (query ↔ article similarity)
+      3. LLM-based accuracy & reliability evaluation per article
+      4. Weighted composite score → filter top results
     """
     articles = state.get("articles", [])
+    original_query = state.get("original_query", "")
+    subqueries = state.get("subqueries", [])
+
+    # =====================================================
+    # 1️⃣ Structural Checks
+    # =====================================================
+
     if not articles:
         state["validation_feedback"] = "No articles found."
         state["retry_counts"]["search"] += 1
         return state
 
-    # Simple validation: Check if we have enough and dates are present
-    if len(articles) > 10:
-        state["validation_feedback"] = "Too many articles (max 10)."
+    if len(articles) < 2:
+        state["validation_feedback"] = "Too few articles to discriminate. Need at least 2."
         state["retry_counts"]["search"] += 1
         return state
-        
+
+    # =====================================================
+    # 2️⃣ Embedding-Based Relevance Scoring
+    # =====================================================
+
+    relevance_scores = {}
+    try:
+        embed_model = get_embedding_model()
+
+        query_text = original_query + " " + " ".join(subqueries)
+        query_embedding = np.array(embed_model.embed_documents([query_text]))
+
+        article_texts = [
+            f"{a.title} {a.snippet}" for a in articles
+        ]
+        article_embeddings = np.array(embed_model.embed_documents(article_texts))
+
+        similarities = cosine_similarity(query_embedding, article_embeddings)[0]
+
+        for i, article in enumerate(articles):
+            relevance_scores[article.url] = float(similarities[i])
+
+    except Exception as e:
+        print(f"   ⚠️ Embedding relevance check failed: {e}")
+        # Fallback: assign neutral score
+        for article in articles:
+            relevance_scores[article.url] = 0.5
+
+    # =====================================================
+    # 3️⃣ LLM-Based Accuracy & Reliability Evaluation
+    # =====================================================
+
+    articles_for_eval = []
+    for i, article in enumerate(articles):
+        articles_for_eval.append({
+            "index": i,
+            "title": article.title,
+            "url": article.url,
+            "snippet": article.snippet[:500],
+            "published_date": article.published_date
+        })
+
+    prompt = ChatPromptTemplate.from_template("""
+    Return ONLY valid JSON.
+
+    You are an expert research quality evaluator. Your job is to assess search results
+    for ACCURACY and RELIABILITY so only the best sources are kept.
+
+    Original Query: {original_query}
+
+    Articles to evaluate:
+    {articles_json}
+
+    For EACH article, score these dimensions from 0.0 to 1.0:
+
+    - source_credibility: Is the source a reputable, authoritative outlet? (e.g., major tech sites,
+      official company blogs, peer-reviewed → high; unknown blogs, forums → low)
+    - content_relevance: How directly does the snippet address the original query?
+    - information_quality: Is the content factual, specific, and substantive (not clickbait or vague)?
+    - recency_value: Is the publication date recent enough to be useful for the query?
+
+    Also flag any article that appears to be:
+    - duplicate/near-duplicate content of another article (set "is_duplicate": true)
+    - clickbait or low-substance (set "is_low_quality": true)
+
+    Return JSON:
+    {{
+      "evaluations": [
+        {{
+          "index": int,
+          "source_credibility": float,
+          "content_relevance": float,
+          "information_quality": float,
+          "recency_value": float,
+          "is_duplicate": bool,
+          "is_low_quality": bool,
+          "reason": "one-line justification"
+        }}
+      ],
+      "overall_feedback": "brief assessment of the result set quality"
+    }}
+    """)
+
+    chain = prompt | get_llm()
+    llm_scores = {}
+
+    try:
+        response = chain.invoke({
+            "original_query": original_query,
+            "articles_json": json.dumps(articles_for_eval, indent=2)
+        })
+
+        data = safe_json_extract(response.content)
+        evaluations = data.get("evaluations", [])
+
+        for ev in evaluations:
+            idx = ev.get("index")
+            if idx is not None and 0 <= idx < len(articles):
+                url = articles[idx].url
+                llm_scores[url] = {
+                    "credibility": float(ev.get("source_credibility", 0.5)),
+                    "relevance": float(ev.get("content_relevance", 0.5)),
+                    "quality": float(ev.get("information_quality", 0.5)),
+                    "recency": float(ev.get("recency_value", 0.5)),
+                    "is_duplicate": bool(ev.get("is_duplicate", False)),
+                    "is_low_quality": bool(ev.get("is_low_quality", False)),
+                    "reason": ev.get("reason", "")
+                }
+
+    except Exception as e:
+        print(f"   ⚠️ LLM evaluation failed: {e}")
+        # Fallback: neutral scores for all
+        for article in articles:
+            llm_scores[article.url] = {
+                "credibility": 0.5, "relevance": 0.5,
+                "quality": 0.5, "recency": 0.5,
+                "is_duplicate": False, "is_low_quality": False,
+                "reason": "LLM evaluation unavailable"
+            }
+
+    # =====================================================
+    # 4️⃣ Composite Scoring & Filtering
+    # =====================================================
+
+    scored_articles = []
+    for article in articles:
+        url = article.url
+        embedding_relevance = relevance_scores.get(url, 0.5)
+        llm_eval = llm_scores.get(url, {})
+
+        # Skip duplicates and low-quality flagged articles
+        if llm_eval.get("is_duplicate") or llm_eval.get("is_low_quality"):
+            continue
+
+        composite_score = (
+            0.25 * embedding_relevance +
+            0.25 * llm_eval.get("credibility", 0.5) +
+            0.20 * llm_eval.get("relevance", 0.5) +
+            0.20 * llm_eval.get("quality", 0.5) +
+            0.10 * llm_eval.get("recency", 0.5)
+        )
+
+        scored_articles.append((composite_score, article))
+
+    # Sort by composite score descending
+    scored_articles.sort(key=lambda x: x[0], reverse=True)
+
+    # Keep top results (max 8, min quality threshold 0.45)
+    quality_threshold = 0.45
+    filtered = [
+        article for score, article in scored_articles
+        if score >= quality_threshold
+    ][:8]
+
+    print(f"   - Discriminator: {len(articles)} articles → {len(filtered)} passed quality filter")
+
+    if not filtered:
+        state["validation_feedback"] = "All articles scored below quality threshold. Retry search."
+        state["retry_counts"]["search"] += 1
+        return state
+
+    state["articles"] = filtered
     state["validation_feedback"] = "APPROVED"
     return state
 
