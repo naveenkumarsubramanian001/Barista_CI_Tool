@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "en-core-web-sm",
+    "fpdf2>=2.8.7",
     "langchain-community>=0.4.1",
     "langchain-core>=1.2.16",
     "langchain-groq>=1.1.2",

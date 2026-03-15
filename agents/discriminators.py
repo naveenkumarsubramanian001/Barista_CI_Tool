@@ -342,12 +342,12 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     # Sort by composite score descending
     scored_articles.sort(key=lambda x: x[0], reverse=True)
 
-    # Keep top results (max 8, min quality threshold 0.45)
+    # Keep all results above quality threshold (ranker picks top 3 for insights)
     quality_threshold = 0.45
     filtered = [
         article for score, article in scored_articles
         if score >= quality_threshold
-    ][:8]
+    ]
 
     # Split back into official and trusted
     official_filtered = [a for a in filtered if a.source_type == "official"]
@@ -368,7 +368,8 @@ def search_discriminator(state: ResearchState) -> ResearchState:
 
 def summariser_discriminator(state: ResearchState) -> ResearchState:
     """
-    Validates the final report for citations and length.
+    Validates the final report for citations, length, and insight count.
+    Ensures the summariser produced one insight per article.
     """
     report = state.get("final_report", {})
     if not report:
@@ -383,6 +384,33 @@ def summariser_discriminator(state: ResearchState) -> ResearchState:
         state["validation_feedback"] = "Expected at least one insight, got 0."
         state["retry_counts"]["summariser"] += 1
         return state
-        
+
+    # Validate insight count matches article count from ranker
+    final_ranked = state.get("final_ranked_output", {})
+    expected_official = len(final_ranked.get("official_sources", []))
+    expected_trusted = len(final_ranked.get("trusted_sources", []))
+
+    got_official = len(official_insights)
+    got_trusted = len(trusted_insights)
+
+    missing = []
+    if expected_official > 0 and got_official < expected_official:
+        missing.append(
+            f"official: expected {expected_official} insights, got {got_official}"
+        )
+    if expected_trusted > 0 and got_trusted < expected_trusted:
+        missing.append(
+            f"trusted: expected {expected_trusted} insights, got {got_trusted}"
+        )
+
+    if missing:
+        state["validation_feedback"] = (
+            f"Insufficient insights — {'; '.join(missing)}. "
+            f"Generate one insight per article."
+        )
+        state["retry_counts"]["summariser"] += 1
+        return state
+
     state["validation_feedback"] = "APPROVED"
     return state
+

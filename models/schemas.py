@@ -85,3 +85,4 @@ class ResearchState(TypedDict):
     # Control
     retry_counts: Dict[str, int]
     error: Optional[str]
+    search_days_used: Optional[int]

@@ -1,7 +1,4 @@
 import json
-from graph.workflow import build_graph
-
-import json
 import asyncio
 from graph.workflow import build_graph
 
@@ -24,7 +21,8 @@ async def main():
             "search": 0,
             "summariser": 0
         },
-        "error": None
+        "error": None,
+        "search_days_used": None
     }
     
     print("\n🚀 Starting LangGraph Workflow (Async enabled)...")
@@ -40,10 +38,17 @@ async def main():
         with open("report.json", "w") as f:
             json.dump(final_output["final_report"], f, indent=2)
             print("\nReport saved to report.json")
+
+        # Generate PDF report with citations
+        from utils.pdf_report import generate_pdf
+        generate_pdf("report.json", "report.pdf")
     else:
         print("\n❌ Failed to generate report.")
         if final_output.get("error"):
             print(f"Error: {final_output['error']}")
+        # Generate a graceful no-data PDF
+        from utils.pdf_report import generate_no_data_pdf
+        generate_no_data_pdf(query, "report.pdf")
 
 if __name__ == "__main__":
     asyncio.run(main())

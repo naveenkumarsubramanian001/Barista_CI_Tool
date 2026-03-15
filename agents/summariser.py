@@ -18,41 +18,48 @@ def summariser_agent(state: ResearchState) -> ResearchState:
         return state
         
     prompt = ChatPromptTemplate.from_template("""
-    Create a research report on "{query}".
-    
-    You must generate insights from the provided articles grouped by their source type. 
-    If a source type array is empty, return an empty array for that section.
-    If it has articles, YOU MUST RETURN AT LEAST ONE INSIGHT for that section!
-    
-    Official Sources:
+    Create a competitive intelligence research report on "{query}".
+
+    CRITICAL RULES:
+    - Generate exactly ONE insight per article provided below.
+    - If a category has 3 articles, you MUST return 3 insights for it.
+    - If a category has 2 articles, return 2 insights. If 1, return 1.
+    - If a category is empty, return an empty array for that section.
+    - Each article MUST have its own insight entry — do NOT merge articles.
+
+    Official Sources (generate one insight per article):
     {official_articles_json}
-    
-    Trusted Sources:
+
+    Trusted Sources (generate one insight per article):
     {trusted_articles_json}
-    
-    Each insight summary must:
-    - Be 5-8 sentences long.
-    - Use ONLY provided content.
-    - Include a citation_id mapping to the "citation_id" provided in the JSON.
-    
-    You MUST return a valid JSON object with the following structure:
+
+    Each insight MUST:
+    - Have a clear, specific title (not generic).
+    - Have a brief_summary that is 5-8 sentences long.
+    - Use ONLY facts from the provided article content. Do NOT hallucinate.
+    - Include the exact citation_id from the article's JSON.
+
+    You MUST return a valid JSON object with this EXACT structure:
     {{
       "report_title": "string",
       "official_insights": [
         {{
-          "title": "string", 
-          "brief_summary": "string", 
+          "title": "string",
+          "brief_summary": "string",
           "citation_id": integer
         }}
       ],
       "trusted_insights": [
         {{
-          "title": "string", 
-          "brief_summary": "string", 
+          "title": "string",
+          "brief_summary": "string",
           "citation_id": integer
         }}
       ]
     }}
+
+    REMEMBER: Number of official_insights MUST equal number of Official Source articles.
+    Number of trusted_insights MUST equal number of Trusted Source articles.
     """)
     
     from utils.json_utils import safe_json_extract
