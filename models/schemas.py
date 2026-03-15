@@ -35,6 +35,8 @@ class Article(BaseModel):
     url: str
     snippet: str
     published_date: str = Field(..., description="ISO format date YYYY-MM-DD")
+    source_type: str = Field(..., description="'official' or 'trusted'")
+    domain: Optional[str] = Field(None, description="The domain the article was fetched from")
     priority: bool = False
 
 class SearchOutput(BaseModel):
@@ -47,7 +49,8 @@ class Insight(BaseModel):
 
 class FinalReport(BaseModel):
     report_title: str
-    top_insights: List[Insight]
+    official_insights: List[Insight] = Field(default_factory=list)
+    trusted_insights: List[Insight] = Field(default_factory=list)
     references: List[Article]
 
 # --- Validation ---
@@ -63,8 +66,9 @@ from typing_extensions import TypedDict
 class ResearchState(TypedDict):
     original_query: str
     subqueries: List[str]
-    articles: List[Article]
-    top_articles: List[Article]
+    official_sources: List[Article]
+    trusted_sources: List[Article]
+    final_ranked_output: Dict[str, List[Article]]
     final_report: Optional[Dict]
     company_domains: List[str]
     trusted_domains: List[str]

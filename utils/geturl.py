@@ -23,7 +23,7 @@ validation_chain = validation_prompt | llm | validation_parser
 # --- Dynamic Suggestion Chain ---
 suggestion_parser = JsonOutputParser(pydantic_object=SuggestedCompanies)
 suggestion_prompt = ChatPromptTemplate.from_messages([
-    ("system", "You are a market research expert. Based on the provided search context and the user's query, identify the top 5 most relevant and official companies, brands, or organizations mentioned in the context that would be authoritative sources of information for this topic."),
+    ("system", "You are an entity extraction expert. Based on the user's query, identify ONLY the primary companies, brands, or organizations explicitly mentioned or directly targeted by the query.\nCRITICAL RULES:\n1. If the user mentions a specific company (e.g., 'OpenAI', 'Anthropic'), ONLY return those.\n2. DO NOT list competitors or unrelated market leaders unless explicitly requested.\n3. Use the search context only to resolve partial names to their official company names.\n4. Return an empty list if no specific company is targeted.\nEnsure the generated output is a valid JSON with a 'companies' array containing string values."),
     ("user", "Search Context: {context}\n\nQuery: {query}\n\n{format_instructions}")
 ])
 suggestion_chain = suggestion_prompt | llm | suggestion_parser
@@ -57,7 +57,7 @@ async def suggest_companies_dynamic(query: str) -> List[str]:
         client = TavilyClient(api_key=TAVILY_API_KEY)
         search_results = await asyncio.to_thread(
             client.search, 
-            query=f"top companies operating in {query}", 
+            query=f"official company website or companies related to: {query}", 
             max_results=5
         )
         
@@ -78,6 +78,14 @@ async def suggest_companies_dynamic(query: str) -> List[str]:
         })
         print(f"   --- DEBUG: LLM Raw result: {result}")
         companies = result.get("companies", [])
+        
+        # Robust parsing fallback
+        if not companies:
+            for k, v in result.items():
+                if isinstance(v, list) and len(v) > 0:
+                    companies = v
+                    break
+                    
         print(f"   - LLM extracted {len(companies)} companies from context.")
         return companies
     except Exception as e:

@@ -6,15 +6,15 @@ import asyncio
 from graph.workflow import build_graph
 
 async def main():
-    query = "Im going to launch smartphone for 10000 rupee i want to know about my competetor nothing's advancements and news in this segment since the last 6 months"
-    
+    query = "tell me about openai's chatgpt and their new features"
     app = build_graph()
     
     initial_state = {
         "original_query": query,
         "subqueries": [],
-        "articles": [],
-        "top_articles": [],
+        "official_sources": [],
+        "trusted_sources": [],
+        "final_ranked_output": {},
         "final_report": None,
         "company_domains": [],
         "trusted_domains": [],

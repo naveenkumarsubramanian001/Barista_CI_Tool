@@ -176,7 +176,9 @@ def search_discriminator(state: ResearchState) -> ResearchState:
       3. LLM-based accuracy & reliability evaluation per article
       4. Weighted composite score → filter top results
     """
-    articles = state.get("articles", [])
+    official_sources = state.get("official_sources", [])
+    trusted_sources = state.get("trusted_sources", [])
+    articles = official_sources + trusted_sources
     original_query = state.get("original_query", "")
     subqueries = state.get("subqueries", [])
 
@@ -347,14 +349,20 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         if score >= quality_threshold
     ][:8]
 
-    print(f"   - Discriminator: {len(articles)} articles → {len(filtered)} passed quality filter")
+    # Split back into official and trusted
+    official_filtered = [a for a in filtered if a.source_type == "official"]
+    trusted_filtered = [a for a in filtered if a.source_type == "trusted"]
 
-    if not filtered:
+    print(f"   - Discriminator: {len(official_sources)} official → {len(official_filtered)} passed")
+    print(f"   - Discriminator: {len(trusted_sources)} trusted → {len(trusted_filtered)} passed")
+
+    if not official_filtered and not trusted_filtered:
         state["validation_feedback"] = "All articles scored below quality threshold. Retry search."
         state["retry_counts"]["search"] += 1
         return state
 
-    state["articles"] = filtered
+    state["official_sources"] = official_filtered
+    state["trusted_sources"] = trusted_filtered
     state["validation_feedback"] = "APPROVED"
     return state
 
@@ -368,9 +376,11 @@ def summariser_discriminator(state: ResearchState) -> ResearchState:
         state["retry_counts"]["summariser"] += 1
         return state
         
-    insights = report.get("top_insights", [])
-    if len(insights) != 3:
-        state["validation_feedback"] = f"Expected exactly 3 insights, got {len(insights)}."
+    official_insights = report.get("official_insights", [])
+    trusted_insights = report.get("trusted_insights", [])
+    
+    if not official_insights and not trusted_insights:
+        state["validation_feedback"] = "Expected at least one insight, got 0."
         state["retry_counts"]["summariser"] += 1
         return state
         
