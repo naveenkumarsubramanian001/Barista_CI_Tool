@@ -3,9 +3,10 @@ import itertools
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from langchain_core.prompts import ChatPromptTemplate
-from models.schemas import ResearchState, ValidationResult
+from models.schemas import ResearchState
 from config import get_llm, get_embedding_model
 from utils.json_utils import safe_json_extract
+
 
 def decomposer_discriminator(state: ResearchState) -> ResearchState:
     """
@@ -18,7 +19,7 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
 
     original_query = state.get("original_query", "")
     subqueries = state.get("subqueries", [])
-    retry_count = state["retry_counts"].get("decomposer", 0)
+    state["retry_counts"].get("decomposer", 0)
 
     state["validation_metrics"] = {}
     state["redundancy_pairs"] = []
@@ -32,7 +33,9 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
     # =====================================================
 
     if not isinstance(subqueries, list) or not (3 <= len(subqueries) <= 6):
-        state["validation_feedback"] = f"Expected 3-6 subqueries, got {len(subqueries)}."
+        state["validation_feedback"] = (
+            f"Expected 3-6 subqueries, got {len(subqueries)}."
+        )
         state["retry_counts"]["decomposer"] += 1
         return state
 
@@ -66,7 +69,9 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
         state["validation_metrics"]["redundancy_score"] = redundancy_score
 
     except Exception as e:
-        state["semantic_warnings"].append(f"Embedding redundancy check failed: {str(e)}")
+        state["semantic_warnings"].append(
+            f"Embedding redundancy check failed: {str(e)}"
+        )
         redundancy_score = 0.7  # soft fallback
 
     # =====================================================
@@ -109,10 +114,9 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
     chain = prompt | get_llm()
 
     try:
-        response = chain.invoke({
-            "original_query": original_query,
-            "subqueries": json.dumps(subqueries)
-        })
+        response = chain.invoke(
+            {"original_query": original_query, "subqueries": json.dumps(subqueries)}
+        )
 
         data = safe_json_extract(response.content)
 
@@ -125,25 +129,27 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
         state["coverage_gaps"] = data.get("missing_aspects", [])
 
         # Store metrics
-        state["validation_metrics"].update({
-            "intent_preservation": intent,
-            "coverage_completeness": coverage,
-            "atomicity": atomicity,
-            "granularity": granularity,
-            "actionability": actionability
-        })
+        state["validation_metrics"].update(
+            {
+                "intent_preservation": intent,
+                "coverage_completeness": coverage,
+                "atomicity": atomicity,
+                "granularity": granularity,
+                "actionability": actionability,
+            }
+        )
 
         # =====================================================
         # 4️⃣ Weighted Final Score
         # =====================================================
 
         final_score = (
-            0.30 * intent +
-            0.25 * coverage +
-            0.15 * redundancy_score +
-            0.10 * atomicity +
-            0.10 * granularity +
-            0.10 * actionability
+            0.30 * intent
+            + 0.25 * coverage
+            + 0.15 * redundancy_score
+            + 0.10 * atomicity
+            + 0.10 * granularity
+            + 0.10 * actionability
         )
 
         state["decomposition_score"] = round(final_score, 3)
@@ -152,7 +158,9 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
             state["validation_passed"] = True
             state["validation_feedback"] = "APPROVED"
         else:
-            state["validation_feedback"] = f"Low decomposition quality ({final_score:.2f}): {data.get('feedback')}"
+            state["validation_feedback"] = (
+                f"Low decomposition quality ({final_score:.2f}): {data.get('feedback')}"
+            )
             state["retry_counts"]["decomposer"] += 1
 
     except Exception as e:
@@ -163,7 +171,7 @@ def decomposer_discriminator(state: ResearchState) -> ResearchState:
 
     return state
 
-    
+
 def search_discriminator(state: ResearchState) -> ResearchState:
     """
     Research-Grade Search Result Discriminator.
@@ -192,7 +200,9 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         return state
 
     if len(articles) < 2:
-        state["validation_feedback"] = "Too few articles to discriminate. Need at least 2."
+        state["validation_feedback"] = (
+            "Too few articles to discriminate. Need at least 2."
+        )
         state["retry_counts"]["search"] += 1
         return state
 
@@ -207,9 +217,7 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         query_text = original_query + " " + " ".join(subqueries)
         query_embedding = np.array(embed_model.embed_documents([query_text]))
 
-        article_texts = [
-            f"{a.title} {a.snippet}" for a in articles
-        ]
+        article_texts = [f"{a.title} {a.snippet}" for a in articles]
         article_embeddings = np.array(embed_model.embed_documents(article_texts))
 
         similarities = cosine_similarity(query_embedding, article_embeddings)[0]
@@ -229,13 +237,15 @@ def search_discriminator(state: ResearchState) -> ResearchState:
 
     articles_for_eval = []
     for i, article in enumerate(articles):
-        articles_for_eval.append({
-            "index": i,
-            "title": article.title,
-            "url": article.url,
-            "snippet": article.snippet[:500],
-            "published_date": article.published_date
-        })
+        articles_for_eval.append(
+            {
+                "index": i,
+                "title": article.title,
+                "url": article.url,
+                "snippet": article.snippet[:500],
+                "published_date": article.published_date,
+            }
+        )
 
     prompt = ChatPromptTemplate.from_template("""
     Return ONLY valid JSON.
@@ -282,10 +292,12 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     llm_scores = {}
 
     try:
-        response = chain.invoke({
-            "original_query": original_query,
-            "articles_json": json.dumps(articles_for_eval, indent=2)
-        })
+        response = chain.invoke(
+            {
+                "original_query": original_query,
+                "articles_json": json.dumps(articles_for_eval, indent=2),
+            }
+        )
 
         data = safe_json_extract(response.content)
         evaluations = data.get("evaluations", [])
@@ -301,7 +313,7 @@ def search_discriminator(state: ResearchState) -> ResearchState:
                     "recency": float(ev.get("recency_value", 0.5)),
                     "is_duplicate": bool(ev.get("is_duplicate", False)),
                     "is_low_quality": bool(ev.get("is_low_quality", False)),
-                    "reason": ev.get("reason", "")
+                    "reason": ev.get("reason", ""),
                 }
 
     except Exception as e:
@@ -309,10 +321,13 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         # Fallback: neutral scores for all
         for article in articles:
             llm_scores[article.url] = {
-                "credibility": 0.5, "relevance": 0.5,
-                "quality": 0.5, "recency": 0.5,
-                "is_duplicate": False, "is_low_quality": False,
-                "reason": "LLM evaluation unavailable"
+                "credibility": 0.5,
+                "relevance": 0.5,
+                "quality": 0.5,
+                "recency": 0.5,
+                "is_duplicate": False,
+                "is_low_quality": False,
+                "reason": "LLM evaluation unavailable",
             }
 
     # =====================================================
@@ -330,11 +345,11 @@ def search_discriminator(state: ResearchState) -> ResearchState:
             continue
 
         composite_score = (
-            0.25 * embedding_relevance +
-            0.25 * llm_eval.get("credibility", 0.5) +
-            0.20 * llm_eval.get("relevance", 0.5) +
-            0.20 * llm_eval.get("quality", 0.5) +
-            0.10 * llm_eval.get("recency", 0.5)
+            0.25 * embedding_relevance
+            + 0.25 * llm_eval.get("credibility", 0.5)
+            + 0.20 * llm_eval.get("relevance", 0.5)
+            + 0.20 * llm_eval.get("quality", 0.5)
+            + 0.10 * llm_eval.get("recency", 0.5)
         )
 
         scored_articles.append((composite_score, article))
@@ -345,19 +360,24 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     # Keep all results above quality threshold (ranker picks top 3 for insights)
     quality_threshold = 0.45
     filtered = [
-        article for score, article in scored_articles
-        if score >= quality_threshold
+        article for score, article in scored_articles if score >= quality_threshold
     ]
 
     # Split back into official and trusted
     official_filtered = [a for a in filtered if a.source_type == "official"]
     trusted_filtered = [a for a in filtered if a.source_type == "trusted"]
 
-    print(f"   - Discriminator: {len(official_sources)} official → {len(official_filtered)} passed")
-    print(f"   - Discriminator: {len(trusted_sources)} trusted → {len(trusted_filtered)} passed")
+    print(
+        f"   - Discriminator: {len(official_sources)} official → {len(official_filtered)} passed"
+    )
+    print(
+        f"   - Discriminator: {len(trusted_sources)} trusted → {len(trusted_filtered)} passed"
+    )
 
     if not official_filtered and not trusted_filtered:
-        state["validation_feedback"] = "All articles scored below quality threshold. Retry search."
+        state["validation_feedback"] = (
+            "All articles scored below quality threshold. Retry search."
+        )
         state["retry_counts"]["search"] += 1
         return state
 
@@ -365,6 +385,7 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     state["trusted_sources"] = trusted_filtered
     state["validation_feedback"] = "APPROVED"
     return state
+
 
 def summariser_discriminator(state: ResearchState) -> ResearchState:
     """
@@ -376,19 +397,27 @@ def summariser_discriminator(state: ResearchState) -> ResearchState:
         state["validation_feedback"] = "No report generated."
         state["retry_counts"]["summariser"] += 1
         return state
-        
+
     official_insights = report.get("official_insights", [])
     trusted_insights = report.get("trusted_insights", [])
-    
+
     if not official_insights and not trusted_insights:
         state["validation_feedback"] = "Expected at least one insight, got 0."
         state["retry_counts"]["summariser"] += 1
         return state
 
-    # Validate insight count matches article count from ranker
+    # Validate insight count matches article count that was ACTUALLY provided to summariser
     final_ranked = state.get("final_ranked_output", {})
-    expected_official = len(final_ranked.get("official_sources", []))
-    expected_trusted = len(final_ranked.get("trusted_sources", []))
+    official_sources = final_ranked.get("official_sources", [])
+    trusted_sources = final_ranked.get("trusted_sources", [])
+    selected_urls = state.get("selected_articles", [])
+
+    if selected_urls:
+        expected_official = len([a for a in official_sources if a.url in selected_urls])
+        expected_trusted = len([a for a in trusted_sources if a.url in selected_urls])
+    else:
+        expected_official = len(official_sources)
+        expected_trusted = len(trusted_sources)
 
     got_official = len(official_insights)
     got_trusted = len(trusted_insights)
@@ -413,4 +442,3 @@ def summariser_discriminator(state: ResearchState) -> ResearchState:
 
     state["validation_feedback"] = "APPROVED"
     return state
-

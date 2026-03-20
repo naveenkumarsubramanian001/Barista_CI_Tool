@@ -11,13 +11,13 @@ Features:
 """
 
 import json
-import os
 from datetime import datetime
 from fpdf import FPDF
 
 try:
     from tavily import TavilyClient
     from config import TAVILY_API_KEY
+
     _tavily_client = TavilyClient(api_key=TAVILY_API_KEY) if TAVILY_API_KEY else None
 except Exception:
     _tavily_client = None
@@ -25,19 +25,20 @@ except Exception:
 
 # ── Unicode → latin-1 sanitisation ─────────────────────────────────
 _UNICODE_MAP = {
-    "\u2014": "--",    # em-dash
-    "\u2013": "-",     # en-dash
-    "\u2018": "'",     # left single quote
-    "\u2019": "'",     # right single quote
-    "\u201c": '"',     # left double quote
-    "\u201d": '"',     # right double quote
-    "\u2026": "...",   # ellipsis
-    "\u2022": "-",     # bullet
-    "\u2060": "",      # word joiner (invisible)
-    "\u00a0": " ",     # non-breaking space
-    "\u200b": "",      # zero-width space
-    "\ufeff": "",      # BOM
+    "\u2014": "--",  # em-dash
+    "\u2013": "-",  # en-dash
+    "\u2018": "'",  # left single quote
+    "\u2019": "'",  # right single quote
+    "\u201c": '"',  # left double quote
+    "\u201d": '"',  # right double quote
+    "\u2026": "...",  # ellipsis
+    "\u2022": "-",  # bullet
+    "\u2060": "",  # word joiner (invisible)
+    "\u00a0": " ",  # non-breaking space
+    "\u200b": "",  # zero-width space
+    "\ufeff": "",  # BOM
 }
+
 
 def _sanitize(text: str) -> str:
     """Replace common Unicode chars with latin-1 safe equivalents."""
@@ -50,15 +51,15 @@ def _sanitize(text: str) -> str:
 
 
 # ── Colour palette (professional / muted corporate) ────────────────
-DARK       = (25, 25, 30)
-ACCENT     = (0, 82, 165)       # Deep corporate blue
-ACCENT_LT  = (0, 110, 200)      # Lighter link blue
-SECTION_BG = (235, 240, 248)    # Section heading background
-CARD_BG    = (245, 247, 252)    # Insight card background
-MUTED      = (90, 95, 105)      # Secondary / meta text
-WHITE      = (255, 255, 255)
-BORDER_CLR = (200, 208, 220)    # Card border
-CITE_CLR   = (160, 50, 50)      # Citation highlight (dark red)
+DARK = (25, 25, 30)
+ACCENT = (0, 82, 165)  # Deep corporate blue
+ACCENT_LT = (0, 110, 200)  # Lighter link blue
+SECTION_BG = (235, 240, 248)  # Section heading background
+CARD_BG = (245, 247, 252)  # Insight card background
+MUTED = (90, 95, 105)  # Secondary / meta text
+WHITE = (255, 255, 255)
+BORDER_CLR = (200, 208, 220)  # Card border
+CITE_CLR = (160, 50, 50)  # Citation highlight (dark red)
 
 
 class ReportPDF(FPDF):
@@ -177,9 +178,16 @@ class ReportPDF(FPDF):
         self.ln(8)
 
     # ── Insight card ───────────────────────────────────────────────
-    def insight_card(self, idx: int, title: str, summary: str,
-                     citation_num: int, ref_title: str, ref_url: str,
-                     ref_date: str):
+    def insight_card(
+        self,
+        idx: int,
+        title: str,
+        summary: str,
+        citation_num: int,
+        ref_title: str,
+        ref_url: str,
+        ref_date: str,
+    ):
         """
         Render a single insight as a professional card:
           - Numbered title
@@ -203,8 +211,9 @@ class ReportPDF(FPDF):
         self.set_font("Helvetica", "B", 10.5)
         self.set_text_color(*DARK)
         title_text = _sanitize(f"{idx}. {title}")
-        self.multi_cell(usable_w - 4, 6, title_text,
-                        new_x="LMARGIN", new_y="NEXT", fill=True)
+        self.multi_cell(
+            usable_w - 4, 6, title_text, new_x="LMARGIN", new_y="NEXT", fill=True
+        )
 
         # ─ Citation line ─
         self.set_x(self.l_margin + 8)
@@ -212,7 +221,7 @@ class ReportPDF(FPDF):
         self.set_text_color(*CITE_CLR)
         self.write(4.5, f"[{citation_num}] ")
         self.set_text_color(*MUTED)
-        self.write(4.5, f"Source: ")
+        self.write(4.5, "Source: ")
         self.set_font("Helvetica", "UI", 8)
         self.set_text_color(*ACCENT_LT)
         # Truncate long ref titles for the citation line
@@ -228,7 +237,9 @@ class ReportPDF(FPDF):
         self.set_x(self.l_margin + 8)
         self.set_font("Helvetica", "", 9.2)
         self.set_text_color(*DARK)
-        self.multi_cell(usable_w - 16, 5, _sanitize(summary), new_x="LMARGIN", new_y="NEXT")
+        self.multi_cell(
+            usable_w - 16, 5, _sanitize(summary), new_x="LMARGIN", new_y="NEXT"
+        )
 
         y_bottom = self.get_y() + 2
 
@@ -245,6 +256,7 @@ class ReportPDF(FPDF):
 
 
 # ── Tavily context fetcher ─────────────────────────────────────────
+
 
 def _fetch_company_context(report_title: str) -> str:
     """
@@ -268,7 +280,9 @@ def _fetch_company_context(report_title: str) -> str:
             for r in results[:2]:
                 snip = r.get("content", "")
                 # Take first 2-3 meaningful sentences
-                sentences = [s.strip() for s in snip.split(".") if len(s.strip()) > 30][:3]
+                sentences = [s.strip() for s in snip.split(".") if len(s.strip()) > 30][
+                    :3
+                ]
                 if sentences:
                     snippets.append(". ".join(sentences) + ".")
             return " ".join(snippets)
@@ -282,9 +296,9 @@ def _build_intro(report_title, official, trusted, references, company_context=""
     with insights from both official and trusted sources. Returns (text, link_map)."""
 
     n_official = len(official)
-    n_trusted  = len(trusted)
-    n_total    = n_official + n_trusted
-    n_refs     = len(references)
+    n_trusted = len(trusted)
+    n_total = n_official + n_trusted
+    n_refs = len(references)
 
     # Collect unique domains
     domains = sorted({r.get("domain", "unknown") for r in references})
@@ -297,7 +311,7 @@ def _build_intro(report_title, official, trusted, references, company_context=""
 
     intro += (
         f"This competitive intelligence report presents a curated analysis "
-        f"on the topic \"{report_title}\". Through systematic web research and "
+        f'on the topic "{report_title}". Through systematic web research and '
         f"automated source classification, {n_refs} reference(s) were identified "
         f"and evaluated across the following domain(s): {domain_str}. "
         f"\n\n"
@@ -308,24 +322,24 @@ def _build_intro(report_title, official, trusted, references, company_context=""
 
     # Add specific mentions of the insights
     if official:
-        off_titles = [f'\"{i.get("title", "")}\"' for i in official]
+        off_titles = [f'"{i.get("title", "")}"' for i in official]
         intro += (
             f"From official channels, the analysis identified findings related to "
             f"{', '.join(off_titles)}. "
         )
     if trusted:
-        tr_titles = [f'\"{i.get("title", "")}\"' for i in trusted]
+        tr_titles = [f'"{i.get("title", "")}"' for i in trusted]
         intro += (
             f"From trusted third-party coverage, key findings cover "
             f"{', '.join(tr_titles)}. "
         )
 
     intro += (
-        f"\n\n"
-        f"Each insight below is accompanied by a direct citation linking to its "
-        f"original source. The full reference list with URLs is provided at the "
-        f"end of this document for independent verification and further reading. "
-        f"This report is intended for internal R&D and strategic planning use."
+        "\n\n"
+        "Each insight below is accompanied by a direct citation linking to its "
+        "original source. The full reference list with URLs is provided at the "
+        "end of this document for independent verification and further reading. "
+        "This report is intended for internal R&D and strategic planning use."
     )
 
     # Build link_map: map reference titles to URL + citation number
@@ -345,18 +359,16 @@ def _build_conclusion(report_title, official, trusted, references, company_conte
     """Build a detailed conclusion synthesizing both source categories
     alongside company/product context."""
     n_official = len(official)
-    n_trusted  = len(trusted)
-    n_refs     = len(references)
+    n_trusted = len(trusted)
+    n_refs = len(references)
 
     conclusion = (
         f"This report analyzed {n_refs} source(s) to extract competitive "
-        f"intelligence on \"{report_title}\". "
+        f'intelligence on "{report_title}". '
     )
 
     if official:
-        off_themes = "; ".join(
-            f'\"{i.get("title", "")}\"' for i in official
-        )
+        off_themes = "; ".join(f'"{i.get("title", "")}"' for i in official)
         conclusion += (
             f"Official source intelligence ({n_official} insight(s)) covered: "
             f"{off_themes}. These represent first-party disclosures and product "
@@ -365,9 +377,7 @@ def _build_conclusion(report_title, official, trusted, references, company_conte
         )
 
     if trusted:
-        tr_themes = "; ".join(
-            f'\"{i.get("title", "")}\"' for i in trusted
-        )
+        tr_themes = "; ".join(f'"{i.get("title", "")}"' for i in trusted)
         conclusion += (
             f"Trusted source intelligence ({n_trusted} insight(s)) covered: "
             f"{tr_themes}. These findings come from high-credibility third-party "
@@ -391,16 +401,13 @@ def _build_conclusion(report_title, official, trusted, references, company_conte
 
     # Weave in company context for strategic framing
     if company_context:
-        conclusion += (
-            f"\n\n"
-            f"For strategic context: {_sanitize(company_context)} "
-        )
+        conclusion += f"\n\nFor strategic context: {_sanitize(company_context)} "
 
     conclusion += (
-        f"\n\n"
-        f"Recommendation: R&D teams should cross-reference these findings with "
-        f"internal roadmap priorities and evaluate competitive positioning "
-        f"accordingly. All citations are provided for independent verification."
+        "\n\n"
+        "Recommendation: R&D teams should cross-reference these findings with "
+        "internal roadmap priorities and evaluate competitive positioning "
+        "accordingly. All citations are provided for independent verification."
     )
 
     return conclusion
@@ -424,9 +431,9 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
         data = json.load(fh)
 
     report_title = data.get("report_title", "Competitive Intelligence Report")
-    official     = data.get("official_insights", [])[:3]
-    trusted      = data.get("trusted_insights", [])[:3]
-    references   = data.get("references", [])
+    official = data.get("official_insights", [])[:3]
+    trusted = data.get("trusted_insights", [])[:3]
+    references = data.get("references", [])
 
     # ── Fetch company/product context via Tavily ───────────────────
     print("   [PDF] Fetching company/product context via Tavily...")
@@ -457,8 +464,14 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     # Subtitle
     pdf.set_font("Helvetica", "", 12)
     pdf.set_text_color(*MUTED)
-    pdf.cell(0, 7, "Competitive Intelligence Report", align="C",
-             new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0,
+        7,
+        "Competitive Intelligence Report",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
     pdf.ln(2)
 
     # Accent rule
@@ -483,8 +496,14 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     pdf.ln(25)
     pdf.set_font("Helvetica", "I", 9)
     pdf.set_text_color(*MUTED)
-    pdf.cell(0, 6, "Produced by Barista Competitive Intelligence Tool",
-             align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0,
+        6,
+        "Produced by Barista Competitive Intelligence Tool",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
 
     # ================================================================
     # 2. INTRODUCTION
@@ -492,7 +511,9 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     pdf.add_page()
     pdf.section_heading("01", "Introduction")
 
-    intro_text, link_map = _build_intro(report_title, official, trusted, references, company_context)
+    intro_text, link_map = _build_intro(
+        report_title, official, trusted, references, company_context
+    )
     pdf.body_text_with_links(intro_text, link_map)
 
     # ================================================================
@@ -503,11 +524,15 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     if official:
         pdf.set_font("Helvetica", "I", 9)
         pdf.set_text_color(*MUTED)
-        pdf.multi_cell(0, 5, (
-            "Official sources are first-party channels operated directly by the "
-            "subject entity (e.g., company blogs, press releases, investor pages). "
-            "These carry the highest credibility weight."
-        ))
+        pdf.multi_cell(
+            0,
+            5,
+            (
+                "Official sources are first-party channels operated directly by the "
+                "subject entity (e.g., company blogs, press releases, investor pages). "
+                "These carry the highest credibility weight."
+            ),
+        )
         pdf.ln(5)
 
         for i, insight in enumerate(official, 1):
@@ -525,11 +550,15 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     else:
         pdf.set_font("Helvetica", "I", 10)
         pdf.set_text_color(*MUTED)
-        pdf.multi_cell(0, 6, (
-            "No official source insights were identified for this query. "
-            "This may indicate limited first-party disclosure on the topic "
-            "during the analysed time period."
-        ))
+        pdf.multi_cell(
+            0,
+            6,
+            (
+                "No official source insights were identified for this query. "
+                "This may indicate limited first-party disclosure on the topic "
+                "during the analysed time period."
+            ),
+        )
         pdf.ln(4)
 
     # ================================================================
@@ -540,11 +569,15 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     if trusted:
         pdf.set_font("Helvetica", "I", 9)
         pdf.set_text_color(*MUTED)
-        pdf.multi_cell(0, 5, (
-            "Trusted sources are high-credibility third-party outlets such as "
-            "major technology publications, industry analysts, and established "
-            "news organisations that provide independent coverage and analysis."
-        ))
+        pdf.multi_cell(
+            0,
+            5,
+            (
+                "Trusted sources are high-credibility third-party outlets such as "
+                "major technology publications, industry analysts, and established "
+                "news organisations that provide independent coverage and analysis."
+            ),
+        )
         pdf.ln(5)
 
         for i, insight in enumerate(trusted, 1):
@@ -562,11 +595,15 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     else:
         pdf.set_font("Helvetica", "I", 10)
         pdf.set_text_color(*MUTED)
-        pdf.multi_cell(0, 6, (
-            "No trusted source insights were identified for this query. "
-            "This may indicate limited third-party coverage on the topic "
-            "during the analysed time period."
-        ))
+        pdf.multi_cell(
+            0,
+            6,
+            (
+                "No trusted source insights were identified for this query. "
+                "This may indicate limited third-party coverage on the topic "
+                "during the analysed time period."
+            ),
+        )
         pdf.ln(4)
 
     # ================================================================
@@ -574,7 +611,9 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     # ================================================================
     pdf.section_heading("04", "Conclusion & Recommendations")
 
-    conclusion_text = _build_conclusion(report_title, official, trusted, references, company_context)
+    conclusion_text = _build_conclusion(
+        report_title, official, trusted, references, company_context
+    )
     pdf.body_text(conclusion_text)
 
     # ================================================================
@@ -585,14 +624,18 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
 
     pdf.set_font("Helvetica", "I", 9)
     pdf.set_text_color(*MUTED)
-    pdf.multi_cell(0, 5, (
-        "Full reference list for all sources cited in this report. "
-        "URLs are clickable for independent verification."
-    ))
+    pdf.multi_cell(
+        0,
+        5,
+        (
+            "Full reference list for all sources cited in this report. "
+            "URLs are clickable for independent verification."
+        ),
+    )
     pdf.ln(5)
 
     if references:
-        usable_w = pdf.w - pdf.l_margin - pdf.r_margin
+        pdf.w - pdf.l_margin - pdf.r_margin
         for i, ref in enumerate(references):
             # Page break check
             if pdf.get_y() + 25 > pdf.h - 25:
@@ -600,16 +643,21 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
 
             cite_num = i + 1
             ref_title = ref.get("title", "Untitled")
-            url       = ref.get("url", "")
-            pub_date  = ref.get("published_date", "N/A")
-            src_type  = ref.get("source_type", "unknown").capitalize()
-            domain    = ref.get("domain", "")
+            url = ref.get("url", "")
+            pub_date = ref.get("published_date", "N/A")
+            src_type = ref.get("source_type", "unknown").capitalize()
+            domain = ref.get("domain", "")
 
             # Citation number + title
             pdf.set_font("Helvetica", "B", 9.5)
             pdf.set_text_color(*DARK)
-            pdf.multi_cell(0, 5.5, _sanitize(f"[{cite_num}]  {ref_title}"),
-                           new_x="LMARGIN", new_y="NEXT")
+            pdf.multi_cell(
+                0,
+                5.5,
+                _sanitize(f"[{cite_num}]  {ref_title}"),
+                new_x="LMARGIN",
+                new_y="NEXT",
+            )
 
             # URL (clickable)
             pdf.set_x(pdf.l_margin + 10)
@@ -630,14 +678,14 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
             pdf.ln(2)
             pdf.set_draw_color(*BORDER_CLR)
             pdf.set_line_width(0.2)
-            pdf.line(pdf.l_margin + 5, pdf.get_y(),
-                     pdf.w - pdf.r_margin - 5, pdf.get_y())
+            pdf.line(
+                pdf.l_margin + 5, pdf.get_y(), pdf.w - pdf.r_margin - 5, pdf.get_y()
+            )
             pdf.ln(4)
     else:
         pdf.set_font("Helvetica", "I", 10)
         pdf.set_text_color(*MUTED)
-        pdf.cell(0, 8, "No references available.",
-                 new_x="LMARGIN", new_y="NEXT")
+        pdf.cell(0, 8, "No references available.", new_x="LMARGIN", new_y="NEXT")
 
     # ── Save ────────────────────────────────────────────────────────
     pdf.output(output_path)
@@ -666,8 +714,9 @@ def generate_no_data_pdf(query: str, output_path: str = "report.pdf"):
     pdf.ln(8)
     pdf.set_font("Helvetica", "B", 22)
     pdf.set_text_color(*ACCENT)
-    pdf.cell(0, 12, "No Relevant Articles Found", align="C",
-             new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0, 12, "No Relevant Articles Found", align="C", new_x="LMARGIN", new_y="NEXT"
+    )
     pdf.ln(4)
     pdf.set_draw_color(*ACCENT)
     pdf.set_line_width(1.2)
@@ -678,12 +727,18 @@ def generate_no_data_pdf(query: str, output_path: str = "report.pdf"):
     date_str = datetime.now().strftime("%B %d, %Y  |  %H:%M")
     pdf.set_font("Helvetica", "", 10)
     pdf.set_text_color(*MUTED)
-    pdf.cell(0, 6.5, _sanitize(f"Query: {query}"), align="C",
-             new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6.5, f"Generated: {date_str}", align="C",
-             new_x="LMARGIN", new_y="NEXT")
-    pdf.cell(0, 6.5, "Search windows tried: 30, 90, 180 days", align="C",
-             new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0, 6.5, _sanitize(f"Query: {query}"), align="C", new_x="LMARGIN", new_y="NEXT"
+    )
+    pdf.cell(0, 6.5, f"Generated: {date_str}", align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0,
+        6.5,
+        "Search windows tried: 30, 90, 180 days",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
     pdf.ln(15)
 
     # Explanation
@@ -712,8 +767,14 @@ def generate_no_data_pdf(query: str, output_path: str = "report.pdf"):
     pdf.ln(10)
     pdf.set_font("Helvetica", "I", 9)
     pdf.set_text_color(*MUTED)
-    pdf.cell(0, 6, "Produced by Barista Competitive Intelligence Tool",
-             align="C", new_x="LMARGIN", new_y="NEXT")
+    pdf.cell(
+        0,
+        6,
+        "Produced by Barista Competitive Intelligence Tool",
+        align="C",
+        new_x="LMARGIN",
+        new_y="NEXT",
+    )
 
     pdf.output(output_path)
     print(f"\n📄 No-data PDF report saved to {output_path}")

@@ -1,6 +1,7 @@
 from typing import List
 from models.schemas import VerifiedArticle
 
+
 def deduplicate_articles(articles: List[VerifiedArticle]) -> List[VerifiedArticle]:
     seen_urls = set()
     unique_articles = []

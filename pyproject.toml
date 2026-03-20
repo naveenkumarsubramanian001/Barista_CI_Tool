@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "en-core-web-sm",
+    "fastapi>=0.135.1",
     "fpdf2>=2.8.7",
     "langchain-community>=0.4.1",
     "langchain-core>=1.2.16",
@@ -23,6 +24,7 @@ dependencies = [
     "torch>=2.10.0",
     "transformers>=5.2.0",
     "typing>=3.10.0.0",
+    "uvicorn>=0.42.0",
 ]
 
 [tool.uv.sources]

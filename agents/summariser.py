@@ -1,7 +1,8 @@
 import json
 from langchain_core.prompts import ChatPromptTemplate
-from models.schemas import ResearchState, FinalReport, Insight
+from models.schemas import ResearchState, FinalReport
 from config import get_llm
+
 
 def summariser_agent(state: ResearchState) -> ResearchState:
     """
@@ -10,13 +11,20 @@ def summariser_agent(state: ResearchState) -> ResearchState:
     final_ranked_output = state.get("final_ranked_output", {})
     official_top = final_ranked_output.get("official_sources", [])
     trusted_top = final_ranked_output.get("trusted_sources", [])
-    
+    selected_urls = state.get("selected_articles", [])
+
+    if selected_urls:
+        official_top = [a for a in official_top if a.url in selected_urls]
+        trusted_top = [a for a in trusted_top if a.url in selected_urls]
+
     original_query = state.get("original_query", "")
-    all_articles = state.get("official_sources", []) + state.get("trusted_sources", []) # For references
-    
+    all_articles = state.get("official_sources", []) + state.get(
+        "trusted_sources", []
+    )  # For references
+
     if not official_top and not trusted_top:
         return state
-        
+
     prompt = ChatPromptTemplate.from_template("""
     Create a competitive intelligence research report on "{query}".
 
@@ -61,63 +69,71 @@ def summariser_agent(state: ResearchState) -> ResearchState:
     REMEMBER: Number of official_insights MUST equal number of Official Source articles.
     Number of trusted_insights MUST equal number of Trusted Source articles.
     """)
-    
+
     from utils.json_utils import safe_json_extract
-    
+
     official_data = []
     trusted_data = []
-    
+
     for article in official_top:
         # Safe fallback index if article is somehow not in the combined list
         try:
             citation_id = all_articles.index(article) + 1
         except ValueError:
             citation_id = 1
-        official_data.append({
-            "citation_id": citation_id,
-            "title": article.title,
-            "snippet": article.snippet,
-            "domain": article.domain
-        })
-        
+        official_data.append(
+            {
+                "citation_id": citation_id,
+                "title": article.title,
+                "snippet": article.snippet,
+                "domain": article.domain,
+            }
+        )
+
     for article in trusted_top:
         try:
             citation_id = all_articles.index(article) + 1
         except ValueError:
             citation_id = 1
-        trusted_data.append({
-            "citation_id": citation_id,
-            "title": article.title,
-            "snippet": article.snippet,
-            "domain": article.domain
-        })
-        
+        trusted_data.append(
+            {
+                "citation_id": citation_id,
+                "title": article.title,
+                "snippet": article.snippet,
+                "domain": article.domain,
+            }
+        )
+
     chain = prompt | get_llm()
-    print(f"   [Summariser Debug] Extracted {len(official_top)} Official, {len(trusted_top)} Trusted.")
-    response = chain.invoke({
-        "query": original_query,
-        "official_articles_json": json.dumps(official_data),
-        "trusted_articles_json": json.dumps(trusted_data)
-    })
+    print(
+        f"   [Summariser Debug] Extracted {len(official_top)} Official, {len(trusted_top)} Trusted."
+    )
+    response = chain.invoke(
+        {
+            "query": original_query,
+            "official_articles_json": json.dumps(official_data),
+            "trusted_articles_json": json.dumps(trusted_data),
+        }
+    )
     print(f"   [Summariser Debug] LLM Raw Response:\n{response.content}")
-    
+
     try:
         # Use safe_json_extract for robustness
         data = safe_json_extract(response.content)
-        
+
         # Robust parsing for Qwen LLM hallucinations
         report_title = data.get("report_title", f"Research Report: {original_query}")
-        
+
         official_insights = data.get("official_insights", [])
         trusted_insights = data.get("trusted_insights", [])
-        
+
         # Fallback heuristic matching if keys were generated incorrectly
         if not official_insights and official_top:
             for k, v in data.items():
                 if "official" in k.lower() and isinstance(v, list):
                     official_insights = v
                     break
-                    
+
         if not trusted_insights and trusted_top:
             for k, v in data.items():
                 if "trusted" in k.lower() and isinstance(v, list):
@@ -126,25 +142,33 @@ def summariser_agent(state: ResearchState) -> ResearchState:
             # Extreme fallback: assign lists containing 'insight' or 'inspection'
             if not trusted_insights:
                 for k, v in data.items():
-                    if "insight" in k.lower() and isinstance(v, list) and k != "official_insights":
+                    if (
+                        "insight" in k.lower()
+                        and isinstance(v, list)
+                        and k != "official_insights"
+                    ):
                         trusted_insights = v
                         break
-                    elif "inspection" in k.lower() and isinstance(v, list) and k != "official_insights":
+                    elif (
+                        "inspection" in k.lower()
+                        and isinstance(v, list)
+                        and k != "official_insights"
+                    ):
                         trusted_insights = v
                         break
-                        
+
         valid_data = {
             "report_title": report_title,
             "official_insights": official_insights,
             "trusted_insights": trusted_insights,
-            "references": [a.model_dump() for a in all_articles]
+            "references": [a.model_dump() for a in all_articles],
         }
-            
+
         # Validate with Pydantic
         report = FinalReport(**valid_data)
         state["final_report"] = report.model_dump()
     except Exception as e:
         state["error"] = f"Summariser failed: {str(e)}"
         print(f"Summariser Debug - Raw Error: {str(e)}")
-        
+
     return state

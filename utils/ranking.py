@@ -1,6 +1,7 @@
 from typing import List
 from models.schemas import VerifiedArticle
 
+
 def rank_articles(articles: List[VerifiedArticle], query: str) -> List[VerifiedArticle]:
     query_terms = query.lower().split()
     for article in articles:
