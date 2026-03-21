@@ -102,6 +102,7 @@ class QueryDecomposer:
             "Your job: decompose a user query into 3-5 focused, NON-OVERLAPPING subqueries "
             "that together comprehensively cover the original intent.\n\n"
             "Rules:\n"
+            "- CRITICAL: ALWAYS prepend or include the main company name / subject in EVERY subquery explicitly so context is not lost in isolated searches.\n"
             "- Each subquery must target a DIFFERENT aspect of the original query\n"
             "- Subqueries must be web-search-optimised (concise, specific, no filler words)\n"
             "- Use the provided strategy hint to guide the decomposition\n"

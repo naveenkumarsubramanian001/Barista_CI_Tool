@@ -421,8 +421,8 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
     ----------
     1. Cover / Title page
     2. Introduction (detailed, with inline hyperlinks to sources)
-    3. Top Insights — Official Sources (up to 3, each with citation line)
-    4. Top Insights — Trusted Sources (up to 3, each with citation line)
+    3. Top Insights — Official Sources (all selected, each with citation line)
+    4. Top Insights — Trusted Sources (all selected, each with citation line)
     5. Conclusion (synthesising both categories)
     6. References (full numbered list with clickable URLs)
     """
@@ -431,8 +431,8 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
         data = json.load(fh)
 
     report_title = data.get("report_title", "Competitive Intelligence Report")
-    official = data.get("official_insights", [])[:3]
-    trusted = data.get("trusted_insights", [])[:3]
+    official = data.get("official_insights", [])
+    trusted = data.get("trusted_insights", [])
     references = data.get("references", [])
 
     # ── Fetch company/product context via Tavily ───────────────────
@@ -541,7 +541,7 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
             pdf.insight_card(
                 idx=i,
                 title=insight.get("title", "Untitled"),
-                summary=insight.get("brief_summary", "No summary available."),
+                summary=insight.get("detailed_summary", insight.get("brief_summary", "No summary available.")),
                 citation_num=cid + 1,
                 ref_title=ref.get("title", ""),
                 ref_url=ref.get("url", ""),
@@ -586,7 +586,7 @@ def generate_pdf(json_path: str, output_path: str = "report.pdf"):
             pdf.insight_card(
                 idx=i,
                 title=insight.get("title", "Untitled"),
-                summary=insight.get("brief_summary", "No summary available."),
+                summary=insight.get("detailed_summary", insight.get("brief_summary", "No summary available.")),
                 citation_num=cid + 1,
                 ref_title=ref.get("title", ""),
                 ref_url=ref.get("url", ""),

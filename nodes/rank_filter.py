@@ -5,8 +5,9 @@ def rank_filter_node(state: ResearchState) -> ResearchState:
     """
     Pure Python node to rank and select top 3 articles.
     """
-    official_sources = state.get("official_sources", [])
-    trusted_sources = state.get("trusted_sources", [])
+    from models.schemas import Article
+    official_sources = [Article(**a) if isinstance(a, dict) else a for a in state.get("official_sources", [])]
+    trusted_sources = [Article(**a) if isinstance(a, dict) else a for a in state.get("trusted_sources", [])]
     query = state.get("original_query", "").lower()
 
     if not official_sources and not trusted_sources:
@@ -35,8 +36,8 @@ def rank_filter_node(state: ResearchState) -> ResearchState:
         return ranked_articles
 
     final_output = {
-        "official_sources": rank_articles(official_sources),
-        "trusted_sources": rank_articles(trusted_sources),
+        "official_sources": [a.model_dump() for a in rank_articles(official_sources)],
+        "trusted_sources": [a.model_dump() for a in rank_articles(trusted_sources)],
     }
 
     state["final_ranked_output"] = final_output

@@ -43,10 +43,10 @@ def get_config(session_id: str):
 
 
 def _map_article(a, category: str, session_id: str, idx: int, total_per_category: int):
-    """Map an article object to the API response format."""
+    """Map an article object or dict to the API response format."""
     # Mark top 3 articles in each category as default_selected
     default_selected = idx < 3
-    score_raw = getattr(a, "score", None)
+    score_raw = a.get("score") if isinstance(a, dict) else getattr(a, "score", None)
     # Normalise score to 0-1 range for frontend (frontend multiplies by 100)
     if score_raw is None:
         score = 1.0
@@ -56,18 +56,18 @@ def _map_article(a, category: str, session_id: str, idx: int, total_per_category
         score = float(score_raw)
 
     return {
-        "id": a.url,
+        "id": a.get("url") if isinstance(a, dict) else a.url,
         "session_id": session_id,
-        "title": a.title,
-        "url": a.url,
-        "domain": getattr(a, "domain", None) or "unknown",
+        "title": a.get("title") if isinstance(a, dict) else a.title,
+        "url": a.get("url") if isinstance(a, dict) else a.url,
+        "domain": (a.get("domain") or "unknown") if isinstance(a, dict) else (getattr(a, "domain", None) or "unknown"),
         "category": category,
         "score": score,
-        "snippet": getattr(a, "snippet", None),
+        "snippet": a.get("snippet") if isinstance(a, dict) else getattr(a, "snippet", None),
         "is_approved": True,
         "default_selected": default_selected,
         "user_selected": False,
-        "published_date": getattr(a, "published_date", None),
+        "published_date": a.get("published_date") if isinstance(a, dict) else getattr(a, "published_date", None),
     }
 
 

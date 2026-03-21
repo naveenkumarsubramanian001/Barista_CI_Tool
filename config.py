@@ -1,22 +1,25 @@
 import os
 from dotenv import load_dotenv
-from langchain_ollama import OllamaEmbeddings
-from langchain_groq import ChatGroq
+from langchain_ollama import OllamaEmbeddings, ChatOllama
 
 load_dotenv()
 
 # --- Config ---
-# Prefer env override; strip to avoid sending invalid model names with whitespace.
-MODEL_NAME = (os.getenv("OLLAMA_MODEL") or "qwen2.5:7b").strip()
 TEMPERATURE = 0.1
 
 
 # --- LLM Instance ---
-def get_llm():
-    return ChatGroq(
-        model="llama-3.3-70b-versatile",
-        temperature=TEMPERATURE,
-        api_key=os.getenv("GROQ_API_KEY"),
+def get_llm(temperature=None):
+    if temperature is None:
+        temperature = TEMPERATURE
+    
+    # Prefer env override; strip to avoid sending invalid model names with whitespace.
+    MODEL_NAME = (os.getenv("OLLAMA_MODEL") or "llama3.1").strip()
+    return ChatOllama(
+        model=MODEL_NAME,
+        temperature=temperature,
+        num_ctx=32768,      # Force Ollama to allow massive prompts (default is usually only 2048 tokens!)
+        num_predict=8192,   # Force Ollama to allow massive outputs instead of lazily stopping
     )
 
 

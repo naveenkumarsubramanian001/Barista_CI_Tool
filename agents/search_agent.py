@@ -17,10 +17,8 @@ async def perform_single_search(
 ) -> List[dict]:
     """Helper to perform a single Tavily search asynchronously."""
     try:
-        if source_type == "official":
-            restricted_query = build_site_query(query, allowed_domains)
-        else:
-            restricted_query = query
+        # ALWAYS restrict query to the allowed domains to ensure precise targeting for both official and trusted
+        restricted_query = build_site_query(query, allowed_domains)
 
         print(
             f"🔍 Searching {source_type} for: {restricted_query} (Recency: {days} days)"
@@ -32,16 +30,27 @@ async def perform_single_search(
             "max_results": 5,
         }
 
-        # Use 'news' for trusted to enforce recency, but 'general' for official sites since
-        # many companies post product updates on generic URLs that Tavily doesn't tag as 'news'
         if source_type == "trusted":
             kwargs["topic"] = "news"
             kwargs["days"] = days
+            
+            response = await asyncio.to_thread(tavily_client.search, **kwargs)
+            results = response.get("results", [])
+            
+            # Fallback to general web search if 'news' topic yields nothing (common for B2B)
+            if not results:
+                print(f"   ⚠️ No 'news' found for '{query}'. Falling back to 'general' web search...")
+                kwargs["topic"] = "general"
+                kwargs.pop("days", None) # general search does not strictly enforce 'days'
+                response = await asyncio.to_thread(tavily_client.search, **kwargs)
+                results = response.get("results", [])
+                
+            return results
         else:
             kwargs["topic"] = "general"
+            response = await asyncio.to_thread(tavily_client.search, **kwargs)
+            return response.get("results", [])
 
-        response = await asyncio.to_thread(tavily_client.search, **kwargs)
-        return response.get("results", [])
     except Exception as e:
         print(f"   - Search failed for '{query}': {e}")
         return []
@@ -219,7 +228,7 @@ async def search_agent(state: ResearchState) -> ResearchState:
             "⚠️ No articles found even after widening search timeframe."
         )
 
-    state["official_sources"] = official_articles
-    state["trusted_sources"] = trusted_articles
+    state["official_sources"] = [a.model_dump() for a in official_articles]
+    state["trusted_sources"] = [a.model_dump() for a in trusted_articles]
     state["search_days_used"] = attempt_days  # Track which window worked
     return state

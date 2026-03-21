@@ -76,12 +76,18 @@ class SearchOutput(BaseModel):
 
 class Insight(BaseModel):
     title: str
-    brief_summary: str
+    detailed_summary: str = Field(default="", description="A comprehensive, detailed summary of the article covering all facts, figures, and strategies.")
+    reasoning: str = Field(default="", description="Explanation of how this article answers the original query")
+    sentiment: str = Field(default="Neutral", description="Sentiment of the article toward the competitor")
+    key_metrics: List[str] = Field(default_factory=list, description="Key metrics extracted")
+    key_features: List[str] = Field(default_factory=list, description="Key features extracted")
     citation_id: int
 
 
 class FinalReport(BaseModel):
     report_title: str
+    executive_summary: str = Field(default="", description="A cohesive 2-3 paragraph synthesis answering the user's overarching query based on all articles.")
+    conflict_and_consensus: str = Field(default="", description="Analysis comparing official vs trusted sources.")
     official_insights: List[Insight] = Field(default_factory=list)
     trusted_insights: List[Insight] = Field(default_factory=list)
     references: List[Article]
@@ -103,9 +109,9 @@ class ValidationResult(BaseModel):
 class ResearchState(TypedDict):
     original_query: str
     subqueries: List[str]
-    official_sources: List[Article]
-    trusted_sources: List[Article]
-    final_ranked_output: Dict[str, List[Article]]
+    official_sources: List[Dict]
+    trusted_sources: List[Dict]
+    final_ranked_output: Dict[str, List[Dict]]
     final_report: Optional[Dict]
     company_domains: List[str]
     trusted_domains: List[str]

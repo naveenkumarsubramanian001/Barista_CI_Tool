@@ -184,8 +184,9 @@ def search_discriminator(state: ResearchState) -> ResearchState:
       3. LLM-based accuracy & reliability evaluation per article
       4. Weighted composite score → filter top results
     """
-    official_sources = state.get("official_sources", [])
-    trusted_sources = state.get("trusted_sources", [])
+    from models.schemas import Article
+    official_sources = [Article(**a) if isinstance(a, dict) else a for a in state.get("official_sources", [])]
+    trusted_sources = [Article(**a) if isinstance(a, dict) else a for a in state.get("trusted_sources", [])]
     articles = official_sources + trusted_sources
     original_query = state.get("original_query", "")
     subqueries = state.get("subqueries", [])
@@ -381,8 +382,8 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         state["retry_counts"]["search"] += 1
         return state
 
-    state["official_sources"] = official_filtered
-    state["trusted_sources"] = trusted_filtered
+    state["official_sources"] = [a.model_dump() for a in official_filtered]
+    state["trusted_sources"] = [a.model_dump() for a in trusted_filtered]
     state["validation_feedback"] = "APPROVED"
     return state
 
@@ -408,8 +409,9 @@ def summariser_discriminator(state: ResearchState) -> ResearchState:
 
     # Validate insight count matches article count that was ACTUALLY provided to summariser
     final_ranked = state.get("final_ranked_output", {})
-    official_sources = final_ranked.get("official_sources", [])
-    trusted_sources = final_ranked.get("trusted_sources", [])
+    from models.schemas import Article
+    official_sources = [Article(**a) if isinstance(a, dict) else a for a in final_ranked.get("official_sources", [])]
+    trusted_sources = [Article(**a) if isinstance(a, dict) else a for a in final_ranked.get("trusted_sources", [])]
     selected_urls = state.get("selected_articles", [])
 
     if selected_urls:
