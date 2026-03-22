@@ -10,7 +10,17 @@ from typing import List
 from langgraph.checkpoint.memory import MemorySaver
 from graph.workflow import build_graph
 
-app = FastAPI(title="Barista CI API")
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
+from scheduler import start_scheduler
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    start_scheduler()
+    yield
+
+app = FastAPI(title="Barista CI API", lifespan=lifespan)
 
 # Enable CORS for the React frontend
 app.add_middleware(
@@ -20,6 +30,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+from routers import companies
+app.include_router(companies.router)
 
 # Global Checkpointer (MemorySaver) to maintain state across HTTP requests
 checkpointer = MemorySaver()

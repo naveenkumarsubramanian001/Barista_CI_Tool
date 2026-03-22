@@ -227,17 +227,20 @@ async def url_discovery(state: ResearchState) -> ResearchState:
     state.setdefault("logs", [])
     state["logs"].append("🌐 Starting advanced URL discovery...")
 
-    # 1. Extract companies (Dynamic + Batch Validation)
-    state["logs"].append("🏢 Identifying target companies and brands...")
-    companies = await extract_companies(state["original_query"])
-    if companies:
-        state["logs"].append(f"📍 Identified: {', '.join(companies)}")
-
-    # 2. Discover official domains in parallel
-    state["logs"].append("🔗 Searching for official company websites...")
-    company_domains = await find_official_domains(companies)
+    # 1. Check if official domains are already provided in state
+    company_domains = state.get("company_domains", [])
     if company_domains:
-        state["logs"].append(f"🏠 Mapped {len(company_domains)} official domains.")
+        state["logs"].append(f"✅ Using provided company domains: {', '.join(company_domains)}")
+    else:
+        state["logs"].append("🏢 Identifying target companies and brands...")
+        companies = await extract_companies(state["original_query"])
+        if companies:
+            state["logs"].append(f"📍 Identified: {', '.join(companies)}")
+
+        state["logs"].append("🔗 Searching for official company websites...")
+        company_domains = await find_official_domains(companies)
+        if company_domains:
+            state["logs"].append(f"🏠 Mapped {len(company_domains)} official domains.")
 
     # 3. Category-based trusted domains
     category = await detect_category(state["original_query"])
