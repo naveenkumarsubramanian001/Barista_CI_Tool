@@ -1,0 +1,321 @@
+{
+  "report_title": "OpenAI's Latest Product: A Competitive Intelligence Overview",
+  "executive_summary": "Based on official sources and trusted publications, OpenAI has been actively developing and releasing new products and features. The latest product from OpenAI is GPT-5.4, which was announced in March 2026. This model introduces native computer use capabilities and Windows apps integrations, making it a significant advancement in the field of AI. Additionally, OpenAI has been working on its Codex AI coding application and has hired the creator of the popular open-source AI agent tool OpenClaw. Microsoft's Copilot Cowork, which is built with help from Anthropic, also shares similar functionality to GPT-5.4. However, the two products diverge in their approach and target audience. Overall, OpenAI's latest product, GPT-5.4, represents a significant step forward in AI capabilities and sets the stage for further innovation in the industry.",
+  "conflict_and_consensus": "There is some conflict between official sources and trusted publications regarding the exact nature of OpenAI's latest product. While official sources focus on the technical specifications and features of GPT-5.4, trusted publications like VentureBeat highlight the broader implications of this release, including its potential impact on the AI industry as a whole. However, there is consensus that GPT-5.4 represents a significant advancement in AI capabilities and sets the stage for further innovation in the field.",
+  "official_insights": [
+    {
+      "title": "OpenAI's Guide to Identifying and Scaling AI Use Cases",
+      "detailed_summary": "According to OpenAI, 39% of U.S. adults have already used AI in just two years, which is faster than the internet's adoption rate (20% in the same time frame). This rapid growth has led to significant benefits for companies that adopt AI, including 1.5x faster revenue growth, 1.6x higher shareholder returns, and 1.4x better return on invested capital compared to their less advanced peers. However, only 1% of companies believe their AI investments have reached full maturity. To address this challenge, OpenAI provides a three-step process for identifying and scaling AI use cases: Identifying opportunities, Teaching employees fundamental use cases, and Collecting and prioritizing use cases. The guide emphasizes the importance of leadership in driving AI adoption, empowering employees to find use cases that work best for them, and encouraging adoption through hackathons, workshops, and peer-led learning sessions. Key areas to focus on when identifying potential AI use cases include repetitive low-value tasks, skill bottlenecks, and navigating ambiguity.",
+      "reasoning": "The article answers the user's original query about OpenAI's latest product by providing a comprehensive guide to identifying and scaling AI use cases, which is a key aspect of OpenAI's business.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "39% of U.S. adults have already used AI in just two years",
+        "1.5x faster revenue growth for companies that adopt AI",
+        "1.6x higher shareholder returns for companies that adopt AI",
+        "1.4x better return on invested capital for companies that adopt AI",
+        "Only 1% of companies believe their AI investments have reached full maturity"
+      ],
+      "key_features": [
+        "Three-step process for identifying and scaling AI use cases: Identifying opportunities, Teaching employees fundamental use cases, and Collecting and prioritizing use cases",
+        "Importance of leadership in driving AI adoption",
+        "Empowering employees to find use cases that work best for them",
+        "Encouraging adoption through hackathons, workshops, and peer-led learning sessions"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "OpenAI's Latest Product: GPT-5.4 and Variants",
+      "detailed_summary": "OpenAI has released its latest product, GPT-5.4, which offers the best intelligence at scale for agentic, coding, and professional workflows. The model is available in three variants: GPT-5.4, GPT-5.4 mini, and GPT-5.4 nano. Each variant has different pricing tiers, with GPT-5.4 being the most expensive but also offering the highest level of intelligence. The models are priced per 1 million tokens, with input tokens costing $2.50 for GPT-5.4, $0.75 for GPT-5.4 mini, and $0.20 for GPT-5.4 nano. Output tokens cost $15.00 for GPT-5.4, $4.50 for GPT-5.4 mini, and $1.25 for GPT-5.4 nano. The models also have different context windows, with GPT-5.4 having a 1,050,000 token window, GPT-5.4 mini having a 400,000 token window, and GPT-5.4 nano having the same 400,000 token window. The knowledge cutoff for all variants is August 31, 2025. The models support various features such as streaming, function calling, structured outputs, distillation, and image input. Rate limits are also in place, with free tier users limited to 500,000 tokens for GPT-5.4 and GPT-5.4 mini, and 200,000 tokens for GPT-5.4 nano.",
+      "reasoning": "The article answers the user's original query about OpenAI's latest product by providing detailed information on the features, pricing, and capabilities of GPT-5.4 and its variants.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "$2.50 per 1M input tokens for GPT-5.4",
+        "$0.75 per 1M input tokens for GPT-5.4 mini",
+        "$0.20 per 1M input tokens for GPT-5.4 nano",
+        "$15.00 per 1M output tokens for GPT-5.4",
+        "$4.50 per 1M output tokens for GPT-5.4 mini",
+        "$1.25 per 1M output tokens for GPT-5.4 nano"
+      ],
+      "key_features": [
+        "Streaming",
+        "Function calling",
+        "Structured outputs",
+        "Distillation",
+        "Image input"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "OpenAI's Agreement with the Department of War: Key Facts and Strategies",
+      "detailed_summary": "On February 28, 2026, OpenAI announced an agreement with the Department of War (DoW) regarding the use of their AI technology. The agreement includes several key provisions to ensure that OpenAI's tools are not used for domestic surveillance or other unacceptable purposes. Specifically, the DoW has agreed to the following: (1) no use of OpenAI technology for mass domestic surveillance; (2) no use of OpenAI technology to direct autonomous weapons systems; and (3) no use of OpenAI technology for high-stakes automated decisions. To enforce these red lines, OpenAI will retain full discretion over their safety stack, deploy via cloud, have cleared personnel in the loop, and have strong contractual protections. The agreement also includes a deployment architecture that enables OpenAI to independently verify that these red lines are not crossed. Additionally, the DoW plans to convene a working group with leaders from frontier AI labs, cloud providers, and the Department's policy and operational communities to discuss emerging AI capabilities, privacy, and national security challenges. This agreement is seen as a significant step forward in ensuring responsible AI development and deployment.",
+      "reasoning": "The article answers the user's original query by providing detailed information about OpenAI's latest product and their agreement with the Department of War.",
+      "sentiment": "Positive/Marketing",
+      "key_metrics": [
+        "February 28, 2026: Date of announcement",
+        "3 main red lines: no use for mass domestic surveillance, no use to direct autonomous weapons systems, and no use for high-stakes automated decisions"
+      ],
+      "key_features": [
+        "Cloud-only deployment with safety stack",
+        "Independent verification of red line compliance",
+        "Strong contractual protections",
+        "Working group on emerging AI capabilities, privacy, and national security challenges"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "OpenAI Product Comparison and Price Matching with Limited Training Data",
+      "detailed_summary": "The article discusses a client's requirement to compare prices of their products with those from rival websites, using OpenAI models. The client has scraped data from several rival websites, including product names, prices, and some specifications. However, they lack sufficient training data to train an OpenAI model for this task. They are unsure if it is possible to achieve this with current OpenAI models, given the large number of products involved. They also question whether a model can be trained solely on their client's product list without any examples, and how this would affect fine-tuning or inputting the entire list into the prompt. The client hopes to automate price comparison for competitive analysis.",
+      "reasoning": "The article answers the user's original query about OpenAI's latest product by discussing its potential application in comparing prices of products from different websites. It highlights the challenges of training a model with limited data and the need for fine-tuning or inputting large datasets into the prompt.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "Large number of products (client's and rival websites)",
+        "Limited training data available",
+        "Need for fine-tuning or inputting large datasets"
+      ],
+      "key_features": [
+        "OpenAI models",
+        "Product comparison and price matching",
+        "Automated competitive analysis"
+      ],
+      "citation_id": 6
+    }
+  ],
+  "trusted_insights": [
+    {
+      "title": "India's AI Self-Reliance Mission: Top 15 AI Startups Driving End-to-End Ecosystem",
+      "detailed_summary": "The article highlights India's shift towards AI self-reliance, with domestic builders creating an end-to-end AI ecosystem rooted in Indian data and needs. The top 15 AI startups mentioned are working on foundational models, applied platforms, and multilingual AI models supporting 22 languages. Notable mentions include BharatGen's development of a multilingual AI model, which is expected to reach $11.46 billion by 2025. Other key players in the Indian AI ecosystem include companies focused on biomanufacturing, with Karnataka's biotech economy crossing $39 billion. The article emphasizes the importance of domestic AI development and deployment for India's self-reliance mission.",
+      "reasoning": "The article answers the user's original query about OpenAI's latest product by highlighting the growth and development of the Indian AI ecosystem, which is driven by domestic startups and companies working on foundational models, applied platforms, and multilingual AI models.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "$39 billion: Karnataka's biotech economy",
+        "$11.46 billion: Expected revenue for BharatGen's multilingual AI model by 2025"
+      ],
+      "key_features": [
+        "Foundational models",
+        "Applied platforms",
+        "Multilingual AI models supporting 22 languages",
+        "Biomanufacturing",
+        "Domestic AI development and deployment for India's self-reliance mission"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "Anthropic's Claude Code Channels: A Game-Changer for AI Development",
+      "detailed_summary": "Anthropic has announced Claude Code Channels, a new feature that allows developers to interact with its powerful AI agent, Claude Code, directly from popular messaging apps like Discord and Telegram. This move is seen as a direct counter to OpenClaw's appeal, which also allowed users to message their AI agents over common messaging platforms. However, Anthropic's solution comes with the added benefit of security and ease of use, thanks to its commitment to AI safety and the introduction of the Model Context Protocol (MCP) open source standard. The MCP acts as a universal bridge between AI models and external data and tools, enabling developers to spin up polling services and inject messages directly into active sessions. This persistence feature allows Claude Code sessions to run in the background or on persistent servers, unlike traditional web-chats that time out. Anthropic's move is seen as a significant shift in how developers interact with AI agents, moving from synchronous 'ask-and-wait' models to asynchronous partnerships. The company has effectively countered OpenClaw's appeal by offering its own brand name and commitment to security and ease of use.",
+      "reasoning": "The article answers the user's original query about what is OpenAI's latest product by highlighting Anthropic's new feature, Claude Code Channels, which allows developers to interact with its AI agent directly from popular messaging apps. The article also explains how this move positions Anthropic as a competitor to OpenClaw and highlights the key features and benefits of Claude Code Channels.",
+      "sentiment": "Positive/Marketing",
+      "key_metrics": [
+        "Anthropic's commitment to AI safety and security",
+        "Introduction of Model Context Protocol (MCP) open source standard",
+        "Claude Code Channels allows developers to interact with AI agent directly from popular messaging apps",
+        "Persistence feature enables sessions to run in the background or on persistent servers"
+      ],
+      "key_features": [
+        "Model Context Protocol (MCP)",
+        "Claude Code Channels",
+        "Asynchronous partnership model",
+        "Persistence feature",
+        "Security and ease of use commitment"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "Microsoft Announces Copilot Cowork, a Cloud-Powered AI Agent for Microsoft 365 Apps",
+      "detailed_summary": "Microsoft has announced Copilot Cowork, a new cloud-based AI agentic automation tool within its existing AI tool 365 Copilot. This feature allows users to delegate complex, multi-step tasks to an AI agent that plans, executes, and delivers finished work across multiple Microsoft apps, including Outlook, Teams, Excel, PowerPoint, and others. Copilot Cowork is the centerpiece of what Microsoft is calling 'Wave 3' of Microsoft 365 Copilot, which also brings agentic capabilities directly into individual Office apps and introduces new enterprise pricing tiers designed to bundle AI productivity with security and governance. The feature integrates technology from Anthropic's Claude Cowork applications, which were released in January and February 2026 for Mac and Windows respectively. These applications helped trigger a $285 billion selloff in enterprise software stocks as investors repriced companies whose core functionality overlapped with what Anthropic's AI could do. Microsoft is currently offering Copilot Cowork in Research Preview to a limited set of customers, with broader access available through its Frontier program in late March 2026. Enterprises interested in getting early access can join the Frontier program at adoption.microsoft.com/en-us/copilot/frontier-program/.",
+      "reasoning": "The article answers the user's original query about what is OpenAI's latest product by revealing that Microsoft has announced a new AI-powered tool called Copilot Cowork, which integrates technology from Anthropic's Claude Cowork applications.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "$285 billion: The amount of selloff in enterprise software stocks triggered by Anthropic's initial Claude Cowork applications",
+        "March 2026: The month when broader access to Copilot Cowork will be available through Microsoft's Frontier program"
+      ],
+      "key_features": [
+        "Cloud-based AI agentic automation tool within Microsoft 365 Copilot",
+        "Ability to delegate complex, multi-step tasks to an AI agent that plans, executes, and delivers finished work across multiple apps",
+        "Integration with technology from Anthropic's Claude Cowork applications",
+        "Agentic capabilities directly into individual Office apps",
+        "New enterprise pricing tiers designed to bundle AI productivity with security and governance"
+      ],
+      "citation_id": 1
+    },
+    {
+      "title": "Google's Always On Memory Agent: A Persistent Memory Solution for AI Teams",
+      "detailed_summary": "Google senior AI product manager Shubham Saboo has open-sourced an 'Always On Memory Agent' on GitHub, allowing commercial usage under a permissive MIT License. The agent is built with Google's Agent Development Kit (ADK) and Gemini 3.1 Flash-Lite, a low-cost model introduced by Google as its fastest and most cost-efficient Gemini 3 series model. The Always On Memory Agent addresses the problem of persistent memory in AI systems, allowing for continuous information ingestion, consolidation, and retrieval without relying on vector databases. The agent uses a multi-agent internal architecture with specialist components handling ingestion, consolidation, and querying, and supports text, image, audio, video, and PDF ingestion. The design choice of using an LLM to organize and update memory directly simplifies prototypes and reduces infrastructure sprawl. Google's Flash-Lite model is priced at $0.25 per 1 million input tokens and $1.50 per 1 million output tokens, making it a cost-effective solution for high-volume developer workloads. The Always On Memory Agent has the potential to simplify agent design and reduce operational complexity for AI teams.",
+      "reasoning": "The article answers the user's original query about Google's latest product by providing details on the Always On Memory Agent, its architecture, features, and competitive positioning in the market.",
+      "sentiment": "Neutral",
+      "key_metrics": [
+        "$0.25 per 1 million input tokens for Flash-Lite model",
+        "$1.50 per 1 million output tokens for Flash-Lite model",
+        "2.5 times faster than Gemini 2.5 Flash in time to first token",
+        "45% increase in output speed compared to Gemini 2.5 Flash",
+        "1432 Elo score on Arena.ai",
+        "86.9% on GPQA Diamond",
+        "76.8% on MMMU Pro"
+      ],
+      "key_features": [
+        "Always On Memory Agent",
+        "Multi-agent internal architecture",
+        "Specialist components for ingestion, consolidation, and querying",
+        "Supports text, image, audio, video, and PDF ingestion",
+        "LLM-driven persistent memory",
+        "No vector database or embeddings required",
+        "Simplified prototype design and reduced infrastructure sprawl"
+      ],
+      "citation_id": 16
+    }
+  ],
+  "references": [
+    {
+      "title": "OpenAI News",
+      "url": "https://openai.com/news/",
+      "snippet": "Stay up to speed on the rapid advancement of AI technology and the benefits it offers to humanity.",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Introducing GPT-5.4 - OpenAI",
+      "url": "https://openai.com/index/introducing-gpt-5-4/",
+      "snippet": "Compared to GPT\u20115.2, it achieves higher accuracy in fewer turns on Toolathlon, a benchmark that tests how well AI agents can use real-world",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "OpenAI Research | Release",
+      "url": "https://openai.com/research/index/release/",
+      "snippet": "Introducing GPT-5.3-Codex-Spark\u2014our first real-time coding model. 15x faster generation, 128k context, now in research preview for ChatGPT Pro users. Product.",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Identifying and scaling AI use cases - OpenAI",
+      "url": "https://openai.com/business/guides-and-resources/identifying-and-scaling-ai-use-cases/",
+      "snippet": "#### Research use cases to get started with:\n\nSales and MarketingInvestigate new industries, understand competitors better, and research new audiences.\nFinanceSearch for benchmarks from publicly listed companies, M&A targets, or articles and guidance on accounting standards.\nProductSize new markets, research competitors, identify trends, and analyze user feedback.\nSales teamsSearch the web for new vendors and rate their products\u2019 strengths and weaknesses.\nSoftware EngineeringReview API endpoints and external documentation.\n\nIntroducing Deep Research [...] ### Match Group simulates focus groups\n\nMatch Group, the global leader in online dating, is experimenting with GPT\u20114\u2019s multimodal capabilities to run focus group simulations for product usability. By uploading wireframes and asking ChatGPT to mimic a specific persona, designers can pose questions while they ask the \u201cuser\u201d to navigate the interface and provide feedback. The result: new ideas for product innovations without the extra cost and delay.\n\nImage 5: Abstract blue square\n\nPrimitive 06: Automations [...] #### Ideation and strategy use cases to get started with:\n\nMarketingBrainstorm campaign ideas based on new opportunities. Upload your marketing brief and ask what\u2019s missing. Prompt for a go-to-market plan for a product launch.\nProductBuild a market expansion plan for a new geography, taking into account local competitors, risks, size of opportunity, and resource demands.\nSalesBuild launch plans that reflect all dependencies and risks. Upload your PRD and identify areas of weakness before an executive review.\nFinancePractice your pitch or discovery skills with voice mode.\n\n### Match Group simulates focus groups",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Our agreement with the Department of War | OpenAI",
+      "url": "https://openai.com/index/our-agreement-with-the-department-of-war/",
+      "snippet": "In addition to these protections, our contract offers additional layered safeguards including our safety stack and OpenAI technical experts in the loop.\n\n## Author\n\n## Keep reading\n\nOAI Astral 1x1 Art Card\n\nCompanyMar 19, 2026\n\n5.4 Mini Nano Art Card\n\nCompanyMar 17, 2026\n\nPromptfoo > Cover Image\n\nCompanyMar 9, 2026 [...] February 28, 2026\n\n# Our agreement with the Department of War\n\nUpdate on March 2, 2026\n\nThroughout our discussions, the Department made clear it shares our commitment to ensuring our tools will not be used for domestic surveillance. To make our principles as clear as possible, we worked together to add additional language to our agreement. \n\nThis language makes explicit that our tools will not be used to conduct domestic surveillance of U.S. persons, including through the procurement or use of commercially acquired personal or identifiable information. The Department also affirmed that our services will not be used by Department of War intelligence agencies like the NSA. Any services to those agencies would require a new agreement. \n\nThe new language reads: [...] The new language reads:\n\nThe Department of War plans to convene a working group made up of leaders from the frontier AI labs, cloud providers, and the Department\u2019s policy and operational communities. OpenAI will participate and expect this will be an important forum for ongoing dialogue on emerging AI capabilities, privacy, and national security challenges going forward. \n\nThese updates build on the framework we announced last week and we hope will help create a pathway for other labs to work with the Department going forward.\n\nYesterday we reached an agreement with the Pentagon for deploying advanced AI systems in classified environments, which we requested they also make available to all AI companies.",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Compare my products with my rival's - OpenAI Developer Community",
+      "url": "https://community.openai.com/t/compare-my-products-with-my-rivals/544692",
+      "snippet": "# Compare my products with my rival's\n\nHi guys, I hope you can help me with my problem. I\u2019m not sure if this is possible or if it can be solved using OpenAI models.\n\nThe problem:  \nI have a client who has an online store with a high number of products. These products belong to various categories and have technical specifications, model, brand, etc. They also have a price and available units (stock). On the other hand, I have scraped data from several rival websites, which have similar products. For these rival products, I have little more than the name, price, and some specifications.  \nThe client wants to compare prices of rival products with their own products in an automated way to determine if their prices are competitive. [...] My questions:  \nIs it possible to achieve this with current OpenAI models? Given the large number of products from the client and an even larger number of products from rivals, it\u2019s impossible for me to generate examples for training.  \nCould a model be trained solely with the list of products from my client and, without any examples, be able to match products from rival websites with client\u2019s products?  \nWould this be considered fine-tuning, or would I be forced to input the entire list of products into the prompt?\n\nI hope you can help me; I\u2019m new to this wonderful world of artificial intelligence.  \nThank you.\n\n### Related topics [...] ### Related topics\n\n| Topic |  | Replies | Views | Activity |\n ---  --- \n| Using OpenAI to search database for products  API | 12 | 6026 | November 21, 2023 |\n| I\u2019ve built an MVP for a product matching system using AI  Community project ,  api | 4 | 378 | December 5, 2025 |\n| Conversational AI in 2 Ecommerce Scenarios  API chatgpt ,  api ,  lost-user | 1 | 755 | May 21, 2024 |\n| I am an ecommerce company, can i train/finetune 3.5 turbo with my product catalogue?  API fine-tuning | 3 | 926 | August 29, 2023 |\n| Best approach to train a model for technical support to specific products, given product SKU and question  Prompting gpt-35-turbo ,  chatgpt | 3 | 1161 | October 18, 2023 |\n\nPowered by Discourse, best viewed with JavaScript enabled",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "OpenAI Newsroom | Product",
+      "url": "https://openai.com/news/product-releases/",
+      "snippet": "Product ; Our Research. Research Index \u00b7 Research Overview ; Latest Advancements. GPT-5.3 Instant \u00b7 GPT-5.3-Codex ; Safety. Safety Approach \u00b7 Security & Privacy",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Compare models | OpenAI API",
+      "url": "https://developers.openai.com/api/docs/models/compare",
+      "snippet": "### Core concepts\n\n   Text generation\n   Code generation\n   Images and vision\n   Audio and speech\n   Structured output\n   Function calling\n   Responses API\n\n### Agents\n\n   Overview\n   \nBuild agents\n       Agent Builder\n       Node reference\n       Safety in building agents\n       Agents SDK\n\n   \nDeploy in your product\n       ChatKit\n       Custom theming\n       Widgets\n       Actions\n       Advanced integration\n\n   \nOptimize\n       Agent evals\n       Trace grading\n\n   Voice agents\n\n### Tools\n\n   Using tools\n   Web search\n   MCP and Connectors\n   Skills\n   Shell\n   Computer use\n   \nFile search and retrieval\n       File search\n       Retrieval\n\n   Tool search\n   \nMore tools\n       Apply Patch\n       Local shell\n       Image generation\n       Code interpreter\n\n### Run and scale [...] # Compare models | OpenAI API\n\nImage 1: OpenAI Developers\n\nHome\n\nAPI\n\nDocs Guides and concepts for the OpenAI APIAPI reference Endpoints, parameters, and responses\n\nCodex\n\nChatGPT\n\nApps SDK Build apps to extend ChatGPTCommerce Build commerce flows in ChatGPT\n\nResources\n\nShowcase Demo apps to get inspiredBlog Learnings and experiences from developersCookbook Notebook examples for building with OpenAI modelsLearn Docs, videos, and demo apps for building with OpenAICommunity Programs, meetups, and support for builders\n\nAPI Dashboard\n\n## Search the API docs\n\n Close \n\nPrimary navigation\n\n API  API Reference  Codex  ChatGPT  Resources \n\n### Get started\n\n   Overview\n   Quickstart\n   Models\n   Pricing\n   Libraries\n   Latest: GPT-5.4\n   Prompt guidance\n\n### Core concepts [...] Deploy in your product\n       ChatKit\n       Custom theming\n       Widgets\n       Actions\n       Advanced integration\n\n   \nOptimize\n       Agent evals\n       Trace grading\n\n   Voice agents\n\n### Tools\n\n   Using tools\n   Web search\n   MCP and Connectors\n   Skills\n   Shell\n   Computer use\n   \nFile search and retrieval\n       File search\n       Retrieval\n\n   Tool search\n   \nMore tools\n       Apply Patch\n       Local shell\n       Image generation\n       Code interpreter\n\n### Run and scale\n\n   Conversation state\n   Background mode\n   Streaming\n   WebSocket mode\n   Webhooks\n   File inputs\n   \nContext management\n       Compaction\n       Counting tokens\n       Prompt caching\n\n   \nPrompting\n       Overview\n       Prompt engineering\n       Citation formatting",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "[PDF] gpt-oss-120b & gpt-oss-20b Model Card - OpenAI",
+      "url": "https://cdn.openai.com/pdf/419b6906-9da6-406c-a19d-1bb078ac7637/oai_gpt-oss_model_card.pdf",
+      "snippet": "12 Table 5: Production Benchmarks Category gpt-oss-120b gpt-oss-20b OpenAI o4-mini GPT-4o non-violent hate 0.895 0.901 0.832 0.882 personal-data 0.888 0.921 0.847 0.860 harassment/threatening 0.832 0.819 0.695 0.745 sexual/exploitative 0.919 0.852 0.857 0.927 sexual/minors 0.967 0.866 0.862 0.939 extremism 0.932 0.951 0.932 0.919 hate/threatening 0.898 0.829 0.795 0.867 illicit/nonviolent 0.692 0.656 0.658 0.573 illicit/violent 0.817 0.744 0.845 0.633 self-harm/intent 0.950 0.893 0.862 0.849 self-harm/instructions 0.910 0.899 0.901 0.735 4.2 Jailbreaks We further evaluate the robustness of gpt-oss-120b and gpt-oss-20b to jailbreaks: adversarial prompts that purposely try to circumvent model refusals for content it\u2019s not supposed to produce. [...] 24 5.2.3 AI Self-Improvement . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n26 5.2.3.1 SWE-bench Verified (N=477) . . . . . . . . . . . . . . . . . . . .\n26 5.2.3.2 OpenAI PRs . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n27 5.2.3.3 PaperBench . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .\n28 6 Appendix 1 29 7 Appendix 2 30 7.0.1 Recommendations Implemented . . . . . . . . . . . . . . . . . . . . . . . .\n30 7.0.2 Recommendations Not Adopted . . . . . . . . . . . . . . . . . . . . . . . . [...] T. Dao, D. Y. Fu, S. Ermon, A. Rudra, and C. R\u00e9, \u201cFlashAttention: Fast and memory-efficient exact attention with IO-awareness,\u201d 2022.\n OpenAI, \u201cChowdhury, neil and aung, james and shern, chan jun and jaffe, oliver and sherburn, dane and starace, giulio and mays, evan and dias, rachel and aljubeh, mar-wan and glaese, mia and jimenez, carlos e and yang, john and ho, leyton and pat-wardhan, tejal and liu, kevin and madry, aleksander.\u201d  introducing-swe-bench-verified/, 2025. Accessed: 2025-08-04.\n S. Yao, N. Shinn, P. Razavi, and K. Narasimhan, \u201c\u03c4-bench: A benchmark for tool-agent-user interaction in real-world domains,\u201d arXiv preprint arXiv:2406.12045, 2024.\n D. Rein, B. L. Hou, A. C. Stickland, J. Petty, R. Y. Pang, J. Dirani, J. Michael, and S. R.",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "[PDF] gdpval: evaluating ai model performance - OpenAI",
+      "url": "https://cdn.openai.com/pdf/d5eb7428-c4e9-4a33-bd86-86dd4bcf12ce/GDPval.pdf",
+      "snippet": "svglib==1.1.0 gtts==2.2.3 textblob==0.15.3 rasterio==1.3.3 rdflib==6.0.0 rdkit==2024.9.6 23 biopython==1.84 cairosvg==2.5.2 markdownify==0.9.3 anytree==2.8.0 pdfplumber==0.6.2 trimesh==3.9.29 svgwrite==1.4.1 pdfrw==0.4 pyzbar==0.1.8 dlib==19.24.2 mtcnn==0.1.1 imgkit==1.2.2 chardet==3.0.4 bokeh==2.4.0 tabula==1.0.5 camelot-py==0.10.1 exchange_calendars==3.4 weasyprint==53.3 pronouncing==0.2.0 cryptography==3.4.8 spacy==3.4.4 requests==2.31.0 mne==0.23.4 pyopenssl==21.0.0 snowflake-connector-python==2.7.12 databricks-sql-connector==0.9.1 ddtrace\u02dc=2.8.1 datadog\u02dc=0.49.1 pytest\u02dc=8.2.0 pytest-cov\u02dc=5.0.0 pytest-json-report\u02dc=1.5.0 coverage\u02dc=7.5.1 pytest-asyncio\u02dc=0.23.6 catboost\u02dc=1.2.7 lightgbm\u02dc=4.5.0 imblearn\u02dc=0.0 imbalanced-learn\u02dc=0.12.3 rapidfuzz\u02dc=3.10.1 We also installed the following [...] faker==8.13.2 fpdf2==2.8.3 soundfile==0.10.2 kerykeion==2.1.16 pdfkit==0.6.1 pycountry==20.7.3 countryinfo==0.1.2 tabulate==0.9.0 shap==0.39.0 pylog==1.1 pyprover==0.5.6 pytesseract==0.3.8 qrcode==7.3 basemap==1.3.9 pygraphviz==1.7 networkx==2.8.8 pyttsx3==2.90 nashpy==0.0.35 docx2txt==0.8 typing-extensions==4.10.0 torch==2.5.1 torchaudio==2.5.1 torchtext==0.18.0 torchvision==0.20.1 PyMuPDF==1.21.1 pdf2image==1.16.3 pyth3==0.7 h5py==3.8.0 tables==3.8.0 rarfile==4.0 odfpy==1.4.1 pymc==4.0.1 jax==0.2.28 pyxlsb==1.0.8 keras==2.6.0 xgboost==1.4.2 loguru==0.5.3 plotly==5.3.0 graphviz==0.17 fuzzywuzzy==0.18.0 pydot==1.4.2 gensim==4.3.1 pypandoc==1.6.3 einops==0.3.2 reportlab==3.6.12 gradio==2.2.15 mutagen==1.45.1 librosa==0.8.1 svglib==1.1.0 gtts==2.2.3 textblob==0.15.3 rasterio==1.3.3 [...] jupyter-client==8.6.1 jupyter-core==5.5.1 jupyter-server==2.14.0 jupyterlab==4.1.8 jupyterlab-pygments==0.3.0 jupyterlab-server==2.27.1 aiohttp==3.9.5 hypercorn==0.14.3 notebook==6.5.1 nbclassic==0.4.5 pydantic==1.10.2 fastapi[all]==0.95.2 websockets==10.3 tqdm==4.64.0 matplotlib==3.6.3 matplotlib-venn==0.11.6 numpy==1.24.0 numpy-financial==1.0.0 scipy==1.14.1 pandas==1.5.3 statsmodels==0.13.5 sympy==1.13.1 seaborn==0.11.2 scikit-learn==1.1.3 nltk==3.9.1 plotnine==0.10.1 shapely==1.7.1 fiona==1.9.2 geopandas==0.10.2 ffmpeg-python==0.2.0 pydub==0.25.1 moviepy==1.0.3 opencv-python==4.5.5.62 Pillow==9.1.0 python-docx==0.8.11 python-pptx==0.6.21 openpyxl==3.0.10 xml-python==0.4.3 geopy==2.2.0 scikit-image==0.20.0 folium==0.12.1 wordcloud==1.9.2 faker==8.13.2 fpdf2==2.8.3 soundfile==0.10.2",
+      "published_date": "2026-03-21",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": false
+    },
+    {
+      "title": "Anthropic just shipped an OpenClaw killer called Claude Code Channels, letting you message it over Telegram and Discord - VentureBeat",
+      "url": "https://venturebeat.com/orchestration/anthropic-just-shipped-an-openclaw-killer-called-claude-code-channels",
+      "snippet": "The product also introduces a \"Fakechat\" demo\u2014a local-only chat UI that allows developers to test the \"push\" logic on their own machine before connecting to external servers. This reflects Anthropic\u2019s cautious, \"research preview\" approach, ensuring developers understand the flow of events before exposing their terminal to the internet.\n\n## Licensing: Proprietary Power on Open Standards\n\nThe licensing implications of this release highlight a growing trend in the AI industry: proprietary engines running on open tracks. Claude Code remains a proprietary product tied to Anthropic\u2019s commercial subscriptions (Pro, Max, and Enterprise). [...] Now, Anthropic is offering some of the same core functionality as OpenClaw that drove its rapid adoption among software developers and vibe coders following its release in November 2025 by Austrian developer Peter Steinberger (who, ironically, originally called his project \"Clawd\" in honor of Anthropic's own AI model Claude which powered it initially, until Anthropic sent him a cease-and-desist for potential trademark violations. Steinberger was since hired by Anthropic's rival OpenAI.) [...] This isn't just a new UI; it is a fundamental shift in how developers interact with AI agents, moving from a synchronous \"ask-and-wait\" model to an asynchronous, autonomous partnership. Previously, Claude Code users were stuck interacting with the agentic harness on the Claude desktop application, terminal or supported developer environment, and Claude mobile app through a somewhat flaky (in my experience) interconnection setting called Remote Control.",
+      "published_date": "Fri, 20 Mar 2026 01:51:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    },
+    {
+      "title": "Microsoft announces Copilot Cowork with help from Anthropic \u2014 a cloud-powered AI agent that works across M365 apps - VentureBeat",
+      "url": "https://venturebeat.com/orchestration/microsoft-announces-copilot-cowork-with-help-from-anthropic-a-cloud-powered",
+      "snippet": "## What it means for the AI agent race\n\nCopilot Cowork arrives at an inflection point in the AI industry. Every major platform company is now racing to deliver agents that don't just converse but execute.\n\nAnthropic has its standalone Claude Cowork. OpenAI recently launched GPT-5.4 with native computer use capabilities and its own Windows apps integrations, and earlier, launched its own Codex AI coding application and hired the creator of the popular open source AI agent tool OpenClaw. Google has of course been steadily expanding Workspace integrations for AI agents.\n\nMicrosoft's advantage is distribution. With hundreds of millions of M365 users across the enterprise, Copilot Cowork has a built-in audience that no standalone AI product can match. [...] Spataro was pointed about why. \"Many AI tools lock users into a single vendor's models,\" he wrote. \"Others force people to choose between tools, experiences, or modes depending on the task. That fragmentation creates friction for individuals and complexity for organizations.\" Microsoft's answer is a multi-model architecture where \"Copilot automatically applies the right model for the task, all grounded in your enterprise context.\"\n\nThat multi-model positioning is a significant strategic signal. Microsoft has invested $13 billion in OpenAI, which has long served as the primary provider of AI models for Microsoft's products. [...] But with Claude Cowork offering much of the same functionality \u2014 the question is whether Microsoft's first-party offering comes with enough unique advantages or integration with trusted systems currently used by enterprises, to catch on.\n\n## Claude Cowork vs. Copilot Cowork: same DNA, different bets on how work gets done\n\nMicrosoft's announcement blog post explicitly states that Copilot Cowork integrates \"the technology behind Claude Cowork,\" and both products share a core premise: AI should plan and execute multi-step work, not just respond to prompts.\n\nBut the two products diverge sharply in where they operate, what they can reach, and who they're built for.",
+      "published_date": "Mon, 09 Mar 2026 15:58:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    },
+    {
+      "title": "OpenAI launches GPT-5.4 with native computer use mode, financial plugins for Microsoft Excel, Google Sheets - VentureBeat",
+      "url": "https://venturebeat.com/technology/openai-launches-gpt-5-4-with-native-computer-use-mode-financial-plugins-for",
+      "snippet": "|  |  |  |  |  |\n ---  --- \n| Model | Input | Output | Total Cost | Source |\n| Qwen 3 Turbo | $0.05 | $0.20 | $0.25 | Alibaba Cloud |\n| Qwen3.5-Flash | $0.10 | $0.40 | $0.50 | Alibaba Cloud |\n| deepseek-chat (V3.2-Exp) | $0.28 | $0.42 | $0.70 | DeepSeek |\n| deepseek-reasoner (V3.2-Exp) | $0.28 | $0.42 | $0.70 | DeepSeek |\n| Grok 4.1 Fast (reasoning) | $0.20 | $0.50 | $0.70 | xAI |\n| Grok 4.1 Fast (non-reasoning) | $0.20 | $0.50 | $0.70 | xAI |\n| MiniMax M2.5 | $0.15 | $1.20 | $1.35 | MiniMax |\n| Gemini 3.1 Flash-Lite | $0.25 | $1.50 | $1.75 | Google |\n| MiniMax M2.5-Lightning | $0.30 | $2.40 | $2.70 | MiniMax |\n| Gemini 3 Flash Preview | $0.50 | $3.00 | $3.50 | Google |\n| Kimi-k2.5 | $0.60 | $3.00 | $3.60 | Moonshot |\n| GLM-5 | $1.00 | $3.20 | $4.20 | Z.ai | [...] The company is also releasing a new suite of ChatGPT integrations allowing GPT-5.4 to be plugged directly into users' Microsoft Excel and Google Sheets spreadsheets and cells, enabling granular analysis and automated task completion that should speed up work across the enterprise, but may make fears of white collar layoffs even more pronounced on the heels of similar offerings from Anthropic's Claude and its new Cowork application.\n\nOpenAI says GPT-5.4 supports up to 1 million tokens of context in the API and Codex, enabling agents to plan, execute, and verify tasks across long horizons\u2014 however, it charges double the cost per 1 million tokens once the input exceeds 272,000 tokens.\n\n## Native computer use: a step toward autonomous workflows [...] ChatGPT Free users will also get a taste of GPT-5.4, but only when their queries are auto-routed to the model, according to an OpenAI spokesperson.\n\nThe big headlines on this release are efficiency, with OpenAI reporting that GPT-5.4 uses far fewer tokens (47% fewer on some tasks) than its predecessors, and, arguably even more impressively, a new \"native\" Computer Use mode available through the API and its Codex that lets GPT-5.4 navigate a users' computer like a human and work across applications.",
+      "published_date": "Thu, 05 Mar 2026 18:00:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    },
+    {
+      "title": "New MiniMax M2.7 proprietary AI model is 'self-evolving' and can perform 30-50% of reinforcement learning research workflow - VentureBeat",
+      "url": "https://venturebeat.com/technology/new-minimax-m2-7-proprietary-ai-model-is-self-evolving-and-can-perform-30-50",
+      "snippet": "However, with M2.7 being proprietary for now, it is a sign once again that Chinese AI startups \u2014 for much of the last year, the standard-bearers in the world of the open source AI frontier, making them appealing for enterprises globally due to low (or no) costs and customization \u2014 are shifting strategy and pursuing more proprietary frontier models like U.S. leaders like OpenAI, Google, and Anthropic have been doing for years.\n\nMiniMax becomes the second Chinese startup to release a proprietary cutting-edge LLM in recent months following z.ai with its GLM-5 Turbo, and rumors that Alibaba's Qwen team is also shifting to proprietary development in the wake of the departure of senior leadership and other researchers.\n\n## Technical achievement: The self-evolution loop [...] Plus-Highspeed: $40 per month for 4,500 requests per 5 hours.\n Max-Highspeed: $80 per month for 15,000 requests per 5 hours.\n Ultra-High-Speed: $150 per month for 30,000 requests per 5 hours.\n\nYearly Token Plan pricing: Yearly subscriptions provide significant discounts for long-term commitment:\n\n Standard Starter: $100 per year (saves 20 dollars).\n Standard Plus: $200 per year (saves 40 dollars).\n Standard Max: $500 per year (saves 100 dollars).\n High-Speed Plus: $400 per year (saves 80 dollars).\n High-Speed Max: $800 per year (saves 160 dollars).\n High-Speed Ultra: $1,500 per year (saves 300 dollars). [...] Additionally, the model supports the Model Context Protocol, allowing it to natively use tools like Web Search and Understand Image for multimodal reasoning. Developers using the Anthropic SDK can easily integrate M2.7 by modifying the ANTHROPIC\\_BASE\\_URL to point to the MiniMax endpoint.\n\nWhen using MiniMax as a provider in tools like OpenClaw, image understanding capabilities are automatically configured via the model's VLM API endpoint, requiring no extra setup from the user.\n\nWith its deep bench of integrations and its pioneering approach to recursive self-evolution, MiniMax M2.7 represents a significant step toward an AI-native future where models are as involved in their own progress as the humans who guide them.\n\n## Strategic implications for enterprise decision-makers",
+      "published_date": "Wed, 18 Mar 2026 18:47:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    },
+    {
+      "title": "Top 15 AI Startups Powering India\u2019s Self-Reliance Mission - Analytics India Magazine",
+      "url": "https://analyticsindiamag.com/ai-highlights/top-15-ai-startups-powering-indias-self-reliance-mission",
+      "snippet": "Continue Reading\n\nAI News\n\n# Karnataka Biotech Economy Crosses $39 Bn Fuelled by Biomanufacturing\n\nBioindustrial biotechnology emerged as the fastest-growing segment, reaching $11.46 billion in 2025.\n\nMerin Susan John\n\n5 min\n\nFollow:Preferred SourceGoogle NewsWhatsAppTelegram\n\n### Stay Ahead with AI Insights\n\nGet unlimited access to premium articles, exclusive analysis, and more.\n\nSubscribe Now\n\nExcellence in AI Journalism\n\nDownload on theApp StoreGet it onGoogle Play\n\nExplore Topics\n\nAI FeaturesGCCAI TrendsAI StartupsAI NewsAI HighlightsMagazineDeep Tech\n\nNavigation\n\n Home\n Latest\n Trending\n Authors\n Videos\n Print Editions\n Newsletters\n\nAIM Network\n\n AIM Research\n CDO Vision\n MachineCon\n AIM Council\n AdaSci\n\nMore\n\n PEMA Quadrant\n GCC AI\n TLC\n Best Firm\n AIM Media [...] About the Author\n\n### Mohit Pandey\n\nJournalist\n\nMohit writes about AI in simple, explainable, and often funny words. He's especially passionate about chatting with those building AI for Bharat, with the occasional detour into AGI.\n\n### Got a tip? Share confidential information with AIM.\n\nEditorial Standards|Reprints & Permissions\n\nExplore our newsletters\n\nBuild your routine with some of our top newsletters or view them all here.\n\n### Wake up informed\n\nMake sense of the day's AI news and breakthroughs with our morning briefing.\n\nWeeklyBelamySee the latest\n\n### Industry intelligence\n\nReceive a roundup of AI adoption stories by industry vertical, curated for professionals.\n\n3x WeeklySector6See the latest\n\nBy signing up, you agree to our Privacy Policy.\n\nContinue Reading\n\nAI News [...] # Top 15 AI Startups Powering India\u2019s Self-Reliance Mission\n\nFrom foundational models to applied platforms, domestic builders are creating an end-to-end AI ecosystem rooted in Indian data and needs.\n\nMohit Pandey\u00b7\n\n5 min\n\nFollow:Preferred SourceGoogle NewsWhatsAppTelegram\n\nKey Takeaways\n\n### What Actually Matters.\n\nHighlight India's shift towards AI self-reliance through deployment and foundational models.\n\nShowcase BharatGen's development of a multilingual AI model supporting 22 languages.\n\nLoading article content\u2026\n\nAdvertise with UsOur Events CalendarOur AI Trainings\n\nAbout the Author\n\n### Mohit Pandey\n\nJournalist",
+      "published_date": "Mon, 23 Feb 2026 11:30:00 GMT",
+      "source_type": "trusted",
+      "domain": "analyticsindiamag.com",
+      "priority": false
+    },
+    {
+      "title": "Google PM open-sources Always On Memory Agent, ditching vector databases for LLM-driven persistent memory - VentureBeat",
+      "url": "https://venturebeat.com/orchestration/google-pm-open-sources-always-on-memory-agent-ditching-vector-databases-for",
+      "snippet": "And while the repo appears to use multiple specialist agents internally, the materials do not clearly prove a larger claim about persistent memory shared across multiple independent agents.\n\nFor now, the repo reads as a compelling engineering template rather than a complete enterprise memory platform.\n\n## Why this matters now\n\nStill, the release lands at the right time. Enterprise AI teams are moving beyond single-turn assistants and into systems expected to remember preferences, preserve project context and operate across longer horizons.\n\nSaboo's open-source memory agent offers a concrete starting point for that next layer of infrastructure, and Flash-Lite gives the economics some credibility. [...] The project serves as a practical reference implementation for something many AI teams want but few have productionized cleanly: an agent system that can ingest information continuously, consolidate it in the background, and retrieve it later without relying on a conventional vector database.\n\nFor enterprise developers, the release matters less as a product launch than as a signal about where agent infrastructure is headed.\n\nThe repo packages a view of long-running autonomy that is increasingly attractive for support systems, research assistants, internal copilots and workflow automation. It also brings governance questions into sharper focus as soon as memory stops being session-bound.\n\n## What the repo appears to do \u2014 and what it does not clearly claim [...] All Posts\n\n# Google PM open-sources Always On Memory Agent, ditching vector databases for LLM-driven persistent memory\n\nCarl Franzen\n\nGoogle senior AI product manager Shubham Saboo has turned one of the thorniest problems in agent design into an open-source engineering exercise: persistent memory.\n\nThis week, he published an open-source \u201cAlways On Memory Agent\u201d on the official Google Cloud Platform Github page under a permissive MIT License, allowing for commercial usage.\n\nIt was built with Google's Agent Development Kit, or ADK introduced last Spring in 2025, and Gemini 3.1 Flash-Lite, a low-cost model Google introduced on March 3, 2026 as its fastest and most cost-efficient Gemini 3 series model.",
+      "published_date": "Fri, 06 Mar 2026 19:56:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    },
+    {
+      "title": "Anthropic's Claude Code Security finds 500+ vulnerabilities: how security leaders should respond - VentureBeat",
+      "url": "https://venturebeat.com/security/anthropic-claude-code-security-reasoning-vulnerability-hunting",
+      "snippet": "That speed advantage doesn't favor defenders by default. It favors whoever adopts it first. Security directors who move early set the terms.\n\n## Anthropic isn't alone. The pattern is repeating.\n\nSecurity researcher Sean Heelan used OpenAI's o3 model with no custom tooling and no agentic framework to discover CVE-2025-37899, a previously unknown use-after-free vulnerability in the Linux kernel's SMB implementation. The model analyzed over 12,000 lines of code and identified a race condition that traditional static analysis tools consistently missed because detecting it requires understanding concurrent thread interactions across connections.",
+      "published_date": "Mon, 23 Feb 2026 15:44:00 GMT",
+      "source_type": "trusted",
+      "domain": "venturebeat.com",
+      "priority": false
+    }
+  ]
+}

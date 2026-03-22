@@ -25,63 +25,48 @@ def summariser_agent(state: ResearchState) -> ResearchState:
     if not official_top and not trusted_top:
         return state
 
-    prompt = ChatPromptTemplate.from_template("""
-    Create a competitive intelligence research report on "{query}".
+    overview_prompt = ChatPromptTemplate.from_template("""
+    Create a competitive intelligence research overview on "{query}".
 
     CRITICAL RULES:
-    - First, write an 'executive_summary' (2-3 paragraphs) that synthesizes all the provided sources to answer the main "{query}".
-    - Second, write a 'conflict_and_consensus' section analyzing differences between official and trusted sources.
-    - Then, you MUST step through EVERY SINGLE article provided below, one by one.
-    - For EVERY article in the Official Sources list, create exactly ONE object in the `official_insights` array (Total: {num_official} objects).
-    - For EVERY article in the Trusted Sources list, create exactly ONE object in the `trusted_insights` array (Total: {num_trusted} objects).
-    - FATAL ERROR WARNING: DO NOT skip any articles. DO NOT merge articles. Even if articles seem similar, you MUST generate a separate insight for each one to match the exact counts provided above!
+    - Write an 'executive_summary' (2-3 paragraphs) synthesizing all sources to answer the main "{query}".
+    - Write a 'conflict_and_consensus' section analyzing differences between official and trusted sources.
 
-    Official Sources (generate one insight per article):
-    {official_articles_json}
+    Official Sources (Titles & Snippets only):
+    {official_snippets}
 
-    Trusted Sources (generate one insight per article):
-    {trusted_articles_json}
-
-    Each insight MUST:
-    - Have a clear, specific title (not generic).
-    - Have a detailed_summary that acts as a comprehensive brief of the article, capturing ALL the crucial facts, numbers, strategies, and competitive positioning so the user NEVER has to read the original article. It should be as detailed and expansive as possible.
-    - Have a reasoning that explains how the facts in this article answer the user's original query.
-    - Have a sentiment that classifies the article's stance (e.g., "Positive/Marketing", "Critical/Review", "Neutral").
-    - Extract key_metrics (list of strings, e.g., prices, growth, facts) and key_features (list of strings, e.g., product features).
-    - Use ONLY facts from the provided article content. Do NOT hallucinate.
-    - Include the exact citation_id from the article's JSON.
+    Trusted Sources (Titles & Snippets only):
+    {trusted_snippets}
 
     You MUST return a valid JSON object with this EXACT structure:
     {{
       "report_title": "string",
       "executive_summary": "string",
-      "conflict_and_consensus": "string",
-      "official_insights": [
-        {{
-          "title": "string",
-          "detailed_summary": "string",
-          "reasoning": "string",
-          "sentiment": "string",
-          "key_metrics": ["string"],
-          "key_features": ["string"],
-          "citation_id": integer
-        }}
-      ],
-      "trusted_insights": [
-        {{
-          "title": "string",
-          "detailed_summary": "string",
-          "reasoning": "string",
-          "sentiment": "string",
-          "key_metrics": ["string"],
-          "key_features": ["string"],
-          "citation_id": integer
-        }}
-      ]
+      "conflict_and_consensus": "string"
     }}
+    """)
 
-    REMEMBER: Number of official_insights MUST equal number of Official Source articles.
-    Number of trusted_insights MUST equal number of Trusted Source articles.
+    insight_prompt = ChatPromptTemplate.from_template("""
+    You are an elite competitive intelligence analyst. You are evaluating a single article about "{query}".
+    
+    Article Domain: {domain}
+    Article Title: {title}
+    
+    Full Text Content:
+    {content}
+    
+    Your job is to read this entire article and extract EVERY critical fact, strategy, number, and feature into an expansive summary.
+    Do not hallucinate. Do not write about other articles.
+    
+    You MUST return a valid JSON object with this EXACT structure:
+    {{
+      "title": "string (a clear, specific title for this insight)",
+      "detailed_summary": "string (a highly detailed, expansive summary covering all crucial facts, numbers, and competitive positioning so the user NEVER has to read the original article)",
+      "reasoning": "string (how the facts in this article answer the user's original query)",
+      "sentiment": "string (e.g., 'Positive/Marketing', 'Critical/Review', 'Neutral')",
+      "key_metrics": ["string"],
+      "key_features": ["string"]
+    }}
     """)
 
     from utils.json_utils import safe_json_extract
@@ -106,98 +91,73 @@ def summariser_agent(state: ResearchState) -> ResearchState:
         except Exception:
             return None
 
-    official_data = []
-    trusted_data = []
-
-    for article in official_top:
-        # Safe fallback index if article is somehow not in the combined list
-        try:
-            citation_id = all_articles.index(article) + 1
-        except ValueError:
-            citation_id = 1
-            
-        full_content = get_article_content(article.url) or article.snippet
-        official_data.append(
-            {
-                "citation_id": citation_id,
-                "title": article.title,
-                "content": full_content,
-                "domain": article.domain,
-            }
-        )
-
-    for article in trusted_top:
-        try:
-            citation_id = all_articles.index(article) + 1
-        except ValueError:
-            citation_id = 1
-            
-        full_content = get_article_content(article.url) or article.snippet
-        trusted_data.append(
-            {
-                "citation_id": citation_id,
-                "title": article.title,
-                "content": full_content,
-                "domain": article.domain,
-            }
-        )
-
-    chain = prompt | get_llm()
-    print(
-        f"   [Summariser Debug] Extracted {len(official_top)} Official, {len(trusted_top)} Trusted."
-    )
-    response = chain.invoke(
-        {
-            "query": original_query,
-            "official_articles_json": json.dumps(official_data),
-            "trusted_articles_json": json.dumps(trusted_data),
-            "num_official": len(official_top),
-            "num_trusted": len(trusted_top),
-        }
-    )
-    print(f"   [Summariser Debug] LLM Raw Response:\n{response.content}")
-
     try:
-        # Use safe_json_extract for robustness
-        data = safe_json_extract(response.content)
+        # 1. Generate Executive Overview
+        official_snippets_data = [{"title": a.title, "snippet": a.snippet} for a in official_top]
+        trusted_snippets_data = [{"title": a.title, "snippet": a.snippet} for a in trusted_top]
 
-        # Robust parsing for Qwen LLM hallucinations
-        report_title = data.get("report_title", f"Research Report: {original_query}")
-        executive_summary = data.get("executive_summary", "")
-        conflict_and_consensus = data.get("conflict_and_consensus", "")
+        chain_overview = overview_prompt | get_llm()
+        print("   [Summariser Debug] Generating Executive Overview...")
+        res_overview = chain_overview.invoke({
+            "query": original_query,
+            "official_snippets": json.dumps(official_snippets_data),
+            "trusted_snippets": json.dumps(trusted_snippets_data),
+        })
+        
+        overview_data = safe_json_extract(res_overview.content)
+        report_title = overview_data.get("report_title", f"Research Report: {original_query}")
+        executive_summary = overview_data.get("executive_summary", "")
+        conflict_and_consensus = overview_data.get("conflict_and_consensus", "")
 
-        official_insights = data.get("official_insights", [])
-        trusted_insights = data.get("trusted_insights", [])
+        # 2. Process Individual Articles
+        chain_insight = insight_prompt | get_llm()
+        official_insights = []
+        trusted_insights = []
+        
+        print(f"   [Summariser Debug] Processing {len(official_top)} Official Articles individually...")
+        for article in official_top:
+            try:
+                citation_id = all_articles.index(article) + 1
+            except ValueError:
+                citation_id = 1
+            
+            full_content = get_article_content(article.url) or article.snippet
+            res_insight = chain_insight.invoke({
+                "query": original_query,
+                "domain": article.domain,
+                "title": article.title,
+                "content": full_content
+            })
+            
+            insight_data = safe_json_extract(res_insight.content)
+            # Ensure safe fallback keys
+            if "title" not in insight_data: insight_data["title"] = article.title
+            if "detailed_summary" not in insight_data: insight_data["detailed_summary"] = "Summary missing."
+            insight_data["citation_id"] = citation_id
+            official_insights.append(insight_data)
+            print(f"      - Processed: {article.title[:40]}...")
 
-        # Fallback heuristic matching if keys were generated incorrectly
-        if not official_insights and official_top:
-            for k, v in data.items():
-                if "official" in k.lower() and isinstance(v, list):
-                    official_insights = v
-                    break
-
-        if not trusted_insights and trusted_top:
-            for k, v in data.items():
-                if "trusted" in k.lower() and isinstance(v, list):
-                    trusted_insights = v
-                    break
-            # Extreme fallback: assign lists containing 'insight' or 'inspection'
-            if not trusted_insights:
-                for k, v in data.items():
-                    if (
-                        "insight" in k.lower()
-                        and isinstance(v, list)
-                        and k != "official_insights"
-                    ):
-                        trusted_insights = v
-                        break
-                    elif (
-                        "inspection" in k.lower()
-                        and isinstance(v, list)
-                        and k != "official_insights"
-                    ):
-                        trusted_insights = v
-                        break
+        print(f"   [Summariser Debug] Processing {len(trusted_top)} Trusted Articles individually...")
+        for article in trusted_top:
+            try:
+                citation_id = all_articles.index(article) + 1
+            except ValueError:
+                citation_id = 1
+            
+            full_content = get_article_content(article.url) or article.snippet
+            res_insight = chain_insight.invoke({
+                "query": original_query,
+                "domain": article.domain,
+                "title": article.title,
+                "content": full_content
+            })
+            
+            insight_data = safe_json_extract(res_insight.content)
+            if "title" not in insight_data: insight_data["title"] = article.title
+            if "detailed_summary" not in insight_data: insight_data["detailed_summary"] = "Summary missing."
+            insight_data["citation_id"] = citation_id
+            trusted_insights.append(insight_data)
+            print(f"      - Processed: {article.title[:40]}...")
 
         valid_data = {
             "report_title": report_title,
