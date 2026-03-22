@@ -84,9 +84,6 @@ class ResearchState(TypedDict):
 
     # Control
     retry_counts: Dict[str, int]
-<<<<<<< Updated upstream
-    error: Optional[str]
-=======
     error: Optional[str]
     search_days_used: Optional[int]
 
@@ -115,5 +112,3 @@ class AnalyzerState(TypedDict):
     workflow_status: str
     progress_percentage: int
     error: Optional[str]
-
->>>>>>> Stashed changes
