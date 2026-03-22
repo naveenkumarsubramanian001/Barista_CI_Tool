@@ -1,6 +1,11 @@
 import os
 from dotenv import load_dotenv
+<<<<<<< Updated upstream
 from langchain_ollama import ChatOllama, OllamaEmbeddings
+=======
+from langchain_ollama import OllamaEmbeddings
+from langchain_groq import ChatGroq
+>>>>>>> Stashed changes
 
 load_dotenv()
 
@@ -9,11 +14,22 @@ MODEL_NAME = "qwen3:4b"  # Available on system
 TEMPERATURE = 0.1
 
 # --- LLM Instance ---
+<<<<<<< Updated upstream
 def get_llm():
     return ChatOllama(
         model=MODEL_NAME,
         temperature=TEMPERATURE,
         format="json", # Force JSON output if possible
+=======
+def get_llm(temperature=None):
+    if temperature is None:
+        temperature = TEMPERATURE
+    
+    MODEL_NAME = (os.getenv("GROQ_MODEL") or "llama-3.3-70b-versatile").strip()
+    return ChatGroq(
+        model=MODEL_NAME,
+        temperature=temperature,
+>>>>>>> Stashed changes
     )
 
 # --- Embedding Model ---

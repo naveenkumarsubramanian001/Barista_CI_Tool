@@ -84,4 +84,36 @@ class ResearchState(TypedDict):
 
     # Control
     retry_counts: Dict[str, int]
+<<<<<<< Updated upstream
     error: Optional[str]
+=======
+    error: Optional[str]
+    search_days_used: Optional[int]
+
+# --- Analyzer Workflow State ---
+
+class CompetitorProfile(BaseModel):
+    name: str = Field(..., description="Name of the competitor")
+    official_domain: str = Field(..., description="Official website domain of the competitor")
+    reason_for_inclusion: str = Field(..., description="Why this competitor was selected")
+
+class ProductProfile(BaseModel):
+    product_name: str = Field(..., description="Name of the user's product/company")
+    features: List[str] = Field(default_factory=list, description="Key features extracted")
+    value_proposition: str = Field(..., description="Core value prop")
+    target_audience: str = Field(..., description="Target audience or ICP")
+    market_positioning: str = Field(..., description="How it positions itself in the market")
+
+class AnalyzerState(TypedDict):
+    session_id: str
+    uploaded_text: str
+    product_profile: Optional[Dict]
+    discovered_competitors: List[Dict]
+    competitor_data: Dict[str, List[Dict]]
+    final_report: Optional[Dict]
+    logs: List[str]
+    workflow_status: str
+    progress_percentage: int
+    error: Optional[str]
+
+>>>>>>> Stashed changes
