@@ -31,3 +31,12 @@ def get_embedding_model():
 
 # --- API Keys ---
 TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+BING_SEARCH_API_KEY = os.getenv("BING_SEARCH_API_KEY", "").strip()
+SERPER_API_KEY = os.getenv("SERPER_API_KEY", "").strip()
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY", "").strip()
+GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "").strip()
+
+# --- Search Provider ---
+# Options: "tavily", "serper", "bing", "google"
+# Fallback: If the chosen provider has no API key, falls back automatically
+SEARCH_PROVIDER = os.getenv("SEARCH_PROVIDER", "tavily").strip().lower()

@@ -14,3 +14,5 @@ transformers
 typing
 langchain-groq
 tldextract
+scikit-fuzzy
+rich

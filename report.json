@@ -1,95 +1,238 @@
 {
-  "report_title": "OpenAI's ChatGPT and their new features",
-  "official_insights": [],
-  "trusted_insights": [
+  "report_title": "Samsung's One UI 8.5: A Comprehensive Analysis of New Features and Enhancements",
+  "executive_summary": "Samsung's One UI 8.5 is the latest iteration of the company's mobile operating system, offering a range of new features and enhancements [1], [2], [9]. The update introduces upgraded AI features, including improved photo editing and a more refined AI experience [1], [9]. Additionally, One UI 8.5 provides a refreshed design, advanced security and privacy solutions, and improved device connectivity [1], [4], [9]. With a focus on ease of use and next-level productivity, One UI 8.5 is set to revolutionize the Samsung Galaxy experience [4], [9]. The update is expected to bring significant visual changes, including a new design language and 3D-style app icons [10], [12].",
+  "key_findings": [
     {
-      "title": "Introducing Stargate UK - OpenAI",
-      "brief_summary": "OpenAI has introduced Stargate UK, a new initiative focused on enhancing AI safety and privacy. The article highlights recent developments including a teen safety initiative that prioritizes the protection of minors. OpenAI is collaborating with US CAISI and UK AISI to develop more secure AI systems, as reported in a Global Affairs update from September 12, 2025. Additionally, the company is conducting research on how people use ChatGPT, with findings released on September 15, 2025. The initiative also addresses teen safety, freedom, and privacy, emphasizing the need for significant protection for minors. OpenAI's commitment to safety is a central theme in these updates, reflecting their ongoing efforts to ensure responsible AI deployment. The article serves as part of OpenAI's broader strategy to enhance AI safety and responsible deployment.",
-      "citation_id": 2
+      "finding_title": "AI-Powered Features",
+      "finding_summary": "One UI 8.5 introduces upgraded AI features, including improved photo editing and a more refined AI experience [1], [9]. The update also includes a new feature called Now Nudge, which provides shortcuts to the next possible action without having to jump between apps [1]. Additionally, the AI Agent takes the burden off tedious tasks, helping users get things done faster [1].",
+      "source_ids": [
+        1,
+        9
+      ]
     },
     {
-      "title": "GPT-5.1: A smarter, more conversational ChatGPT - OpenAI",
-      "brief_summary": "OpenAI has released an updated version of ChatGPT, GPT-5.1, featuring enhanced conversational capabilities. Users can now fine-tune ChatGPT's response characteristics through personalization settings, including control over conciseness, warmth, scannability, and emoji usage. The model also proactively suggests updates to these preferences during conversations when the user requests a specific tone or style, eliminating the need to navigate settings. Additionally, OpenAI has refined the preset options for ChatGPT's response tone, adding three new personality options: Professional, Candid, and Quirky, while maintaining the existing Default, Friendly, and Efficient presets. These improvements aim to align with how people naturally interact with the model, making it easier to select a response style that feels uniquely appropriate. The new features allow users to adjust or remove any preferences at any time, providing greater flexibility. This update reflects OpenAI's ongoing commitment to making ChatGPT more intuitive and user-friendly.",
-      "citation_id": 5
+      "finding_title": "Design and User Interface",
+      "finding_summary": "One UI 8.5 provides a refreshed design, with a focus on ease of use and next-level productivity [4], [9]. The update includes a new design language, with rounded corners, pill-shaped icons, and bottom bars [10], [12]. The Quick Panel has been redesigned, allowing users to customize it with their favorite apps [1], [9].",
+      "source_ids": [
+        1,
+        4,
+        9,
+        10,
+        12
+      ]
     },
     {
-      "title": "Teen safety, freedom, and privacy - OpenAI",
-      "brief_summary": "OpenAI has published an article focused on teen safety, freedom, and privacy. The initiative emphasizes the need for significant protection for minors, particularly in the context of AI usage. OpenAI's approach includes prioritizing the safety of young users while ensuring they maintain appropriate levels of freedom and privacy in their digital interactions. The article highlights that these measures are essential given the increasing role of AI in children's lives. This update was published on September 16, 2025, as part of OpenAI's broader strategy to enhance AI safety. The company is committed to creating a secure environment for minors without compromising their rights or autonomy. The initiative reflects OpenAI's dedication to addressing the unique challenges of AI deployment in the context of youth.",
-      "citation_id": 6
+      "finding_title": "Device Connectivity and Sharing",
+      "finding_summary": "One UI 8.5 improves device connectivity, with new features such as Storage Share, which enables direct access to files from other Samsung devices [4], [9]. The update also includes enhancements to Quick Share, which recognizes people in photos and proactively suggests sending them directly to those contacts [4].",
+      "source_ids": [
+        4,
+        9
+      ]
+    },
+    {
+      "finding_title": "Security and Privacy",
+      "finding_summary": "One UI 8.5 provides advanced security and privacy solutions, including new safeguards against theft [9]. The update also includes enhancements to privacy, with a focus on protecting user data [1], [9].",
+      "source_ids": [
+        1,
+        9
+      ]
+    },
+    {
+      "finding_title": "Customization and Personalization",
+      "finding_summary": "One UI 8.5 offers improved customization options, including the ability to personalize the Quick Panel, Home screen, and Lock screen [1], [9]. Users can also customize the look and feel of their device, with a range of new themes and icon packs [10], [12].",
+      "source_ids": [
+        1,
+        9,
+        10,
+        12
+      ]
     }
   ],
+  "official_insights": [
+    {
+      "title": "One UI 8.5: A New Era of Mobile Innovation",
+      "brief_summary": "According to Samsung, One UI 8.5 is designed to provide a more intuitive and connected user experience [1]. The update includes a range of new features, including upgraded AI features, a refreshed design, and advanced security and privacy solutions [1], [2]. With a focus on ease of use and next-level productivity, One UI 8.5 is set to revolutionize the Samsung Galaxy experience [4].",
+      "citation_id": 1
+    },
+    {
+      "title": "Samsung Introduces the New Bixby in One UI 8.5",
+      "brief_summary": "Samsung has introduced the new Bixby in One UI 8.5, which provides a more refined AI experience [2]. The update includes a range of new features, including improved voice recognition and a more intuitive interface [2].",
+      "citation_id": 2
+    }
+  ],
+  "trusted_insights": [
+    {
+      "title": "One UI 8.5: A Game-Changer for Samsung Galaxy Devices",
+      "brief_summary": "According to Android Authority, One UI 8.5 is a significant update that brings a range of new features and enhancements to Samsung Galaxy devices [9]. The update includes a new design language, improved AI features, and advanced security and privacy solutions [9]. With a focus on ease of use and next-level productivity, One UI 8.5 is set to revolutionize the Samsung Galaxy experience [9].",
+      "citation_id": 9
+    },
+    {
+      "title": "One UI 8.5: A Closer Look at the New Features and Enhancements",
+      "brief_summary": "Android Authority has taken a closer look at the new features and enhancements in One UI 8.5, including the new design language, improved AI features, and advanced security and privacy solutions [10], [12]. The update is expected to bring significant visual changes, including a new design language and 3D-style app icons [10], [12].",
+      "citation_id": 10
+    }
+  ],
+  "cross_source_analysis": "A comparison of the official and trusted sources reveals that One UI 8.5 is a significant update that brings a range of new features and enhancements to Samsung Galaxy devices [1], [2], [9]. While the official sources provide a general overview of the update, the trusted sources offer a more in-depth look at the new features and enhancements [9], [10], [12]. The update is expected to bring significant visual changes, including a new design language and 3D-style app icons [10], [12]. However, some features, such as the new Bixby, are only mentioned in the official sources [2]. Overall, the cross-source analysis suggests that One UI 8.5 is a major update that is set to revolutionize the Samsung Galaxy experience [1], [4], [9].",
   "references": [
     {
-      "title": "Introducing GPT-5.2-Codex - OpenAI",
-      "url": "https://openai.com/index/introducing-gpt-5-2-codex/",
-      "snippet": "Switch to\n\n ChatGPT(opens in a new window)\n Sora(opens in a new window)\n API Platform(opens in a new window)\n\nOpenAI\n\nDecember 18, 2025\n\nProductRelease\n\n# Introducing GPT-5.2-Codex\n\nThe most advanced agentic coding model for professional software engineering and defensive cybersecurity.\n\n$ npm i -g @openai/codex\n\nToday we\u2019re releasing GPT\u20115.2-Codex, the most advanced agentic coding model yet for complex, real-world software engineering. GPT\u20115.2-Codex is a version of GPT\u20115.2\u2060 further optimized for agentic coding in Codex, including improvements on long-horizon work through context compaction, stronger performance on large code changes like refactors and migrations, improved performance in Windows environments, and significantly stronger cybersecurity capabilities. [...] ## Pushing the frontier on real-world software engineering\n\nGPT\u20115.2-Codex builds on GPT\u20115.2\u2019s strengths\u2060 in professional knowledge work and GPT\u20115.1-Codex-Max\u2060\u2019s frontier agentic coding and terminal-using capabilities. GPT\u20115.2-Codex is now better at long-context understanding, reliable tool calling, improved factuality, and native compaction, making it a more dependable partner for long running coding tasks, while remaining token-efficient in its reasoning. [...] We're releasing GPT\u20115.2-Codex today in all Codex surfaces for paid ChatGPT users, and working towards safely enabling access to GPT\u20115.2-Codex for API users in the coming weeks. In parallel, we\u2019re piloting invite-only trusted access to upcoming capabilities and more permissive models for vetted professionals and organizations focused on defensive cybersecurity work. We believe that this approach to deployment will balance accessibility with safety.\n\n## Pushing the frontier on real-world software engineering",
-      "published_date": "Thu, 18 Dec 2025 18:15:30 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": false
+      "title": "One UI | Samsung US",
+      "url": "https://www.samsung.com/us/apps/one-ui/",
+      "snippet": "One UI 8.5 comes with newly enhanced AI features, a refreshed design and advanced security and privacy solutions. Together, they help you get things done more efficiently, enjoy a more seamless and consistent experience and keep your private data better protected across your Galaxy devices.   \n    \n   \u2022 AI features: introduces upgraded Photo Assist for smarter photo editing, along with other features like Now Nudge for a more refined AI experience. Explore more AI features that make your life smarter and easier in One UI 8.5.   \n    \n   Go to Galaxy AI section   \n    \n   \u2022 Design: provides a wider view of the screen and a smoother user experience with redesigned navigation bars and menu.   \n    \n   Go to UI section [...] One UI is Samsung's innovative software, designed for intuitive and connected user experience on your Galaxy devices. With Galaxy AI deeply integrated, One UI 8.5 helps you get through your day quicker and more effortlessly by providing instant assistance.   \n    \n   \u2022 The upgraded One UI 8.5 now understands your usage patterns and your needs, delivering a more personalized and convenient experience.   \n    \n   \u2022 With advanced AI features like Now Nudge, you can easily access shortcuts to the next possible action without having to jump between apps.   \n    \n   \u2022 AI Agent takes the burden off your tedious tasks, helping you get things done faster. Simply tap or enter a short prompt to get what you need. [...] With One UI 8.5, you can make your device truly yours by personalizing the Quick Panel, Home screen and Lock screen. Enjoy easier access to everyday controls with a more balanced look.   \n    \n   \u2022 Quick Panel: Customize the Quick Panel by adding or deleting items to get a quick access to your favorite apps. You can also resize and rearrange the brightness and sound bars to optimize your viewing experience.   \n    \n   \u2022 Home screen & Lock screen: When you set the wallpaper, the image is automatically repositioned to align better with key apps and widgets on your screen, delivering a cleaner layout.\"\n ### What are the main AI features available in One UI 8.5?)",
+      "published_date": "2026-03-23",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": true,
+      "score": 0.8675
     },
     {
-      "title": "Introducing Stargate UK - OpenAI",
-      "url": "https://openai.com/index/introducing-stargate-uk/",
-      "snippet": "ChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Careers\n   Brand\n\nSupport\n   Help Center(opens in a new window)\n\nMore\n   News\n   Stories\n   Livestreams\n   Podcast\n\nTerms & Policies\n   Terms of Use\n   Privacy Policy\n   Other Policies [...] 2025\n   Partnerships\n\nAuthor\n\nOpenAI\n\nKeep reading\n\nView all\n\nImage 2: teen-safety-freedom-and-privacy > cover image\n\nTeen safety, freedom, and privacy Safety Sep 16, 2025\n\nImage 3: how-people-are-using-chatgpt > cover image\n\nHow people are using ChatGPT Research Sep 15, 2025\n\nImage 4: us-caisi-uk-aisi-ai-safety > cover image\n\nWorking with US CAISI and UK AISI to build more secure AI systems Global Affairs Sep 12, 2025\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n\nLatest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency [...] For Developers\n\nBack to main menu  \n\n       API Platform\n       API Pricing\n       Codex\n       Open Models\n       Community(opens in a new window)\n\n   ChatGPT\n\nBack to main menu  \n\n       Explore ChatGPT\n       Business\n       Enterprise\n       Education\n       Pricing\n       Download\n\n   Sora\n\nBack to main menu  \n\n       Sora Overview\n       Features\n       Pricing\n       Help Center(opens in a new window)\n       Sora Log in(opens in a new window)\n\n   Stories\n   Company\n\nBack to main menu  \n\n       About Us\n       Our Charter\n       Careers\n       Brand Guidelines\n\n   News\n\nLog in\n\nOpenAI\n\nSeptember 16, 2025\n\nGlobal AffairsCompany\n\nIntroducing Stargate UK",
-      "published_date": "Tue, 16 Sep 2025 21:31:51 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": true
+      "title": "Samsung Introduces the New Bixby in One UI 8.5",
+      "url": "https://news.samsung.com/us/samsung-introduces-new-bixby-one-ui-8-5",
+      "snippet": "Purchase per customer. If you return or cancel your purchase, the discount will be forfeit. [...] ##### Availability\n\nThe latest Bixby updates are available in One UI 8.5 in select markets including Germany, India, Korea, Poland, the UK and the U.S. with plans for broader expansion to follow.\n\nOn February 25, Samsung Electronics will host Unpacked in San Francisco. Join us as we unveil Samsung\u2019s newest Galaxy innovations \u2014 marking a new phase in the era of AI as intelligence becomes truly personal and adaptive. The event will be streamed live on Samsung.com, Samsung Newsroom, and Samsung\u2019s YouTube channel beginning at 10 a.m. PT/1 p.m. EST. [...] carrier or retailer promotions, discounts, or offers unless specifically provided for in the terms and conditions of such offers. Additional terms, including terms that govern the resolution of disputes, apply. Click here to learn more.",
+      "published_date": "2026-03-23",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": true,
+      "score": 0.8576
     },
     {
-      "title": "Piloting group chats in ChatGPT - OpenAI",
-      "url": "https://openai.com/index/group-chats-in-chatgpt/",
-      "snippet": "We\u2019ve also taught ChatGPT new social behaviors for group chats. It follows the flow of the conversation and decides when to respond and when to stay quiet based on the context of the group conversation. You can always mention \u201cChatGPT\u201d in a message when you want it to respond. We\u2019ve also given ChatGPT the ability to react to messages with emojis, and reference profile photos\u2014so it can, for example, use group members\u2019 photos when asked to create fun personalized images within that group conversation.\n\nYou can also manage the group settings\u2014tap on the participants\u2019 icons to name the group, add or remove people, or mute notifications. You can set custom instructions for how ChatGPT responds in each group chat, whether that\u2019s sharing more context or giving specific tone or personality. [...] Group chats work much like your usual ChatGPT conversations \u2014 only now, others can join in. Responses are powered by GPT\u20115.1 Auto, which chooses the best model to respond with based on the prompt and the models available to the user that ChatGPT is responding to based on their Free, Go, Plus or Pro plan. Search, image and file upload, image generation, and dictation are enabled. Rate limits only apply when ChatGPT responds\u2013not to messages between users in the group chat\u2013and responses from ChatGPT count toward the limit available of the person ChatGPT is responding to. For more details, you can visit the help center\u2060(opens in a new window). [...] Group chats also make collaboration at work or school easier. You can draft an outline or research a new topic together. Share articles, notes, and questions, and ChatGPT can help summarize and organize information.\n\nHow it works",
-      "published_date": "Fri, 14 Nov 2025 01:08:45 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": false
+      "title": "Samsung Begins Official Rollout of One UI 8 to Galaxy Devices",
+      "url": "https://news.samsung.com/global/samsung-begins-official-rollout-of-one-ui-8-to-galaxy-devices",
+      "snippet": "### UX Optimized for Multiple Form Factors\n\nOne UI 8 redefines versatility with UX optimized across the Galaxy product portfolio. Designed to adapt to the unique form factors of Galaxy smartphones and tablets, One UI 8 ensures seamless functionality while boosting productivity and efficiency. [...] Samsung Electronics today announced the official rollout of One UI 8 \u2014 introducing advanced multimodal AI capabilities, a UX optimized for different device form factors and personalized, proactive suggestions to make everyday life smarter and more convenient. Starting this week with the Galaxy S25 series, One UI 8 will also reach the Galaxy S24 series, Galaxy Z Fold6, Galaxy Z Flip6, Galaxy S24 FE and additional eligible models later this year.1\n\n### Personalized Suggestions With Advanced Security [...] ### Intelligent Multimodality: AI That Works the Way the User Does\n\nPowered by multimodal AI designed to deliver experiences tailored to user needs, One UI 8 transforms the way users interact with Galaxy devices. By combining visual, auditory and contextual intelligence, it makes everyday tasks intuitive and effortless.",
+      "published_date": "2026-03-23",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": false,
+      "score": 0.8473
     },
     {
-      "title": "Introducing GPT-5.2 - OpenAI",
-      "url": "https://openai.com/index/introducing-gpt-5-2/",
-      "snippet": "Switch to\n\n ChatGPT(opens in a new window)\n Sora(opens in a new window)\n API Platform(opens in a new window)\n\nOpenAI\n\nDecember 11, 2025\n\nProductResearch\n\n# Introducing GPT-5.2\n\nThe most advanced frontier model for professional work and long-running agents.\n\nWe are introducing GPT\u20115.2, the most capable model series yet for professional knowledge work.\n\nAlready, the average ChatGPT Enterprise user says\u2060 AI saves them 40\u201360 minutes a day, and heavy users say it saves them more than 10 hours a week. We designed GPT\u20115.2 to unlock even more economic value for people; it\u2019s better at creating spreadsheets, building presentations, writing code, perceiving images, understanding long contexts, using tools, and handling complex, multi-step projects. [...] Side-by-side comparisons show improved sophistication and formatting in spreadsheets and slides generated by GPT\u20115.2 Thinking:\n\nPrompt: Create a workforce planning model: headcount, hiring plan, attrition, and budget impact. Include engineering, marketing, legal, and sales departments.\n\nTo use the new spreadsheet and presentation capabilities in ChatGPT, you must be on a paid plan (Plus, Pro, Business, Enterprise) and select either GPT\u20115.2 Thinking or Pro. Complex generations can take many minutes to produce.\n\n#### Coding [...] In ChatGPT, GPT\u20115.2 Instant, Thinking, and Pro will begin rolling out today, starting with paid plans. In the API, they are available now to all developers.\n\nOverall, GPT\u20115.2 brings significant improvements in general intelligence, long-context understanding, agentic tool-calling, and vision\u2014making it better at executing complex, real-world tasks end-to-end than any previous model.\n\n## Model performance\n\n#### Economically valuable tasks",
-      "published_date": "Thu, 11 Dec 2025 18:22:09 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": false
+      "title": "Samsung Launches One UI 8.5 Beta for Next-Level Ease of Use",
+      "url": "https://news.samsung.com/us/samsung-launches-one-ui-8-5-beta-next-level-ease-use",
+      "snippet": "###### 2 Available on devices with One UI 2.1 or above, with Android Q OS version or higher installed. Bluetooth Low Energy and Wi-Fi connection are both required for Quick Share. Actual speed may vary depending on device, network condition and user environment. Screen image simulated for illustrative purposes. Actual UX/UI may vary.\n\n###### 3 Only available on Galaxy S25 series devices, including Galaxy S25, S25+, and S25 Ultra. Screen image simulated for illustrative purposes. Actual UX/UI may vary [...] Samsung Global Newsroom Samsung Global Newsroom\n\n Product\n  + Mobile\n  + Home Entertainment\n  + Home Appliances\n  + Computing\n  + Display\n  + Semiconductor\n  + Innovation\n  + See All Product News\n Corporate\n  + Communities\n  + Workforce\n  + Sustainability\n  + Care\n  + Smart Living\n  + Education\n  + See All Corporate News\n Press Resources\n  + Media Contacts\n  + Media Library\n About\n  + Overview\n  + Executive Bios\n  + Public Affairs\n\nMobile\n\n# Samsung Launches One UI 8.5 Beta for Next-Level Ease of Use\n\nLatest version of One UI brings enhanced productivity, privacy, and performance across the Galaxy ecosystem\n\n12/8/2025 [...] Sharing is smoother too, thanks to enhancements to Quick Share2 which now recognizes people in photos and proactively suggests sending them directly to those contacts.\n\nGalaxy AI \n\n##### How does One UI 8.5 improve device connectivity?\n\nWith Storage share new cross-device features make managing devices easier, whether users need to manage files, share their network, or communicate with nearby devices. Audio Broadcast3 enables effortless communication with LE Audio-supported devices nearby using Auracast. In addition to audio from media sources, users can now broadcast their voice using their Galaxy smartphone\u2019s built-in microphone \u2014 ideal for group situations like tours or events.",
+      "published_date": "2026-03-23",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": true,
+      "score": 0.8433
     },
     {
-      "title": "GPT-5.1: A smarter, more conversational ChatGPT - OpenAI",
-      "url": "https://openai.com/index/gpt-5-1/",
-      "snippet": "Beyond these presets, for users who want more granular control over how ChatGPT responds, we\u2019re also experimenting with the ability to tune ChatGPT\u2019s characteristics directly from personalization settings\u2014including how concise, warm, or scannable its responses are, and how frequently it uses emojis. ChatGPT can also proactively offer to update these preferences during conversations when it notices you asking for a certain tone or style, without requiring you to navigate into settings. You can adjust or remove any of these preferences at any time. [...] Earlier this year, we added preset options to tailor the tone of how ChatGPT responds. Today, we\u2019re refining those options to better reflect the most common ways people use ChatGPT. Default, Friendly(formerly Listener), and Efficient (formerly Robot) remain (with updates), and we\u2019re adding Professional, Candid, and Quirky. These options are designed to align with what we\u2019ve learned about how people naturally steer the model, making it quick and intuitive to choose a personality that feels uniquely right. [...] Our Research\n   Research Index\n   Research Overview\n   Research Residency\n   OpenAI for Science\n\nLatest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales",
-      "published_date": "Wed, 12 Nov 2025 19:05:30 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": true
+      "title": "Samsung Launches One UI 8.5 Beta for Next-Level Ease of Use",
+      "url": "https://news.samsung.com/global/samsung-launches-one-ui-8-5-beta-for-next-level-ease-of-use",
+      "snippet": "Latest version of One UI brings enhanced productivity, privacy and performance across the Galaxy ecosystem.",
+      "published_date": "Mon, 08 Dec 2025 00:00:00 GMT",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": false,
+      "score": 0.8033
     },
     {
-      "title": "Teen safety, freedom, and privacy - OpenAI",
-      "url": "https://openai.com/index/teen-safety-freedom-and-privacy/",
-      "snippet": "ChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Careers\n   Brand\n\nSupport\n   Help Center(opens in a new window)\n\nMore\n   News\n   Stories\n   Livestreams\n   Podcast\n\nTerms & Policies\n   Terms of Use\n   Privacy Policy\n   Other Policies [...] The third principle is about protecting teens. We prioritize safety ahead of privacy and freedom for teens; this is a new and powerful technology, and we believe minors need significant protection.\n\nFirst, we have to separate users who are under 18 from those who aren\u2019t (ChatGPT is intended for people 13 and up). We\u2019re building an age-prediction system to estimate age based on how people use ChatGPT. If there is doubt, we\u2019ll play it safe and default to the under-18 experience. In some cases or countries we may also ask for an ID; we know this is a privacy compromise for adults but believe it is a worthy tradeoff. [...] 2025\n   ChatGPT\n\nAuthor\n\nSam Altman\n\nKeep reading\n\nView all\n\nImage 2: building-towards-age-prediction > cover image\n\nBuilding towards age prediction Safety Sep 16, 2025\n\nImage 3: Codex System Card 1x1\n\nAddendum to GPT-5 system card: GPT-5-Codex Safety Sep 15, 2025\n\nImage 4: us-caisi-uk-aisi-ai-safety > cover image\n\nWorking with US CAISI and UK AISI to build more secure AI systems Global Affairs Sep 12, 2025\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n\nLatest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency",
-      "published_date": "Tue, 16 Sep 2025 13:06:24 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": true
+      "title": "One UI Software Update",
+      "url": "https://www.samsung.com/in/support/mobile-devices/one-ui-software-update/",
+      "snippet": "Discover the latest software update for the UI 8 model, including the detailed upgrade schedule and new features. Stay informed about the",
+      "published_date": "Mon, 09 Mar 2026 04:20:30 GMT",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": false,
+      "score": 0.7768
     },
     {
-      "title": "Scaling AI for everyone - OpenAI",
-      "url": "https://openai.com/index/scaling-ai-for-everyone/",
-      "snippet": "ChatGPT is where people start with AI, with more than 900M weekly active users, and we now have more than 50 million consumer subscribers.. Subscriber momentum accelerated meaningfully to start the year, with January and February on track to be the largest months for new subscribers in our history. People use ChatGPT to learn, write, plan, and build. As usage scales, the product improves in ways people feel immediately: faster responses, higher reliability, stronger safety, and more consistent performance. [...] Image 3: Amazon > Card\n\nOpenAI and Amazon announce strategic partnership Company Feb 27, 2026\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n   OpenAI for Science\n   Economic Research\n\nLatest Advancements\n   GPT-5\n   Codex\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window) [...] You can see that scale in our products. Codex brings the power of a top engineer to anyone who wants to build software. Weekly Codex users have more than tripled since the start of the year to 1.6M. More people are now creating, automating, and shipping software that once required a full engineering team.\n\nMore than 9 million paying business users rely on ChatGPT for work, and startups, enterprises, and governments are building on the OpenAI platform to transform how their products and services are designed, delivered, and run. Teams start with individual productivity and move quickly to deployment across engineering, support, finance, sales, and operations. Our Frontier platform helps enterprises build, deploy, and manage AI coworkers.",
-      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
-      "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": false
+      "title": "Galaxy S26 Ultra",
+      "url": "https://www.samsung.com/us/smartphones/galaxy-s26-ultra/",
+      "snippet": "When everything just works, you stay in the moment. Galaxy S26 Ultra anticipates what you need next, empowers your creativity, delivers powerful performance",
+      "published_date": "Mon, 02 Mar 2026 04:20:30 GMT",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": false,
+      "score": 0.585
     },
     {
-      "title": "Strengthening ChatGPT\u2019s responses in sensitive conversations - OpenAI",
-      "url": "https://openai.com/index/strengthening-chatgpt-responses-in-sensitive-conversations/",
-      "snippet": "We\u2019ve continued improving GPT\u20115\u2019s reliability in long conversations. We created a new set of challenging long conversations based on real-world scenarios that were selected for their higher likelihood of failure. We estimate that our latest models maintained over 95% reliability in longer conversations, improving in a particularly challenging setting we\u2019ve mentioned before\u2060. [...] On a model evaluation consisting of more than 1,000 challenging mental health-related conversations, our new automated evaluations score the new GPT\u20115 model at 92% compliant with our desired behaviors under our taxonomies, compared to 27% for the previous GPT\u20115 model. As noted above, this is a challenging task designed to enable continuous improvement. [...] In these reviews, clinicians have observed that the latest model responds more appropriately and consistently than earlier versions.\n\nAs part of this work, psychiatrists and psychologists reviewed more than 1,800 model responses involving serious mental health situations and compared responses from the new GPT\u20115 chat model to previous models. These experts found that the new model was substantially improved compared to GPT\u20114o, with a 39-52% decrease in undesired responses across all categories. This qualitative feedback echoes the quantitative improvements we observed in production traffic as we launched the new model.",
-      "published_date": "Mon, 27 Oct 2025 17:03:10 GMT",
+      "title": "Samsung Galaxy S26 Ultra Awarded \u2018Best in Show\u2019 at the Global Mobile Awards at Mobile World Congress 2026",
+      "url": "https://news.samsung.com/uk/samsung-galaxy-s26-ultra-awarded-best-in-show-at-the-global-mobile-awards-at-mobile-world-congress-2026",
+      "snippet": "Samsung Galaxy S26 Ultra secures top honour for groundbreaking and impactful mobile technology.",
+      "published_date": "Mon, 09 Mar 2026 04:20:30 GMT",
+      "source_type": "official",
+      "domain": "samsung.com",
+      "priority": false,
+      "score": 0.57
+    },
+    {
+      "title": "Breaking: Samsung kicks off One UI 8.5 beta program for Galaxy S25 series - Android Authority",
+      "url": "https://www.androidauthority.com/one-ui-8-5-beta-program-rollout-features-availability-eligible-devices-3623009/",
+      "snippet": "New Galaxy AI features, including improved image generation tools.\n Better cross-device connectivity, like storage sharing between Samsung devices and faster Smart View access.\n Enhanced Auracast features that make it easier to listen to and broadcast sound through the new Audio broadcast menu in Settings.\n Battery and performance upgrades, including redesigned power management controls.\n Enhanced customization, with more control over the Quick panel, lock screen, widgets, and icons.\n Enhancements to privacy and security, including new safeguards against theft.\n Accessibility improvements, such as wider support for hearing devices and new control options. [...] You can also expect a significant visual redesign in One UI 8.5, including transparency elements and refreshed 3D-style app icons and UI components. Check out the full official One UI 8.5 beta changelog in the screenshots we\u2019ve captured below:\n\nIn its announcement post, Samsung highlights the updated Photo Assist feature, which allows users to continuously generate new images without needing to save each iteration, as they can select their favorites later on. Samsung is also highlighting the Storage Share feature, which enables direct access to files from other Samsung devices, including TVs, within the My Files app. [...] Today\u2019s One UI 8.5 beta program rollout comes just days after a major changelog leak revealed all the new and upcoming features of the update. We can now confirm that the leaked changelog was mostly accurate. It also mentioned some Bixby improvements, but we\u2019re not seeing them in the official changelog pasted below.\n\nThe software introduces a substantial visual refresh, new AI-powered tools, deeper connectivity capabilities, and improved customization options. Since the update is based on Android 16 QPR2, it\u2019s also expected to bring major new Android features to Galaxy devices.\n\n## What to expect in One UI 8.5\n\nSamsung is bringing the following new features with the latest One UI 8.5 update:",
+      "published_date": "Mon, 08 Dec 2025 10:33:34 GMT",
       "source_type": "trusted",
-      "domain": "openai.com",
-      "priority": false
+      "domain": "androidauthority.com",
+      "priority": true,
+      "score": 0.8175
+    },
+    {
+      "title": "New Samsung One UI 8.5 leak hints at a bigger redesign than we first thought - Android Authority",
+      "url": "https://www.androidauthority.com/samsung-one-ui-8-5-redesign-system-app-3622468/",
+      "snippet": "> Great News!\n>\n> One UI 8.5: Calculator app gets an update to v12.5.10.18.\n>\n> What\u2019s new:  \n>  \u2022 Refreshed UI  \n>  \u2022 New UI effects  \n>  \u2022 New 3D app icon\n>\n> Repost pic.twitter.com/OZ1X97m6bK\n>\n> \u2014 Tarun Vats (@tarunvats33) December 4, 2025\n\nThe selected button in the Calculator app is also highlighted in a bluish-green gradient, while the app now has a new fluid animation to accommodate the numbers or text being selected. In addition, the Calculator\u2019s icon also appears to have undergone a refresh and now looks more volumetric and three-dimensional. However, these changes are much less prominent when viewed with a dark theme.\n\nHere\u2019s a detailed comparison between different screens. [...] Besides being painted in more colors, the timer and the stopwatch sections of the Clock app now show more detailed graphics with accents around the clock dial. Another slight change comes in the form of the boxes now allocated to the different time zones in the world clock, which previously only appeared as text.\n\nIn addition to these changes, Samsung might also bring a bigger collection of backgrounds for the Samsung Internet app, as Ice Universe highlights in a separate Weibo post. Meanwhile, it is also expected to undergo some visual upgrades, including the repositioning of the address bar to somewhere near the center of the page, and also adding a shadow underneath it for similar 3D effects.\n\nSamsungSamsung One UI [...] Here\u2019s a detailed comparison between different screens.\n\nApart from the visual changes, the Calculator app in One UI 8.5 will also access the phone\u2019s clipboard, allowing it to suggest numbers or formulas from copied text.\n\nSimultaneously, Samsung is bringing similar changes to the Clock app, as highlighted by leaker Ice Universe on X. Here, the 3D-fication is less prominent compared to the Calculator. Instead of relying on more shadows, Samsung appears to be using more vibrant colors across the board compared to the existing One UI 8 interface.",
+      "published_date": "Fri, 05 Dec 2025 09:46:08 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": true,
+      "score": 0.7933
+    },
+    {
+      "title": "Samsung's One UI 8.5 update makes quick settings pop with cleaner, glassier design - Android Authority",
+      "url": "https://www.androidauthority.com/samsung-one-ui-8-5-quick-settings-refresh-3611574/",
+      "snippet": "Samsung\u2019s upcoming One UI 8.5 software for Galaxy smartphones and tablets is set to bring several significant design changes over the current UI. One of these is a refreshed Quick Settings panel, which is expected to become more dynamic and customizable with this future update. Although One UI 8.5 is likely to arrive alongside the Galaxy S26 series \u2014 and the beta isn\u2019t coming for the whole of November either, plenty of leaks have given us an overview of these design changes. [...] ### Search results for\n\nAll search results\n\nBest daily deals\n\nAffiliate links on Android Authority may earn us a commission. Learn more.\n\nMobile\n\n# Samsung's One UI 8.5 update makes quick settings pop with cleaner, glassier design\n\nBut not as iOS-esque as some of the other One UI 8.5 features.\n\nBy\n\n\u2022\n\n12 hours ago\n\n\u2022\n\n\u2022\n\nSammobile\n\nTL;DR\n\n Samsung appears to have further reworked the Quick Settings panel in the latest One UI 8.5 build.\n The leak shows dark outlines outside Quick Settings tiles along with a subtle, glass-like interface.\n This adds to the list of features seemingly inspired by Apple\u2019s latest design changes in iOS 26, though it\u2019s not entirely the same. [...] While a revamped Quick Settings panel has already been spotted in previously leaked builds of One UI 8.5, the latest leak gives us a better look at additional options it could bring. Tipster Tarun Vats shared a screenshot of the updated panel on X, showing that quick settings tiles for various shortcuts now have a thin outline. This is predominantly visible when the shortcut is disabled.\n\nWhile it\u2019s a subtle touch, the outline also visually separates the tile from the background. Additionally, it should be slightly easier on the eyes, especially when you\u2019re haphazardly searching for the right one.\n\nDon\u2019t want to miss the best from Android Authority?",
+      "published_date": "Thu, 30 Oct 2025 08:29:47 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": false,
+      "score": 0.7933
+    },
+    {
+      "title": "This is our clearest look yet at Samsung's big One UI makeover coming to Galaxy phones - Android Authority",
+      "url": "https://www.androidauthority.com/one-ui-8-5-hands-on-3601412/",
+      "snippet": "Samsung\u2019s next major software update \u2014 One UI 8.5 \u2014 is starting to take shape, and we can now see how it\u2019s coming together thanks to a new hands-on video posted by folks over at Sammobile. While we\u2019ve also leaked several upcoming One UI 8.5 features exclusively, like the new Privacy Display, NFC-based Quick Share, Automatic Call Screening, and more, and this hands-on doesn\u2019t show any of them, it gives us our clearest look yet at some big UI changes Galaxy users can expect from the update when it arrives.\n\nDon\u2019t want to miss the best from Android Authority?\n\n Set us as a favorite source in Google Discover to support us and make sure you never miss our latest exclusive reports, expert analysis, and much more. You can also set us as a preferred source in Google Search \u2014 find out more here. [...] By\n\n\u2022\n\n14 hours ago\n\n\u2022\n\n\u2022\n\nSammobile\n\nTL;DR\n\n A leaked One UI 8.5 build on the Galaxy S25 Ultra shows Samsung\u2019s big design refresh, which includes rounded corners, pill-shaped icons, and bottom bars.\n Sammobile has showcased the update in a hands-on video, giving us a better look at features like the fully customizable quick settings panel, Direct Voicemail in the Phone app, and new tweaks in Gallery, My Files, and Camera.\n More features are expected before launch, with a stable rollout most likely coming alongside the Galaxy S26 series. [...] While this early build doesn\u2019t represent the final software, and as we said, it doesn\u2019t showcase a number of new features we\u2019re expecting to see in One UI 8.5, it gives us a good preview of where the software is headed. Samsung seems to be unifying the look and feel of its apps with a cleaner, more modern visual language, reminiscent of Google\u2019s Material 3 Expressive refresh and even some iOS 26 influences. We expect to see more features added as the update develops.\n\nSamsungSamsung One UI\n\nThank you for being part of our community. Read our Comment Policy before posting.",
+      "published_date": "Fri, 26 Sep 2025 04:33:12 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": true,
+      "score": 0.7933
+    },
+    {
+      "title": "Fifth One UI 8.5 beta is now out with a new Bixby - GSMArena.com news - GSMArena.com",
+      "url": "https://www.gsmarena.com/fifth_one_ui_85_beta_is_now_out_with_a_new_bixby-news-71633.php",
+      "snippet": "Samsung is now putting the finishing touches on One UI 8.5, which is expected to launch alongside the Galaxy S26 family on February 25. After the Galaxy S26, S26+, and S26 Ultra get released, One UI 8.5 will roll out to their predecessors as well.\n\nSource\n\n Add as a preferred source on Google \n\nRelated articles\n\n Samsung Galaxy S26 Ultra's headline new display feature confirmed by One UI 8.5\n Samsung's wide Galaxy Z Fold spotted in One UI 9\n Samsung Galaxy Watch4's One UI 8 Watch update rollout expands to more countries\n Second One UI 8.5 beta is now rolling out as the first build expands to more countries\n\n Read all comments\n Post your comment\n\nTotal reader comments: 3\n\nRecommended [...] Tip us   2.0m   150k   RSS   EV   Merch   Log in  \nI forgot my password  Sign up\n\n Home\n News\n Reviews\n Videos\n Featured\n Phone Finder\n Deals\n MerchNew\n Coverage\n Contact\n\nADVERTISEMENT\n\n# Fifth One UI 8.5 beta is now out with a new Bixby\n\n Post your comment\n Comments (3)\n\nVlad  19 February 2026\n\nSamsung Android Beta\n\nEarlier this month, Samsung released the fourth beta of One UI 8.5 for the Galaxy S25 family, and today the fifth beta is out to those who enrolled their devices in the beta program. The new firmware ends in ZZAN and includes the February 5, 2026 security patch level.\n\nIt also comes with an updated version of Bixby. The rollout is currently taking place in the US, UK, India, Germany, and Korea. The new build is about 546-553MB in size. [...] Total reader comments: 3\n\nRecommended\n\n Samsung advertises the Galaxy S26 Ultra's low-light camera performance with an AI video\n NordVPN offers up to 77% off + 3 free months\n Samsung Galaxy S26 and Galaxy S26+: what to expect\n We are on TikTok, follow us for exclusive content\n\nADVERTISEMENT\n\nHome News Reviews Compare Coverage Glossary FAQ RSS Youtube Instagram TikTok Facebook Twitter\n\n\u00a9 2000-2026 GSMArena.com Mobile version Android app Tools Contact us Merch store Privacy Terms of use",
+      "published_date": "Thu, 19 Feb 2026 19:01:02 GMT",
+      "source_type": "trusted",
+      "domain": "gsmarena.com",
+      "priority": false,
+      "score": 0.7933
+    },
+    {
+      "title": "Samsung's One UI 8.5 update is an even bigger deal than you thought - Android Authority",
+      "url": "https://www.androidauthority.com/one-ui-8-5-android-16-qpr2-3603597/",
+      "snippet": "We\u2019re still over 3 months away from the expected unveiling of the Samsung Galaxy S26 series, but we already know many of its new software tricks thanks to a trove of One UI 8.5 leaks. Leaked builds of the software have surfaced, giving us a rare opportunity to see what Samsung is developing for its next major release.\n\nAs its name suggests, One UI 8.5 will be based on this year\u2019s Android 16 release, not the yet-to-be-released Android 17. However, it will differ from its predecessor. While One UI 8 was based on the initial stable release of Android 16, One UI 8.5 will be built upon the second quarterly platform release, Android 16 QPR2. [...] That\u2019s why Samsung basing its One UI 8.5 release on Android 16 QPR2 is such a big deal. We haven\u2019t seen the company \u2014 or any other OEM for that matter \u2014 incorporate changes from a quarterly Android release since the limited Android 12L release in early 2022. And considering Samsung has embraced Google\u2019s Trunk Stable model to speed up software updates, this may be just the beginning. Moving forward, Samsung could continue to match Google\u2019s release cadence, allowing users and developers to get new Android features on Galaxy devices much sooner.\n\nDon\u2019t want to miss the best from Android Authority? [...] \u2022\n\n\u2022\n\nMishaal Rahman / Android Authority\n\nTL;DR\n\n Leaked builds show Samsung\u2019s next One UI 8.5 update, debuting with the Galaxy S26, will be based on Android 16\u2019s second quarterly release (QPR2).\n This is significant because most device makers skip quarterly Android updates, delaying new features until the next major annual version is released.\n By adopting QPR2, Samsung can bring new Android platform features to Galaxy devices much faster than before, matching Google\u2019s own release cadence.",
+      "published_date": "Fri, 03 Oct 2025 11:34:46 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": false,
+      "score": 0.635
+    },
+    {
+      "title": "The One UI 8.5 beta turned my Samsung phone into an iPhone - Android Authority",
+      "url": "https://www.androidauthority.com/one-ui-8-5-turned-my-samsung-phone-into-iphone-3623645/",
+      "snippet": "However, it\u2019s also true that Samsung going to such lengths to copy iOS 26 is a bad look. Samsung is far from the only Android OEM to tweak its software this year to be more iOS-like, but it stings a little more given Samsung\u2019s size and scale, plus its abandonment of the original design elements that still existed in One UI.\n\nOne UI had a clear-cut design identity when it debuted in 2018, and while it stayed that way for a while, Samsung has chipped away at it here and there with updates over the years. One UI 8.5 feels like the largest dose of iOS-ification we\u2019ve seen from Samsung at once, and it\u2019s clear Samsung doesn\u2019t intend to change this strategy anytime soon. [...] That feeling is even more prevalent in some of Samsung\u2019s first-party applications\u2014 specifically the Clock, Gallery, and Phone apps. All of these are redesigned in One UI 8.5, with a new bottom navigation bar that looks like it was ripped straight from iOS 26. The floating bar design is functionally sound and doesn\u2019t really change how you use any of these apps, but that almost makes it worse.\n\nSamsung may not admit it, but it\u2019s pretty evident that the only reason these apps have this new navigation bar is that the iPhone does. And it would be naive to think that more Samsung apps won\u2019t adopt this new UI in the weeks/months ahead. [...] And the iOS 26 inspiration doesn\u2019t end there. The search bar in the app drawer is now a smaller pill shape, akin to the iOS 26-like navigation bar in the apps mentioned above. The back arrow in the Settings app is now a floating circle, just like in iOS 26. Samsung even went so far as to add a glow effect to the Calculator app\u2019s buttons, mimicking the Liquid Glass design of the iOS 26 Calculator app.\n\n## Samsung is losing its software design identity\n\nDo these iOS inspirations make One UI 8.5 a bad piece of software? Do they ruin what\u2019s an otherwise solid update? No, and I don\u2019t think anyone would suggest that.",
+      "published_date": "Wed, 10 Dec 2025 10:30:50 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": false,
+      "score": 0.635
+    },
+    {
+      "title": "3 reasons you should try Home Up's latest upgrades on your Samsung Galaxy - Android Authority",
+      "url": "https://www.androidauthority.com/3-new-home-up-85-3635525/",
+      "snippet": "Don\u2019t want to miss the best from Android Authority?\n\n Set us as a favorite source in Google Discover to never miss our latest exclusive reports, expert analysis, and much more.\n You can also set us as a preferred source in Google Search by clicking the button below.\n\nOne UI 8.5 is already one of my favorite versions of Samsung\u2019s Android skin, and the updated Good Lock modules are only making me love it even more. What about you? Are you looking forward to trying out the new features from One UI 8.5 and Good Lock? Let us know in the comments.\n\nGood LockSamsungSamsung One UI\n\nThank you for being part of our community. Read our Comment Policy before posting. [...] Hadlee Simons / Android Authority\n\nWhen Samsung releases new versions of One UI, it usually breaks some of the Good Lock modules I use every day. The One UI 8.5 beta is no exception \u2014 several Good Lock modules have been incompatible since the beta started, including Home Up. Home Up is a module that lets you tweak everything from your home screen icons to the overview menu. Samsung recently updated Home Up, and it does more than make it compatible with the latest version of One UI \u2014 it adds new features that have made my favorite Good Lock module better than ever.\n\n### Do you use Home Up?\n\n727 votes\n\n## Widget resize",
+      "published_date": "Sun, 08 Feb 2026 10:00:21 GMT",
+      "source_type": "trusted",
+      "domain": "androidauthority.com",
+      "priority": false,
+      "score": 0.635
     }
   ]
 }

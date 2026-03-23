@@ -95,19 +95,24 @@ async def search_agent(state: ResearchState) -> ResearchState:
         print(f"   - {source_type.capitalize()} search completed. Collected {len(all_articles)} unique articles.")
         return all_articles
         
-    # 1. Execute parallel searches for Official Domains
-    official_articles = []
-    if company_domains:
+    # Run official + trusted searches CONCURRENTLY for speed
+    async def search_official():
+        if not company_domains:
+            return []
         tasks_official = [perform_single_search(q, company_domains, search_days, "official") for q in subqueries[:5]]
         search_results_official = await asyncio.gather(*tasks_official)
-        official_articles = process_results(search_results_official, "official")
-        
-    # 2. Execute parallel searches for Trusted Domains
-    trusted_articles = []
-    if trusted_domains:
+        return process_results(search_results_official, "official")
+    
+    async def search_trusted():
+        if not trusted_domains:
+            return []
         tasks_trusted = [perform_single_search(q, trusted_domains, search_days, "trusted") for q in subqueries[:5]]
         search_results_trusted = await asyncio.gather(*tasks_trusted)
-        trusted_articles = process_results(search_results_trusted, "trusted")
+        return process_results(search_results_trusted, "trusted")
+    
+    official_articles, trusted_articles = await asyncio.gather(
+        search_official(), search_trusted()
+    )
             
     if not official_articles and not trusted_articles:
         print("⚠️ No articles passed the filters for either official or trusted pipelines.")

@@ -38,6 +38,7 @@ class Article(BaseModel):
     source_type: str = Field(..., description="'official' or 'trusted'")
     domain: Optional[str] = Field(None, description="The domain the article was fetched from")
     priority: bool = False
+    score: float = Field(0.0, description="Quality score from hybrid fuzzy discriminator")
 
 class SearchOutput(BaseModel):
     articles: List[Article]
@@ -47,10 +48,18 @@ class Insight(BaseModel):
     brief_summary: str
     citation_id: int
 
+class KeyFinding(BaseModel):
+    finding_title: str = Field(..., description="Short title for the thematic finding")
+    finding_summary: str = Field(..., description="3-5 sentence cross-source analysis of this finding")
+    source_ids: List[int] = Field(default_factory=list, description="Citation IDs backing this finding")
+
 class FinalReport(BaseModel):
     report_title: str
+    executive_summary: str = Field("", description="3-4 paragraph overview synthesizing ALL sources")
+    key_findings: List[KeyFinding] = Field(default_factory=list, description="Cross-source thematic findings")
     official_insights: List[Insight] = Field(default_factory=list)
     trusted_insights: List[Insight] = Field(default_factory=list)
+    cross_source_analysis: str = Field("", description="Comparing official vs trusted perspectives")
     references: List[Article]
 
 # --- Validation ---
@@ -86,6 +95,8 @@ class ResearchState(TypedDict):
     retry_counts: Dict[str, int]
     error: Optional[str]
     search_days_used: Optional[int]
+    selected_articles: List[str]
+    logs: List[str]
 
 # --- Analyzer Workflow State ---
 

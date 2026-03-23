@@ -24,6 +24,8 @@ from models.schemas import ResearchState
 def decomposer_agent(state: ResearchState) -> ResearchState:
     """
     LangGraph Node for Query Decomposition.
+    Includes relevance alignment validation to ensure subqueries
+    are semantically relevant to the original query.
     """
     query = state.get("original_query", "")
     if not query:
@@ -43,6 +45,39 @@ def decomposer_agent(state: ResearchState) -> ResearchState:
 
     # Update State
     subqueries = [sq.get("subquery") if isinstance(sq, dict) else sq for sq in result.get("subqueries", [])]
+    
+    # =====================================================
+    # Relevance Alignment Validation
+    # Ensures search agents get queries relevant to the original,
+    # not random tangents.
+    # =====================================================
+    try:
+        from config import get_embedding_model
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+        
+        embed_model = get_embedding_model()
+        query_emb = np.array(embed_model.embed_documents([query]))
+        sub_embs = np.array(embed_model.embed_documents(subqueries))
+        
+        sims = cosine_similarity(query_emb, sub_embs)[0]
+        
+        RELEVANCE_THRESHOLD = 0.4
+        aligned = []
+        for i, sq in enumerate(subqueries):
+            if sims[i] >= RELEVANCE_THRESHOLD:
+                aligned.append(sq)
+            else:
+                print(f"   ⚠️ Removed divergent subquery (sim={sims[i]:.3f}): {sq}")
+        
+        if len(aligned) >= 3:
+            subqueries = aligned
+        else:
+            print(f"   ⚠️ Only {len(aligned)} aligned subqueries — keeping all to avoid data loss")
+            
+    except Exception as e:
+        print(f"   ⚠️ Relevance alignment check failed: {e} — using all subqueries")
+    
     state["subqueries"] = subqueries
     
     return state

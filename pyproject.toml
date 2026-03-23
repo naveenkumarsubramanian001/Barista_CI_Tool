@@ -17,6 +17,7 @@ dependencies = [
     "pymupdf>=1.27.2.2",
     "python-dotenv>=1.2.1",
     "python-multipart>=0.0.22",
+    "scikit-fuzzy>=0.5.0",
     "scikit-learn>=1.8.0",
     "spacy>=3.8.11",
     "tavily-python>=0.7.22",
@@ -24,6 +25,8 @@ dependencies = [
     "torch>=2.10.0",
     "transformers>=5.2.0",
     "typing>=3.10.0.0",
+    "scikit-fuzzy>=0.5.0",
+    "rich>=14.3.3",
 ]
 
 [tool.uv.sources]
