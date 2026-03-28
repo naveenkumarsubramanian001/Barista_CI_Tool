@@ -27,6 +27,7 @@ dependencies = [
     "typing>=3.10.0.0",
     "scikit-fuzzy>=0.5.0",
     "rich>=14.3.3",
+    "langgraph-checkpoint>=4.0.1",
 ]
 
 [tool.uv.sources]
