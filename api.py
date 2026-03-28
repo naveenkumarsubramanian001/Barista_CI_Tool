@@ -1,6 +1,8 @@
 import asyncio
 import os
 import secrets
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -9,36 +11,88 @@ from typing import List
 
 from langgraph.checkpoint.memory import MemorySaver
 from graph.workflow import build_graph
+from graph.analyzer_workflow import build_analyzer_graph
 
-from contextlib import asynccontextmanager
 from database import create_db_and_tables
 from scheduler import start_scheduler
+from models.schemas import ApiError, SearchStartResponse, WorkflowStatusResponse
+from config import (
+    CORS_ALLOWED_ORIGINS,
+    CHECKPOINTER_BACKEND,
+    CHECKPOINT_DB_PATH,
+    STRICT_STARTUP_VALIDATION,
+    validate_runtime_config,
+)
+
+
+_CHECKPOINTER_CONTEXT = None
+
+
+def _create_checkpointer():
+    """Create checkpointer backend with persistence when available."""
+    global _CHECKPOINTER_CONTEXT
+
+    if CHECKPOINTER_BACKEND == "sqlite":
+        try:
+            from langgraph.checkpoint.sqlite import SqliteSaver
+
+            _CHECKPOINTER_CONTEXT = SqliteSaver.from_conn_string(CHECKPOINT_DB_PATH)
+            return _CHECKPOINTER_CONTEXT.__enter__()
+        except Exception as exc:
+            print(f"[startup] sqlite checkpointer unavailable ({exc}); falling back to MemorySaver")
+
+    return MemorySaver()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    config_report = validate_runtime_config(strict=STRICT_STARTUP_VALIDATION)
+    if config_report.get("errors"):
+        for startup_error in config_report["errors"]:
+            print(f"[startup][config error] {startup_error}")
+    if config_report.get("warnings"):
+        for warning in config_report["warnings"]:
+            print(f"[startup][config warning] {warning}")
+
     create_db_and_tables()
     start_scheduler()
+
+    app.state.checkpointer = checkpointer
+    app.state.graph_app = graph_app
+    app.state.analyzer_app = analyzer_app
+    app.state.get_config = get_config
+
     yield
+
+    global _CHECKPOINTER_CONTEXT
+    if _CHECKPOINTER_CONTEXT is not None:
+        try:
+            _CHECKPOINTER_CONTEXT.__exit__(None, None, None)
+        except Exception:
+            pass
 
 app = FastAPI(title="Barista CI API", lifespan=lifespan)
 
 # Enable CORS for the React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=CORS_ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-from routers import companies
+from routers import analyze, companies
 app.include_router(companies.router)
+app.include_router(analyze.router)
 
-# Global Checkpointer (MemorySaver) to maintain state across HTTP requests
-checkpointer = MemorySaver()
-
-# Global Graph instantiation
+# Backward-compatible globals (also mirrored in app.state for DI)
+checkpointer = _create_checkpointer()
 graph_app = build_graph(checkpointer=checkpointer)
+analyzer_app = build_analyzer_graph(checkpointer=checkpointer)
+
+app.state.checkpointer = checkpointer
+app.state.graph_app = graph_app
+app.state.analyzer_app = analyzer_app
 
 
 # --- Pydantic Models for API ---
@@ -53,6 +107,9 @@ class GeneratePdfRequest(BaseModel):
 # --- Helper functions ---
 def get_config(session_id: str):
     return {"configurable": {"thread_id": session_id}}
+
+
+app.state.get_config = get_config
 
 
 def _map_article(a, category: str, session_id: str, idx: int, total_per_category: int):
@@ -116,7 +173,7 @@ async def get_tips():
     }
 
 
-@app.post("/api/search")
+@app.post("/api/search", response_model=SearchStartResponse)
 async def start_search(request: SearchRequest):
     session_id = f"sess_{secrets.token_hex(8)}"
 
@@ -141,23 +198,24 @@ async def start_search(request: SearchRequest):
         print(
             f"[{session_id}] 🚀 Starting LangGraph Workflow Phase 1 (Search & Filter)..."
         )
-        await graph_app.ainvoke(initial_state, config=get_config(session_id))
+        await app.state.graph_app.ainvoke(initial_state, config=get_config(session_id))
         print(
             f"[{session_id}] ⏳ Phase 1 paused. Waiting for human-in-the-loop selection..."
         )
 
     asyncio.create_task(run_phase_1())
 
-    return {"session_id": session_id, "status": "started"}
+    return {"api_version": "v1", "session_id": session_id, "status": "started", "error": None}
 
 
-@app.get("/api/workflow/status/{session_id}")
+@app.get("/api/workflow/status/{session_id}", response_model=WorkflowStatusResponse)
 async def get_workflow_status(session_id: str):
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
 
     if not state or not state.values:
         return {
+            "api_version": "v1",
             "session_id": session_id,
             "status": "pending",
             "current_stage": "initializing",
@@ -195,11 +253,13 @@ async def get_workflow_status(session_id: str):
                 },
             ],
             "logs": [],
+            "error": None,
         }
 
     next_tasks = state.next
     is_paused_for_human = "summariser" in next_tasks
     has_final_report = bool(state.values.get("final_report"))
+    state_error = state.values.get("error")
 
     logs = state.values.get("logs", [])
 
@@ -276,6 +336,11 @@ async def get_workflow_status(session_id: str):
                 "status": "completed",
             },
         ]
+    elif state_error:
+        status = "failed"
+        progress = state.values.get("progress_percentage", 10)
+        current_stage = "failed"
+        stages = _build_running_stages(len(logs))
     else:
         # Workflow is still running — estimate progress from logs count
         n_logs = len(logs)
@@ -287,12 +352,14 @@ async def get_workflow_status(session_id: str):
         stages = _build_running_stages(n_logs)
 
     return {
+        "api_version": "v1",
         "session_id": session_id,
         "status": status,
         "current_stage": current_stage,
         "progress_percentage": progress,
         "stages": stages,
         "logs": logs,
+        "error": ({"code": "WORKFLOW_FAILED", "message": str(state_error)} if state_error else None),
     }
 
 
@@ -319,7 +386,7 @@ def _build_running_stages(n_logs: int) -> list:
 @app.get("/api/articles/{session_id}")
 async def get_scored_articles(session_id: str):
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
 
     if not state or not state.values:
         raise HTTPException(
@@ -350,7 +417,7 @@ async def get_scored_articles(session_id: str):
 @app.get("/api/session/{session_id}")
 async def get_session_info(session_id: str):
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
 
@@ -365,7 +432,7 @@ async def get_session_info(session_id: str):
 async def get_report(session_id: str):
     """Return the final_report JSON for inline rendering in the frontend."""
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
 
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -394,7 +461,7 @@ async def get_report(session_id: str):
 @app.post("/api/generate-pdf/{session_id}")
 async def generate_pdf(session_id: str, request: GeneratePdfRequest):
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
 
     if not state:
         raise HTTPException(status_code=404, detail="Session not found.")
@@ -410,10 +477,10 @@ async def generate_pdf(session_id: str, request: GeneratePdfRequest):
     )
 
     # Update state with the selected URLs
-    graph_app.update_state(config, {"selected_articles": request.selected_article_urls})
+    app.state.graph_app.update_state(config, {"selected_articles": request.selected_article_urls})
 
     print(f"[{session_id}] 🚀 Starting Phase 2 (Summarise & PDF)...")
-    final_output = await graph_app.ainvoke(None, config=config)
+    final_output = await app.state.graph_app.ainvoke(None, config=config)
 
     if final_output.get("final_report"):
         import json
@@ -443,7 +510,7 @@ async def generate_pdf(session_id: str, request: GeneratePdfRequest):
 @app.get("/api/pdf-status/{session_id}")
 async def get_pdf_status(session_id: str):
     config = get_config(session_id)
-    state = graph_app.get_state(config)
+    state = app.state.graph_app.get_state(config)
 
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -453,18 +520,29 @@ async def get_pdf_status(session_id: str):
 
     if has_report and pdf_exists:
         return {
+            "api_version": "v1",
             "session_id": session_id,
             "status": "completed",
             "download_url": f"/api/pdf/download/{session_id}",
+            "error": None,
         }
     elif has_report:
-        return {"session_id": session_id, "status": "generating"}
+        return {"api_version": "v1", "session_id": session_id, "status": "generating", "error": None}
 
     next_tasks = state.next
     if next_tasks and "summariser" in next_tasks:
-        return {"session_id": session_id, "status": "pending"}
+        return {"api_version": "v1", "session_id": session_id, "status": "pending", "error": None}
 
-    return {"session_id": session_id, "status": "generating"}
+    state_error = state.values.get("error") if state.values else None
+    if state_error:
+        return {
+            "api_version": "v1",
+            "session_id": session_id,
+            "status": "failed",
+            "error": {"code": "PDF_WORKFLOW_FAILED", "message": str(state_error)},
+        }
+
+    return {"api_version": "v1", "session_id": session_id, "status": "generating", "error": None}
 
 
 @app.get("/api/pdf/download/{session_id}")

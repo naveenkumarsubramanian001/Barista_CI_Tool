@@ -68,6 +68,7 @@ class Article(BaseModel):
         None, description="The domain the article was fetched from"
     )
     priority: bool = False
+    score: float = Field(0.0, description="Quality score used for ranking/display")
 
 
 class SearchOutput(BaseModel):
@@ -133,3 +134,69 @@ class ResearchState(TypedDict):
     retry_counts: Dict[str, int]
     error: Optional[str]
     search_days_used: Optional[int]
+
+
+# --- Analyzer Workflow State ---
+
+
+class CompetitorProfile(BaseModel):
+    name: str = Field(..., description="Name of the competitor")
+    official_domain: str = Field(..., description="Official website domain of the competitor")
+    reason_for_inclusion: str = Field(..., description="Why this competitor was selected")
+
+
+class ProductProfile(BaseModel):
+    product_name: str = Field(..., description="Name of the user's product/company")
+    features: List[str] = Field(default_factory=list, description="Key features extracted")
+    value_proposition: str = Field(..., description="Core value proposition")
+    target_audience: str = Field(..., description="Target audience or ICP")
+    market_positioning: str = Field(..., description="How it is positioned in the market")
+
+
+class AnalyzerState(TypedDict):
+    session_id: str
+    uploaded_text: str
+    product_profile: Optional[Dict]
+    discovered_competitors: List[Dict]
+    competitor_data: Dict[str, List[Dict]]
+    final_report: Optional[Dict]
+    logs: List[str]
+    workflow_status: str
+    progress_percentage: int
+    error: Optional[str]
+
+
+# --- API Contract Models ---
+
+
+class ApiError(BaseModel):
+    code: str = Field(..., description="Stable machine-readable error code")
+    message: str = Field(..., description="Human-readable error message")
+
+
+class SearchStartResponse(BaseModel):
+    api_version: str = Field(default="v1")
+    session_id: str
+    status: str
+    error: Optional[ApiError] = None
+
+
+class WorkflowStatusResponse(BaseModel):
+    api_version: str = Field(default="v1")
+    session_id: str
+    status: str
+    current_stage: str
+    progress_percentage: int
+    stages: List[Dict]
+    logs: List[str]
+    error: Optional[ApiError] = None
+
+
+class AnalyzeStatusResponse(BaseModel):
+    api_version: str = Field(default="v1")
+    session_id: str
+    status: str
+    progress_percentage: int
+    logs: List[str]
+    report_data: Optional[Dict] = None
+    error: Optional[ApiError] = None

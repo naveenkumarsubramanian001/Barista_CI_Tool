@@ -4,8 +4,18 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from langchain_core.prompts import ChatPromptTemplate
 from models.schemas import ResearchState
-from config import get_llm, get_embedding_model
+from config import get_llm, get_embedding_model, ENABLE_FUZZY_SCORING
 from utils.json_utils import safe_json_extract
+
+try:
+    from agents.fuzzy_discriminator import (
+        compute_hybrid_score,
+        compute_recency_score,
+        ensure_minimum_sources,
+    )
+    FUZZY_AVAILABLE = True
+except Exception:
+    FUZZY_AVAILABLE = False
 
 
 def decomposer_discriminator(state: ResearchState) -> ResearchState:
@@ -336,6 +346,14 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     # =====================================================
 
     scored_articles = []
+    use_fuzzy = ENABLE_FUZZY_SCORING and FUZZY_AVAILABLE
+    state.setdefault("logs", [])
+
+    if ENABLE_FUZZY_SCORING and not FUZZY_AVAILABLE:
+        state["logs"].append("⚠️ Fuzzy scoring requested but unavailable; using legacy scoring.")
+    elif use_fuzzy:
+        state["logs"].append("🧠 Fuzzy discriminator enabled for source scoring.")
+
     for article in articles:
         url = article.url
         embedding_relevance = relevance_scores.get(url, 0.5)
@@ -345,13 +363,41 @@ def search_discriminator(state: ResearchState) -> ResearchState:
         if llm_eval.get("is_duplicate") or llm_eval.get("is_low_quality"):
             continue
 
-        composite_score = (
-            0.25 * embedding_relevance
-            + 0.25 * llm_eval.get("credibility", 0.5)
-            + 0.20 * llm_eval.get("relevance", 0.5)
-            + 0.20 * llm_eval.get("quality", 0.5)
-            + 0.10 * llm_eval.get("recency", 0.5)
-        )
+        if use_fuzzy:
+            recency_score = compute_recency_score(article.published_date)
+            combined_relevance = 0.5 * embedding_relevance + 0.5 * llm_eval.get("relevance", 0.5)
+            composite_score, fuzzy_score, weighted_score = compute_hybrid_score(
+                relevance=combined_relevance,
+                credibility=llm_eval.get("credibility", 0.5),
+                quality=llm_eval.get("quality", 0.5),
+                recency=recency_score,
+            )
+            state["logs"].append(
+                (
+                    f"🧠 Score[{article.source_type}] {article.title[:50]} | "
+                    f"hybrid={composite_score:.3f}, fuzzy={fuzzy_score:.3f}, weighted={weighted_score:.3f}, "
+                    f"embed={embedding_relevance:.3f}, llm_rel={llm_eval.get('relevance', 0.5):.3f}, "
+                    f"cred={llm_eval.get('credibility', 0.5):.3f}, quality={llm_eval.get('quality', 0.5):.3f}, recency={recency_score:.3f}"
+                )
+            )
+        else:
+            composite_score = (
+                0.25 * embedding_relevance
+                + 0.25 * llm_eval.get("credibility", 0.5)
+                + 0.20 * llm_eval.get("relevance", 0.5)
+                + 0.20 * llm_eval.get("quality", 0.5)
+                + 0.10 * llm_eval.get("recency", 0.5)
+            )
+            state["logs"].append(
+                (
+                    f"📊 Score[{article.source_type}] {article.title[:50]} | "
+                    f"legacy={composite_score:.3f}, embed={embedding_relevance:.3f}, "
+                    f"cred={llm_eval.get('credibility', 0.5):.3f}, rel={llm_eval.get('relevance', 0.5):.3f}, "
+                    f"quality={llm_eval.get('quality', 0.5):.3f}, recency={llm_eval.get('recency', 0.5):.3f}"
+                )
+            )
+
+        article.score = round(float(composite_score), 4)
 
         scored_articles.append((composite_score, article))
 
@@ -359,10 +405,16 @@ def search_discriminator(state: ResearchState) -> ResearchState:
     scored_articles.sort(key=lambda x: x[0], reverse=True)
 
     # Keep all results above quality threshold (ranker picks top 3 for insights)
-    quality_threshold = 0.45
-    filtered = [
-        article for score, article in scored_articles if score >= quality_threshold
-    ]
+    quality_threshold = 0.35 if use_fuzzy else 0.45
+    filtered = [article for score, article in scored_articles if score >= quality_threshold]
+
+    if use_fuzzy and len(filtered) < 3:
+        filtered = ensure_minimum_sources(
+            scored_articles,
+            min_count=3,
+            initial_threshold=quality_threshold,
+            floor_threshold=0.20,
+        )
 
     # Split back into official and trusted
     official_filtered = [a for a in filtered if a.source_type == "official"]

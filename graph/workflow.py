@@ -1,7 +1,7 @@
 from langgraph.graph import StateGraph, END, START
 from models.schemas import ResearchState
 from agents.QueryDecomposer import decomposer_agent
-from agents.search_agent import search_agent
+from agents.multi_search_agent import multi_search_agent
 from agents.summariser import summariser_agent
 from agents.discriminators import (
     decomposer_discriminator,
@@ -19,7 +19,7 @@ def build_graph(checkpointer=None):
     workflow.add_node("decomposer", decomposer_agent)
     workflow.add_node("decomposer_validator", decomposer_discriminator)
     workflow.add_node("url_discovery", url_discovery)
-    workflow.add_node("search", search_agent)
+    workflow.add_node("search", multi_search_agent)
     workflow.add_node("search_validator", search_discriminator)
     workflow.add_node("ranker", rank_filter_node)
     workflow.add_node("summariser", summariser_agent)

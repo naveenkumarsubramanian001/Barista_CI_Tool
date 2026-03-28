@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt
+          python -m pip install ruff
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Compile check
+        run: |
+          find . -name '*.py' -not -path './.venv/*' -print0 | xargs -0 python -m py_compile
+
+      - name: API contract tests
+        run: python -m pytest -q tests/test_api_contract_e2e.py
+
+      - name: PDF regression tests
+        run: python -m pytest -q tests/test_comparative_pdf_report.py
+
+      - name: Integration tests
+        run: python -m pytest -q tests/test_integration_live_paths.py
