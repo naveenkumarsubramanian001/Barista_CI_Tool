@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "en-core-web-sm",
+    "fastapi>=0.135.2",
     "langchain-community>=0.4.1",
     "langchain-core>=1.2.16",
     "langchain-groq>=1.1.2",
@@ -16,7 +17,10 @@ dependencies = [
     "pydantic>=2.12.5",
     "pymupdf>=1.27.2.2",
     "python-dotenv>=1.2.1",
+    "requests>=2.32.4",
+    "beautifulsoup4>=4.13.4",
     "python-multipart>=0.0.22",
+    "pytest>=9.0.2",
     "scikit-fuzzy>=0.5.0",
     "scikit-learn>=1.8.0",
     "spacy>=3.8.11",
@@ -25,9 +29,11 @@ dependencies = [
     "torch>=2.10.0",
     "transformers>=5.2.0",
     "typing>=3.10.0.0",
-    "scikit-fuzzy>=0.5.0",
     "rich>=14.3.3",
     "langgraph-checkpoint>=4.0.1",
+    "uvicorn>=0.42.0",
+    "langgraph-checkpoint-sqlite>=3.0.3",
+    "aiosqlite>=0.22.1",
 ]
 
 [tool.uv.sources]

@@ -40,3 +40,29 @@ GOOGLE_CSE_ID = os.getenv("GOOGLE_CSE_ID", "").strip()
 # Options: "tavily", "serper", "bing", "google"
 # Fallback: If the chosen provider has no API key, falls back automatically
 SEARCH_PROVIDER = os.getenv("SEARCH_PROVIDER", "tavily").strip().lower()
+
+
+def _parse_csv_env(name: str, default: str) -> list[str]:
+    raw_value = os.getenv(name, default)
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
+def _parse_bool_env(name: str, default: bool) -> bool:
+    raw_value = os.getenv(name)
+    if raw_value is None:
+        return default
+    return raw_value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+# --- API Runtime ---
+CORS_ALLOWED_ORIGINS = _parse_csv_env(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:5173,http://localhost:3000",
+)
+CORS_ALLOW_CREDENTIALS = _parse_bool_env("CORS_ALLOW_CREDENTIALS", True)
+
+
+# --- LangGraph Checkpointer ---
+# "memory" keeps current behavior. "sqlite" enables persistence when sqlite saver is available.
+CHECKPOINTER_BACKEND = os.getenv("CHECKPOINTER_BACKEND", "sqlite").strip().lower()
+CHECKPOINTER_SQLITE_PATH = os.getenv("CHECKPOINTER_SQLITE_PATH", "barista_checkpoints.sqlite").strip()

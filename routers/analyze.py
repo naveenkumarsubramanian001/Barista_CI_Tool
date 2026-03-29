@@ -1,16 +1,23 @@
 import os
 import secrets
-from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException
+from fastapi import APIRouter, UploadFile, File, BackgroundTasks, HTTPException, Request
 from pydantic import BaseModel
 import fitz  # PyMuPDF
 
 router = APIRouter(prefix="/api/analyze", tags=["analyze"])
 
+
+async def _get_graph_state(graph, config):
+    """Support both async LangGraph APIs and sync test doubles."""
+    if hasattr(graph, "aget_state"):
+        return await graph.aget_state(config)
+    return graph.get_state(config)
+
 # We'll import analyzer_app once we build it in api.py or graph/analyzer_workflow.py
 # from api import analyzer_app, get_config
 
 @router.post("/upload")
-async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+async def upload_document(request: Request, background_tasks: BackgroundTasks, file: UploadFile = File(...)):
     session_id = f"analyzer_{secrets.token_hex(8)}"
     
     content = await file.read()
@@ -33,8 +40,12 @@ async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = 
     if not extracted_text.strip():
         raise HTTPException(status_code=400, detail="No readable text found in document.")
 
-    from api import analyzer_app, get_config
     import asyncio
+
+    analyzer_app = request.app.state.analyzer_app
+
+    def get_config(session_id: str):
+        return {"configurable": {"thread_id": session_id}}
     
     initial_state = {
         "session_id": session_id,
@@ -80,10 +91,14 @@ async def upload_document(background_tasks: BackgroundTasks, file: UploadFile = 
     return {"session_id": session_id, "status": "started", "message": "Document uploaded successfully"}
 
 @router.get("/status/{session_id}")
-async def get_analyze_status(session_id: str):
-    from api import analyzer_app, get_config
+async def get_analyze_status(request: Request, session_id: str):
+    analyzer_app = request.app.state.analyzer_app
+
+    def get_config(current_session_id: str):
+        return {"configurable": {"thread_id": current_session_id}}
+
     config = get_config(session_id)
-    state = analyzer_app.get_state(config)
+    state = await _get_graph_state(analyzer_app, config)
     
     if not state or not state.values:
         return {

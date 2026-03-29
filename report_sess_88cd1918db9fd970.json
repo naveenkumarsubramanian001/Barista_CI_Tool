@@ -1,0 +1,197 @@
+{
+  "report_title": "OpenAI's Latest Product",
+  "introduction": "OpenAI has introduced several new products and partnerships recently, including a strategic partnership with Amazon [4] and the introduction of Aardvark, an AI agent that thinks like a security researcher [2].",
+  "executive_summary": "OpenAI's latest product is either the Stateful Runtime Environment, a joint collaboration with Amazon [5], or GPT-5.2, a model series designed for professional knowledge work [6].",
+  "key_findings": [
+    {
+      "finding_title": "Stateful Runtime Environment",
+      "finding_summary": "The Stateful Runtime Environment is a joint collaboration with Amazon, designed to make it easier for customers to run multi-step work reliably over time [5].",
+      "source_ids": [
+        5
+      ]
+    },
+    {
+      "finding_title": "GPT-5.2",
+      "finding_summary": "GPT-5.2 is a model series designed for professional knowledge work, which sets a new state of the art across many benchmarks [6].",
+      "source_ids": [
+        6
+      ]
+    }
+  ],
+  "official_insights": [
+    {
+      "title": "Scaling AI for everyone - OpenAI",
+      "brief_summary": "OpenAI has announced $110B in new investment and strategic partnerships with Amazon and NVIDIA to scale AI for everyone [4]",
+      "citation_id": 4,
+      "tags": [
+        "#OpenAI",
+        "#AI"
+      ],
+      "overview": "OpenAI is expanding its global reach, infrastructure, and balance sheet to bring frontier AI to more people, businesses, and communities worldwide [4]",
+      "key_findings": [
+        "OpenAI has secured $110B in new investment at a $730B pre-money valuation [4]",
+        "The company has signed a strategic partnership with Amazon and secured next-generation inference compute with NVIDIA [4]"
+      ],
+      "analysis": "The new funding and partnerships will enable OpenAI to scale its infrastructure and products, including ChatGPT and Codex, to meet growing demand [4]",
+      "why_it_matters": "The expansion of OpenAI's products and services has the potential to transform how businesses and individuals use AI, with over 900M weekly active users on ChatGPT and 50 million consumer subscribers [4]",
+      "practical_significance": "The increased valuation of the OpenAI Foundation's stake in OpenAI Group to over $180 billion will further strengthen its capacity to fund philanthropy in areas such as health breakthroughs and AI resilience [4]",
+      "technical_context": "OpenAI is using dedicated inference capacity and training on Vera Rubin systems, as well as Hopper and Blackwell systems, to train and deploy frontier models at global scale [4]"
+    },
+    {
+      "title": "Introducing Aardvark: OpenAI\u2019s agentic security researcher",
+      "brief_summary": "OpenAI has introduced Aardvark, an AI agent that thinks like a security researcher, now available in private beta [2]",
+      "citation_id": 2,
+      "tags": [
+        "#OpenAI",
+        "#Aardvark",
+        "#SecurityResearch"
+      ],
+      "overview": "Aardvark is an autonomous agent that helps developers and security teams discover and fix security vulnerabilities at scale, using LLM-powered reasoning and tool-use [2]",
+      "key_findings": [
+        "Aardvark identified 92% of known and synthetically-introduced vulnerabilities in benchmark testing [2]",
+        "Aardvark has discovered and responsibly disclosed numerous vulnerabilities in open-source projects [2]"
+      ],
+      "analysis": "Aardvark's multi-stage pipeline identifies, explains, and fixes vulnerabilities, and it works alongside engineers, integrating with GitHub, Codex, and existing workflows [2]",
+      "why_it_matters": "Aardvark has the potential to tip the balance in favor of defenders in the field of software security, helping to discover and patch vulnerabilities before adversaries can exploit them [2]",
+      "practical_significance": "Aardvark can be used to uncover bugs such as logic flaws, incomplete fixes, and privacy issues, and it will be offered as a research preview, with free usage for the next month [2]",
+      "technical_context": "Aardvark is powered by GPT-5 and uses a combination of natural language processing and machine learning to understand code behavior and identify vulnerabilities [2]"
+    }
+  ],
+  "trusted_insights": [
+    {
+      "title": "OpenAI and Amazon announce strategic partnership",
+      "brief_summary": "OpenAI and Amazon have announced a multi-year strategic partnership to accelerate AI innovation, with Amazon investing $50 billion in OpenAI [3]",
+      "citation_id": 3,
+      "tags": [
+        "#AI",
+        "#Partnership"
+      ],
+      "overview": "The partnership includes the development of a Stateful Runtime Environment powered by OpenAI\u2019s models, available through Amazon Bedrock [3]",
+      "key_findings": [
+        "OpenAI and Amazon are jointly developing a Stateful Runtime Environment [3]",
+        "AWS will serve as the exclusive third-party cloud distribution provider for OpenAI Frontier [3]"
+      ],
+      "analysis": "The partnership aims to accelerate AI innovation for enterprises, startups, and end consumers, with a focus on stateful developer environments and AI applications [3]",
+      "why_it_matters": "The partnership is expected to expand access to OpenAI\u2019s most advanced enterprise platform, Frontier, and enable companies to integrate powerful AI into existing workflows quickly and securely [3]",
+      "practical_significance": "The partnership will enable developers to build, deploy, and manage teams of AI agents that operate across real business systems with shared context, built-in governance, and enterprise-grade security [3]",
+      "technical_context": "The Stateful Runtime Environment will be trained to run optimally on AWS's infrastructure and integrated with Amazon Bedrock AgentCore and infrastructure services [3]"
+    },
+    {
+      "title": "Scaling AI for everyone - OpenAI",
+      "brief_summary": "OpenAI has announced $110B in new investment and strategic partnerships with Amazon and NVIDIA to scale AI for everyone [4]",
+      "citation_id": 4,
+      "tags": [
+        "#AI",
+        "#OpenAI"
+      ],
+      "overview": "OpenAI is expanding its global reach, infrastructure, and balance sheet to bring frontier AI to more people, businesses, and communities worldwide [4]",
+      "key_findings": [
+        "OpenAI has secured $110B in new investment at a $730B pre-money valuation [4]",
+        "The company has signed a strategic partnership with Amazon and secured next-generation inference compute with NVIDIA [4]"
+      ],
+      "analysis": "The new funding and partnerships will enable OpenAI to scale its infrastructure and turn capacity into products people rely on, moving faster on its mission to ensure AGI benefits all of humanity [4]",
+      "why_it_matters": "The expansion of OpenAI's products, such as ChatGPT and Codex, will have a significant impact on the way people work, learn, and build, with over 900M weekly active users and 50 million consumer subscribers [4]",
+      "practical_significance": "The increased valuation of the OpenAI Foundation's stake in OpenAI Group to over $180 billion will further strengthen its capacity to fund philanthropy in areas such as health breakthroughs and AI resilience [4]",
+      "technical_context": "The use of 3 GW of dedicated inference capacity and 2 GW of training on Vera Rubin systems, as well as the expansion of collaboration with NVIDIA, will strengthen OpenAI's ability to train and deploy frontier models at global scale [4]"
+    },
+    {
+      "title": "Introducing the Stateful Runtime Environment for Agents in Amazon Bedrock",
+      "brief_summary": "OpenAI's latest product is the Stateful Runtime Environment, a joint collaboration with Amazon, designed to make it easier for customers to run multi-step work reliably over time [5]",
+      "citation_id": 5,
+      "tags": [
+        "#OpenAI",
+        "#AmazonBedrock"
+      ],
+      "overview": "The Stateful Runtime Environment is a new product that runs natively in Amazon Bedrock, powered by OpenAI models, optimized for AWS infrastructure and tailored for agentic workflows [5]",
+      "key_findings": [
+        "The Stateful Runtime Environment reduces the burden on development teams by handling persistent orchestration and state across steps [5]",
+        "The runtime is designed to operate within customers' AWS environment to easily comply with existing security posture, tooling integrations, and governance rules [5]"
+      ],
+      "analysis": "The Stateful Runtime Environment is designed to make it easier for customers to deliver solutions like multi-system customer support, sales operations workflows, internal IT automation, and finance processes with approvals and audits [5]",
+      "why_it_matters": "The Stateful Runtime Environment matters because it allows teams to focus on the workflow and the business logic instead of scaffolding, making it easier to deliver complex solutions [5]",
+      "practical_significance": "The practical significance of the Stateful Runtime Environment is that it enables customers to run stateful tasks reliably over time, carrying forward the context and control boundaries needed for multi-step execution [5]",
+      "technical_context": "The Stateful Runtime Environment is jointly designed with Amazon to reduce the load on development teams and is optimized to work with AWS services [5]"
+    },
+    {
+      "title": "Introducing GPT-5.2",
+      "brief_summary": "OpenAI's latest product is GPT-5.2, a model series designed for professional knowledge work, which sets a new state of the art across many benchmarks [6]",
+      "citation_id": 6,
+      "tags": [
+        "#GPT-5.2",
+        "#OpenAI"
+      ],
+      "overview": "GPT-5.2 is the most capable model series yet for professional knowledge work, with improvements in general intelligence, long-context understanding, agentic tool-calling, and vision [6]",
+      "key_findings": [
+        "GPT-5.2 sets a new state of the art across many benchmarks, including GDPval, where it outperforms industry professionals at well-specified knowledge work tasks spanning 44 occupations [6]",
+        "GPT-5.2 Thinking beats or ties top industry professionals on 70.9% of comparisons on GDPval knowledge work tasks, according to expert human judges [6]"
+      ],
+      "analysis": "GPT-5.2 demonstrates state-of-the-art long-horizon reasoning and tool-calling performance, and is exceptional at agentic data science and document analysis tasks [6]",
+      "why_it_matters": "GPT-5.2 can help with professional work, producing outputs for GDPval tasks at >11x the speed and <1% the cost of expert professionals, suggesting that when paired with human oversight, GPT-5.2 can unlock even more economic value for people [6]",
+      "practical_significance": "GPT-5.2 has significant improvements in areas such as interactive coding, code reviews, and bug finding, making it better at executing complex, real-world tasks end-to-end than any previous model [6]",
+      "technical_context": "GPT-5.2 is available in ChatGPT, starting with paid plans, and in the API, available now to all developers, with new tools that GPT-5 Thinking does not [6]"
+    }
+  ],
+  "cross_source_analysis": "OpenAI has secured $110B in new investment at a $730B pre-money valuation, and has signed a strategic partnership with Amazon and secured next-generation inference compute with NVIDIA [4].",
+  "references": [
+    {
+      "title": "Scaling AI for everyone - OpenAI",
+      "url": "https://openai.com/index/scaling-ai-for-everyone/",
+      "snippet": "You can see that scale in our products. Codex brings the power of a top engineer to anyone who wants to build software. Weekly Codex users have more than tripled since the start of the year to 1.6M. More people are now creating, automating, and shipping software that once required a full engineering team.\n\nMore than 9 million paying business users rely on ChatGPT for work, and startups, enterprises, and governments are building on the OpenAI platform to transform how their products and services are designed, delivered, and run. Teams start with individual productivity and move quickly to deployment across engineering, support, finance, sales, and operations. Our Frontier platform helps enterprises build, deploy, and manage AI coworkers. [...] ChatGPT is where people start with AI, with more than 900M weekly active users, and we now have more than 50 million consumer subscribers.. Subscriber momentum accelerated meaningfully to start the year, with January and February on track to be the largest months for new subscribers in our history. People use ChatGPT to learn, write, plan, and build. As usage scales, the product improves in ways people feel immediately: faster responses, higher reliability, stronger safety, and more consistent performance. [...] Scaling AI for everyone | OpenAI\n\n\n\n   Research\n   Products\n   Business\n   Developers\n   Company\n   Foundation\n\nScaling AI for everyone | OpenAI\n\nTable of contents\n\n   Our Partnership with Amazon\n   Our Partnership with NVIDIA\n\nFebruary 27, 2026\n\nCompany\n\nScaling AI for everyone\n\nListen to article\n\nShare\n\nAI demand is surging across consumers, developers, and businesses. Meeting that demand and providing everyone access to our products requires three things: compute, distribution, and capital.",
+      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8257
+    },
+    {
+      "title": "Introducing Aardvark: OpenAI\u2019s agentic security researcher - OpenAI",
+      "url": "https://openai.com/index/introducing-aardvark/",
+      "snippet": "Latest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Foundation\n   Careers\n   Brand\n\nSupport\n\nMore\n   News\n   Stories\n   Livestreams\n   Podcast [...] Aardvark represents a breakthrough in AI and security research: an autonomous agent that can help developers and security teams discover and fix security vulnerabilities at scale. Aardvark is now available in private beta to validate and refine its capabilities in the field.\n\nHow Aardvark works\n\nAardvark continuously analyzes source code repositories to identify vulnerabilities, assess exploitability, prioritize severity, and propose targeted patches. [...] Introducing Aardvark: OpenAI\u2019s agentic security researcher | OpenAI\n\nSkip to main content\n\nLog in\n\n\n   Sora(opens in a new window)\n   API Platform(opens in a new window)\n\n   Research \n   Safety \n   For Business \n   For Developers \n   ChatGPT \n   Sora \n   Stories \n   Company \n   News \n\n   Research\n\nBack to main menu  \n\n       Research Index\n       Research Overview\n       Research Residency\n       Latest Advancements\n       Sora 2\n       GPT-5\n       OpenAI o3 and o4-mini\n       GPT-4.5\n       OpenAI o1\n       GPT-4o\n\n   Safety\n\nBack to main menu  \n\n       Safety Approach\n       Security & Privacy\n\n   For Business\n\nBack to main menu  \n\n       Business Overview\n       Startups\n       Solutions\n       ChatGPT Pricing\n       API Pricing\n       Contact Sales\n\n   For Developers",
+      "published_date": "Thu, 30 Oct 2025 17:55:05 GMT",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.6402
+    },
+    {
+      "title": "OpenAI and Amazon announce strategic partnership - OpenAI",
+      "url": "https://openai.com/index/amazon-partnership/",
+      "snippet": "This commitment spans both Trainium3 and next-generation Trainium4 chips and will power a broad range of advanced AI workloads. Trainium4, expected to begin delivery in 2027, will provide another major performance gain, including significantly higher FP4 compute performance, expanded memory bandwidth, and increased high-bandwidth memory capacity to support increasingly capable AI systems at scale.\n\nCustom models available to power Amazon\u2019s customer-facing applications [...] \u2014 Sam Altman, co-founder and CEO of OpenAI\n\n   2026\n   Partnerships\n\nAuthor\n\nOpenAI\n\nKeep reading\n\nView all\n\nImage 1: Scaling AI for everyone > Cover\n\nScaling AI for everyone Company Feb 27, 2026\n\nImage 2: Stateful Runtime > Cover\n\nIntroducing the Stateful Runtime Environment for Agents in Amazon Bedrock Company Feb 27, 2026\n\nImage 3: microsoft > cover\n\nJoint Statement from OpenAI and Microsoft Company Feb 27, 2026\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n   OpenAI for Science\n   Economic Research\n\nLatest Advancements\n   GPT-5\n   Codex\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency",
+      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8245
+    },
+    {
+      "title": "Scaling AI for everyone - OpenAI",
+      "url": "https://openai.com/index/scaling-ai-for-everyone/",
+      "snippet": "You can see that scale in our products. Codex brings the power of a top engineer to anyone who wants to build software. Weekly Codex users have more than tripled since the start of the year to 1.6M. More people are now creating, automating, and shipping software that once required a full engineering team.\n\nMore than 9 million paying business users rely on ChatGPT for work, and startups, enterprises, and governments are building on the OpenAI platform to transform how their products and services are designed, delivered, and run. Teams start with individual productivity and move quickly to deployment across engineering, support, finance, sales, and operations. Our Frontier platform helps enterprises build, deploy, and manage AI coworkers. [...] ChatGPT is where people start with AI, with more than 900M weekly active users, and we now have more than 50 million consumer subscribers.. Subscriber momentum accelerated meaningfully to start the year, with January and February on track to be the largest months for new subscribers in our history. People use ChatGPT to learn, write, plan, and build. As usage scales, the product improves in ways people feel immediately: faster responses, higher reliability, stronger safety, and more consistent performance. [...] OpenAI Amazon NVIDIA SoftBank Group Corp\n\n> \u201cWe\u2019re pushing the frontier across infrastructure, research, and products to make AI more capable, reliable, and broadly useful. SoftBank, NVIDIA, and Amazon are long-term partners who share our ambition to turn real scientific progress into systems that deliver meaningful benefits for people at global scale. Building AI that works for everyone will require deep collaboration across the stack, and we\u2019re excited to do this together.\u201d\n\n\u2014 Sam Altman, co-founder and CEO of OpenAI\n\n   2026\n\nAuthor\n\nOpenAI\n\nKeep reading\n\nView all\n\nImage 1: Stateful Runtime > Cover\n\nIntroducing the Stateful Runtime Environment for Agents in Amazon Bedrock Company Feb 27, 2026\n\nImage 2: microsoft > cover\n\nJoint Statement from OpenAI and Microsoft Company Feb 27, 2026",
+      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8257
+    },
+    {
+      "title": "Introducing the Stateful Runtime Environment for Agents in Amazon Bedrock - OpenAI",
+      "url": "https://openai.com/index/introducing-the-stateful-runtime-environment-for-agents-in-amazon-bedrock/",
+      "snippet": "Image 2: Scaling AI for everyone > Cover\n\nScaling AI for everyone Company Feb 27, 2026\n\nImage 3: microsoft > cover\n\nJoint Statement from OpenAI and Microsoft Company Feb 27, 2026\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n   OpenAI for Science\n   Economic Research\n\nLatest Advancements\n   GPT-5\n   Codex\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window) [...] ##### Faster time to production for multi-step workflows\n\nWhen the runtime handles persistent orchestration and state across steps, teams can focus on the workflow and the business logic instead of scaffolding.\n\n##### A better fit for long-horizon work\n\nStateful tasks are designed to run reliably over time, carrying forward the context and control boundaries needed for multi-step execution.\n\n##### AWS-native deployment and governance\n\nThe runtime is designed to operate within customers\u2019 AWS environment to easily comply with the existing security posture, tooling integrations, and governance rules.\n\nGetting started [...] API Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Foundation\n   Careers\n   Brand\n\nSupport\n   Help Center(opens in a new window)\n\nMore\n   News\n   Stories\n   Livestreams\n   Podcast\n   RSS\n\nTerms & Policies\n   Terms of Use\n   Privacy Policy\n   Other Policies\n\n(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)\n\nOpenAI \u00a9 2015\u20132026 Manage Cookies\n\nEnglish United States",
+      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8225
+    },
+    {
+      "title": "Introducing GPT-5.2 - OpenAI",
+      "url": "https://openai.com/index/introducing-gpt-5-2/",
+      "snippet": "GPT\u20115.2 Thinking is also better at front-end software engineering than GPT\u20115.1 Thinking. Early testers found it significantly stronger at front-end development and complex or unconventional UI work\u2014especially involving 3D elements\u2014making it a powerful daily partner for engineers across the stack. See a few examples of what it can produce from a single prompt:\n\n`Prompt:` `Create a single-page app in a single HTML file with the following requirements:  \n- Name: Ocean Wave Simulation  \n- Goal: Display realistic animated waves.  \n- Features: Change wind speed, wave height, lighting.  \n- The UI should be calming and realistic.`\n\nEarly testers shared their feedback on GPT\u20115.2\u2019s coding capabilities: [...] Side-by-side comparisons show improved sophistication and formatting in spreadsheets and slides generated by GPT\u20115.2 Thinking:\n\nPrompt: Create a workforce planning model: headcount, hiring plan, attrition, and budget impact. Include engineering, marketing, legal, and sales departments.\n\nTo use the new spreadsheet and presentation capabilities in ChatGPT, you must be on a paid plan (Plus, Pro, Business, Enterprise) and select either GPT\u20115.2 Thinking or Pro. Complex generations can take many minutes to produce.\n\n#### Coding [...] ##### Vision\n\n| GPT-5.2 Thinking | GPT-5.2 Pro | GPT-5.1 Thinking |\n --- \n| CharXiv reasoning (no tools) | 82.1%  67.0% |\n| CharXiv reasoning (w/ Python) | 88.7%  80.3% |\n| MMMU Pro (no tools) | 79.5%  - |\n| MMMU Pro (w/ Python) | 80.4%  79.0% |\n| Video MMMU (no tools) | 85.9%  82.9% |\n| Screenspot Pro (w/ Python) | 86.3%  64.2% |\n\n##### Tool usage\n\n| GPT-5.2 Thinking | GPT-5.2 Pro | GPT-5.1 Thinking |\n --- \n| Tau2-bench Telecom | 98.7%  95.6% |\n| Tau2-bench Retail | 82.0%  77.9% |\n| BrowseComp | 65.8% | 77.9% | 50.8% |\n| Scale MCP-Atlas | 60.6%  44.5% |\n| Toolathlon | 46.3%  36.1% |\n\n##### Academic",
+      "published_date": "Thu, 11 Dec 2025 18:22:09 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": false,
+      "score": 0.8214
+    }
+  ]
+}

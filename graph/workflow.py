@@ -4,6 +4,8 @@ All available search APIs run in parallel, results merged and deduped,
 then passed through hybrid fuzzy discriminator.
 """
 
+import inspect
+
 from langgraph.graph import StateGraph, END, START
 from models.schemas import ResearchState
 from agents.QueryDecomposer import decomposer_agent
@@ -18,18 +20,135 @@ from nodes.rank_filter import rank_filter_node
 from utils.geturl import url_discovery
 
 
+STAGE_LABELS = {
+    "understand": "Understanding your query",
+    "identify": "Identifying topic & domain",
+    "collect": "Collecting source candidates",
+    "filter": "Filtering & ranking content",
+    "analyze": "Analyzing selected documents",
+    "prepare": "Preparing results for review",
+}
+
+
+def _default_stages():
+    return [
+        {"id": key, "label": value, "status": "pending"}
+        for key, value in STAGE_LABELS.items()
+    ]
+
+
+def _ensure_tracking(state: ResearchState) -> ResearchState:
+    if not state.get("stages"):
+        state["stages"] = _default_stages()
+    if "logs" not in state:
+        state["logs"] = []
+    if "current_stage" not in state:
+        state["current_stage"] = "initializing"
+    if "progress_percentage" not in state:
+        state["progress_percentage"] = 0
+    return state
+
+
+def _mark_stage(
+    state: ResearchState,
+    stage_id: str,
+    status: str,
+    current_stage: str | None = None,
+    progress: int | None = None,
+    log_message: str | None = None,
+) -> ResearchState:
+    state = _ensure_tracking(state)
+    for stage in state["stages"]:
+        if stage.get("id") == stage_id:
+            stage["status"] = status
+            break
+    if current_stage is not None:
+        state["current_stage"] = current_stage
+    if progress is not None:
+        state["progress_percentage"] = progress
+    if log_message:
+        state["logs"].append(log_message)
+    return state
+
+
+async def _run_node(fn, state: ResearchState):
+    result = fn(state)
+    if inspect.isawaitable(result):
+        result = await result
+    return result
+
+
+async def decomposer_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "understand", "running", current_stage="understand", progress=12)
+    result = await _run_node(decomposer_agent, state)
+    _mark_stage(result, "understand", "completed", current_stage="identify", progress=20)
+    return result
+
+
+async def url_discovery_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "identify", "running", current_stage="identify", progress=28)
+    result = await _run_node(url_discovery, state)
+    _mark_stage(result, "identify", "completed", current_stage="collect", progress=36)
+    return result
+
+
+async def search_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "collect", "running", current_stage="collect", progress=45)
+    result = await _run_node(multi_search_agent, state)
+    _mark_stage(result, "collect", "completed", current_stage="filter", progress=58)
+    return result
+
+
+async def search_validator_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "filter", "running", current_stage="filter", progress=66)
+    result = await _run_node(search_discriminator, state)
+    if result.get("validation_feedback") == "APPROVED":
+        _mark_stage(result, "filter", "completed", current_stage="analyze", progress=76)
+    return result
+
+
+async def ranker_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "analyze", "running", current_stage="analyze", progress=84)
+    result = await _run_node(rank_filter_node, state)
+    _mark_stage(result, "analyze", "completed", current_stage="prepare", progress=92)
+    _mark_stage(
+        result,
+        "prepare",
+        "completed",
+        current_stage="select",
+        progress=100,
+        log_message="Review stage ready. Awaiting human selection.",
+    )
+    return result
+
+
+async def summariser_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "analyze", "running", current_stage="analyze", progress=94)
+    result = await _run_node(summariser_agent, state)
+    _mark_stage(result, "analyze", "completed", current_stage="prepare", progress=98)
+    return result
+
+
+async def summariser_validator_stage(state: ResearchState) -> ResearchState:
+    _mark_stage(state, "prepare", "running", current_stage="prepare", progress=99)
+    result = await _run_node(summariser_discriminator, state)
+    if result.get("validation_feedback") == "APPROVED":
+        _mark_stage(result, "prepare", "completed", current_stage="finished", progress=100)
+    return result
+
+
 def build_graph(checkpointer=None):
     workflow = StateGraph(ResearchState)
 
     # Add Nodes
-    workflow.add_node("decomposer", decomposer_agent)
+    workflow.add_node("decomposer", decomposer_stage)
     workflow.add_node("decomposer_validator", decomposer_discriminator)
-    workflow.add_node("url_discovery", url_discovery)
-    workflow.add_node("search", multi_search_agent)  # All providers in parallel
-    workflow.add_node("search_validator", search_discriminator)
-    workflow.add_node("ranker", rank_filter_node)
-    workflow.add_node("summariser", summariser_agent)
-    workflow.add_node("summariser_validator", summariser_discriminator)
+    workflow.add_node("url_discovery", url_discovery_stage)
+    workflow.add_node("search", search_stage)  # All providers in parallel
+    workflow.add_node("search_validator", search_validator_stage)
+    workflow.add_node("ranker", ranker_stage)
+    workflow.add_node("summariser", summariser_stage)
+    workflow.add_node("summariser_validator", summariser_validator_stage)
 
     # Add Edges
     workflow.add_edge(START, "decomposer")

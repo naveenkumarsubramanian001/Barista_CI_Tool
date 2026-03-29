@@ -1,7 +1,10 @@
 openai
 tavily-python
+fastapi
 pydantic
 python-dotenv
+requests
+beautifulsoup4
 playwright
 langchain-core
 langchain-community
@@ -16,3 +19,4 @@ langchain-groq
 tldextract
 scikit-fuzzy
 rich
+pytest

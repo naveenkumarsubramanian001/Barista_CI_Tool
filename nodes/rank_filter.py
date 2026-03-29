@@ -20,7 +20,7 @@ def rank_filter_node(state: ResearchState) -> ResearchState:
 
     query_terms = set(query.split())
 
-    def rank_articles(articles_list, min_count=3):
+    def rank_articles(articles_list):
         scored = []
         for article in articles_list:
             fuzzy_score = getattr(article, "score", 0.0) or 0.0
@@ -30,12 +30,12 @@ def rank_filter_node(state: ResearchState) -> ResearchState:
             scored.append((combined, article))
 
         scored.sort(key=lambda x: x[0], reverse=True)
-        top_count = max(min_count, 3)
-        top = []
-        for i, (_, article) in enumerate(scored[:top_count]):
-            article.priority = True
-            top.append(article)
-        return top
+        ranked = []
+        for i, (_, article) in enumerate(scored):
+            # Top 3 are auto-selected defaults in the review UI.
+            article.priority = i < 3
+            ranked.append(article)
+        return ranked
 
     final_output = {
         "official_sources": rank_articles(official_sources),

@@ -47,6 +47,21 @@ class Insight(BaseModel):
     title: str
     brief_summary: str
     citation_id: int
+    detailed_summary: str = ""
+    reasoning: str = ""
+    sentiment: str = ""
+    key_metrics: List[str] = Field(default_factory=list)
+    key_features: List[str] = Field(default_factory=list)
+    tags: List[str] = Field(default_factory=list)
+    overview: str = ""
+    key_findings: List[str] = Field(default_factory=list)
+    strategic_analysis: str = ""
+    analysis: str = ""
+    why_it_matters: str = ""
+    business_impact: str = ""
+    practical_significance: str = ""
+    technical_context: str = ""
+    source_url: str = ""
 
 class KeyFinding(BaseModel):
     finding_title: str = Field(..., description="Short title for the thematic finding")
@@ -55,11 +70,30 @@ class KeyFinding(BaseModel):
 
 class FinalReport(BaseModel):
     report_title: str
+    company_name: str = Field("", description="Target company name inferred from query/insights")
+    query_topic: str = Field("", description="Original user query topic")
+    generated_on: str = Field("", description="ISO date or readable generation date")
+    generated_time: str = Field("", description="Time of report generation")
+    report_header: str = Field("", description="Formatted report header block")
+    introduction: str = Field("", description="Context-setting introduction")
+    strategic_significance: str = Field("", description="Introduction subsection: strategic significance")
+    research_scope: str = Field("", description="Introduction subsection: scope with counts/domains")
+    official_intelligence: str = Field("", description="Introduction subsection: official-source intelligence summary")
+    market_context: str = Field("", description="Introduction subsection: trusted-source market context")
+    report_structure: str = Field("", description="Introduction subsection: document structure explanation")
     executive_summary: str = Field("", description="3-4 paragraph overview synthesizing ALL sources")
+    conflict_and_consensus: str = Field("", description="Agreements and disagreements across source categories")
     key_findings: List[KeyFinding] = Field(default_factory=list, description="Cross-source thematic findings")
     official_insights: List[Insight] = Field(default_factory=list)
     trusted_insights: List[Insight] = Field(default_factory=list)
     cross_source_analysis: str = Field("", description="Comparing official vs trusted perspectives")
+    conclusion: str = Field("", description="Analytical conclusion and forward-looking implications")
+    analysis_summary: str = Field("", description="Conclusion subsection: overall analysis summary")
+    official_strategic_signals: str = Field("", description="Conclusion subsection: official strategic signals")
+    independent_market_assessment: str = Field("", description="Conclusion subsection: independent assessment")
+    temporal_significance: str = Field("", description="Conclusion subsection: timing and recency significance")
+    key_takeaways: List[str] = Field(default_factory=list, description="Conclusion subsection: key takeaways")
+    recommended_actions: List[str] = Field(default_factory=list, description="Conclusion subsection: recommended actions")
     references: List[Article]
 
 # --- Validation ---
@@ -97,6 +131,9 @@ class ResearchState(TypedDict):
     search_days_used: Optional[int]
     selected_articles: List[str]
     logs: List[str]
+    stages: List[Dict[str, str]]
+    current_stage: str
+    progress_percentage: int
 
 # --- Analyzer Workflow State ---
 

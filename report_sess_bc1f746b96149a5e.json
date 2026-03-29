@@ -1,0 +1,231 @@
+{
+  "report_title": "Competitive Intelligence Report: What is OpenAI's latest product?",
+  "company_name": "Openai",
+  "query_topic": "What is OpenAI's latest product?",
+  "generated_on": "2026-03-29",
+  "generated_time": "09:15 UTC",
+  "report_header": "What is OpenAI's latest product?\nGenerated: 2026-03-29 | 09:15 UTC\nTotal Sources Analysed: 5\nOfficial Insights: 2 | Trusted Insights: 3\nClassification: INTERNAL USE -- R&D\nProduced by Barista Competitive Intelligence Tool",
+  "introduction": "This briefing analyzes selected developments related to Openai. Official highlights include: Introducing Aardvark: OpenAI\u2019s agentic security researcher, OpenAI acquires Software Applications Incorporated, maker of Sky - OpenAI. Trusted coverage includes: Introducing GPT-5.2 - OpenAI, OpenAI and Amazon announce strategic partnership - OpenAI, OpenAI and Broadcom announce strategic collaboration to deploy 10 gigawatts of OpenAI-designed AI accelerators - OpenAI.",
+  "strategic_significance": "The selected developments indicate active strategic motion in product, partnerships, and positioning.",
+  "research_scope": "Insights analyzed: 5. Official: 2. Trusted: 3.",
+  "official_intelligence": "Official sources provide direct statements of priorities, launches, and strategic commitments.",
+  "market_context": "Trusted sources provide external framing, comparative context, and implications for competition.",
+  "report_structure": "The report presents executive summary, categorized insights, synthesis, and references.",
+  "executive_summary": "This report summarizes selected developments for 'What is OpenAI's latest product?'. A total of 2 official and 3 trusted insights were analyzed. Current synthesis was generated with fallback mode because the LLM daily token limit was reached; content remains grounded in selected sources.",
+  "conflict_and_consensus": "Official sources emphasize first-party announcements and strategic intent, while trusted sources add external interpretation and market context. Consensus exists on key development themes, with differences mainly in framing and impact emphasis.",
+  "key_findings": [
+    {
+      "finding_title": "Selected-source synthesis",
+      "finding_summary": "Report assembled from human-selected official and trusted sources.",
+      "source_ids": [
+        1,
+        2
+      ]
+    }
+  ],
+  "official_insights": [
+    {
+      "title": "Introducing Aardvark: OpenAI\u2019s agentic security researcher",
+      "brief_summary": "OpenAI has introduced Aardvark, an AI agent that thinks like a security researcher and scales to meet the demands of modern software. Aardvark continuously analyzes source code repositories to identify vulnerabilities, assess exploitability, prioritize severity, and propose targeted patches. It works by monitoring commits and changes to codebases, identifying vulnerabilities, and proposing fixes using LLM-powered reasoning and tool-use.",
+      "citation_id": 1,
+      "detailed_summary": "OpenAI has introduced Aardvark, an AI agent that thinks like a security researcher and scales to meet the demands of modern software. Aardvark continuously analyzes source code repositories to identify vulnerabilities, assess exploitability, prioritize severity, and propose targeted patches. It works by monitoring commits and changes to codebases, identifying vulnerabilities, and proposing fixes using LLM-powered reasoning and tool-use.",
+      "reasoning": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "sentiment": "Positive",
+      "key_metrics": [
+        "Tens of thousands of new vulnerabilities discovered each year",
+        "Several months of Aardvark being in service"
+      ],
+      "key_features": [
+        "Autonomous agent that can help developers and security teams discover and fix security vulnerabilities at scale",
+        "Continuous analysis of source code repositories",
+        "LLM-powered reasoning and tool-use",
+        "Multi-stage pipeline for identifying, explaining, and fixing vulnerabilities",
+        "Integration with OpenAI Codex for patching",
+        "Integration with GitHub and existing workflows"
+      ],
+      "tags": [
+        "#Sentiment:Positive"
+      ],
+      "overview": "OpenAI has introduced Aardvark, an AI agent that thinks like a security researcher and scales to meet the demands of modern software. Aardvark continuously analyzes source code repositories to identify vulnerabilities, assess exploitability, prioritize severity, and propose targeted patches. It works by monitoring commits and changes to codebases, identifying vulnerabilities, and proposing fixes using LLM-powered reasoning and tool-use.",
+      "key_findings": [
+        "Tens of thousands of new vulnerabilities discovered each year",
+        "Several months of Aardvark being in service",
+        "Autonomous agent that can help developers and security teams discover and fix security vulnerabilities at scale",
+        "Continuous analysis of source code repositories",
+        "LLM-powered reasoning and tool-use",
+        "Multi-stage pipeline for identifying, explaining, and fixing vulnerabilities"
+      ],
+      "strategic_analysis": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "analysis": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "why_it_matters": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "business_impact": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "practical_significance": "Aardvark uses a multi-stage pipeline to identify, explain, and fix vulnerabilities, including analysis, commit scanning, validation, and patching. It integrates with OpenAI Codex to help fix vulnerabilities and attaches a Codex-generated patch to each finding for human review.",
+      "technical_context": "Autonomous agent that can help developers and security teams discover and fix security vulnerabiliti...; Continuous analysis of source code repositories; LLM-powered reasoning and tool-use",
+      "source_url": "https://openai.com/index/introducing-aardvark/"
+    },
+    {
+      "title": "OpenAI acquires Software Applications Incorporated, maker of Sky - OpenAI",
+      "brief_summary": "For Developers Back to main menu API Platform API Pricing Agents Codex Open Models Community(opens in a new window) ChatGPT Back to main menu Explore ChatGPT Business Enterprise Education Pricing Download Sora Back to main menu Sora Overview Help Center(opens in a new window) Sora Log in(opens in a new window) Stories Company Back to main menu About Us Our Charter Careers Brand Guidelines News Log in OpenAI October 23, 2025 Company OpenAI acquires Software Applications Incorporated, maker of Sky Enhancing how people use AI on their computers. [...] Our Research Research Index Research Overview Research Residency Latest Advancements GPT-5 Open...",
+      "citation_id": 2,
+      "detailed_summary": "For Developers Back to main menu API Platform API Pricing Agents Codex Open Models Community(opens in a new window) ChatGPT Back to main menu Explore ChatGPT Business Enterprise Education Pricing Download Sora Back to main menu Sora Overview Help Center(opens in a new window) Sora Log in(opens in a new window) Stories Company Back to main menu About Us Our Charter Careers Brand Guidelines News Log in OpenAI October 23, 2025 Company OpenAI acquires Software Applications Incorporated, maker of Sky Enhancing how people use AI on their computers. [...] Our Research Research Index Research Overview Research Residency Latest Advancements GPT-5 OpenAI o3 OpenAI o4-mini GPT-4o GPT-4o mini Sora Safety Safety Approach Security & Privacy Trust & Transparency ChatGPT Explore ChatGPT(opens in a new window) Business Enterprise Education Pricing(opens in a new window) Download(opens in a new window) So... [2]",
+      "reasoning": "This source contributes evidence for the query. [2]",
+      "sentiment": "Neutral",
+      "key_metrics": [],
+      "key_features": [],
+      "tags": [
+        "#Sentiment:Neutral"
+      ],
+      "overview": "For Developers Back to main menu API Platform API Pricing Agents Codex Open Models Community(opens in a new window) ChatGPT Back to main menu Explore ChatGPT Business Enterprise Education Pricing Download Sora Back to main menu Sora Overview Help Center(opens in a new window) Sora Log in(opens in a new window) Stories Company Back to main menu About Us Our Charter Careers Brand Guidelines News Log in OpenAI October 23, 2025 Company OpenAI acquires Software Applications Incorporated, maker of Sky Enhancing how people use AI on their computers. [...] Our Research Research Index Research Overview Research Residency Latest Advancements GPT-5 OpenAI o3 OpenAI o4-mini GPT-4o GPT-4o mini Sora Safet...",
+      "key_findings": [
+        "No structured findings extracted for citation [2]"
+      ],
+      "strategic_analysis": "This source contributes evidence for the query. [2]",
+      "analysis": "This source contributes evidence for the query. [2]",
+      "why_it_matters": "This source contributes evidence for the query. [2]",
+      "business_impact": "This source contributes evidence for the query. [2]",
+      "practical_significance": "This source contributes evidence for the query. [2]",
+      "technical_context": "",
+      "source_url": "https://openai.com/index/openai-acquires-software-applications-incorporated/"
+    }
+  ],
+  "trusted_insights": [
+    {
+      "title": "Introducing GPT-5.2 - OpenAI",
+      "brief_summary": "GPT\u20115.2 Thinking is also better at front-end software engineering than GPT\u20115.1 Thinking. Early testers found it significantly stronger at front-end development and complex or unconventional UI work\u2014especially involving 3D elements\u2014making it a powerful daily partner for engineers across the stack. See a few examples of what it can produce from a single prompt: `Prompt:` `Create a single-page app in a single HTML file with the following requirements: - Name: Ocean Wave Simulation - Goal: Display realistic animated waves. - Features: Change wind speed, wave height, lighting. - The UI should be calming and realistic.` Early testers shared their f...",
+      "citation_id": 3,
+      "detailed_summary": "GPT\u20115.2 Thinking is also better at front-end software engineering than GPT\u20115.1 Thinking. Early testers found it significantly stronger at front-end development and complex or unconventional UI work\u2014especially involving 3D elements\u2014making it a powerful daily partner for engineers across the stack. See a few examples of what it can produce from a single prompt: `Prompt:` `Create a single-page app in a single HTML file with the following requirements: - Name: Ocean Wave Simulation - Goal: Display realistic animated waves. - Features: Change wind speed, wave height, lighting. - The UI should be calming and realistic.` Early testers shared their feedback on GPT\u20115.2\u2019s coding capabilities: [...] Side-by-side comparisons show improved sophistication and formatting in spreadsheets and slides generated by GPT\u20115.2 Thinking: Prompt: Create a workforce planning model: headcount, hiring plan, attritio... [3]",
+      "reasoning": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "sentiment": "Neutral",
+      "key_metrics": [],
+      "key_features": [],
+      "tags": [
+        "#Sentiment:Neutral"
+      ],
+      "overview": "GPT\u20115.2 Thinking is also better at front-end software engineering than GPT\u20115.1 Thinking. Early testers found it significantly stronger at front-end development and complex or unconventional UI work\u2014especially involving 3D elements\u2014making it a powerful daily partner for engineers across the stack. See a few examples of what it can produce from a single prompt: `Prompt:` `Create a single-page app in a single HTML file with the following requirements: - Name: Ocean Wave Simulation - Goal: Display realistic animated waves. - Features: Change wind speed, wave height, lighting. - The UI should be calming and realistic.` Early testers shared their feedback on GPT\u20115.2\u2019s coding capabilities: [...] Si...",
+      "key_findings": [
+        "No structured findings extracted for citation [3]"
+      ],
+      "strategic_analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "why_it_matters": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "business_impact": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "practical_significance": "Generated with non-LLM fallback due to temporary LLM rate limit. [3]",
+      "technical_context": "",
+      "source_url": "https://openai.com/index/introducing-gpt-5-2/"
+    },
+    {
+      "title": "OpenAI and Amazon announce strategic partnership - OpenAI",
+      "brief_summary": "This commitment spans both Trainium3 and next-generation Trainium4 chips and will power a broad range of advanced AI workloads. Trainium4, expected to begin delivery in 2027, will provide another major performance gain, including significantly higher FP4 compute performance, expanded memory bandwidth, and increased high-bandwidth memory capacity to support increasingly capable AI systems at scale. Custom models available to power Amazon\u2019s customer-facing applications [...] \u2014 Sam Altman, co-founder and CEO of OpenAI 2026 Partnerships Author OpenAI Keep reading View all Image 1: Scaling AI for everyone > Cover Scaling AI for everyone Company Fe...",
+      "citation_id": 4,
+      "detailed_summary": "This commitment spans both Trainium3 and next-generation Trainium4 chips and will power a broad range of advanced AI workloads. Trainium4, expected to begin delivery in 2027, will provide another major performance gain, including significantly higher FP4 compute performance, expanded memory bandwidth, and increased high-bandwidth memory capacity to support increasingly capable AI systems at scale. Custom models available to power Amazon\u2019s customer-facing applications [...] \u2014 Sam Altman, co-founder and CEO of OpenAI 2026 Partnerships Author OpenAI Keep reading View all Image 1: Scaling AI for everyone > Cover Scaling AI for everyone Company Feb 27, 2026 Image 2: Stateful Runtime > Cover Introducing the Stateful Runtime Environment for Agents in Amazon Bedrock Company Feb 27, 2026 Image 3: microsoft > cover Joint Statement from OpenAI and Microsoft Company Feb 27, 2026 Our Research Researc... [4]",
+      "reasoning": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "sentiment": "Neutral",
+      "key_metrics": [],
+      "key_features": [],
+      "tags": [
+        "#Sentiment:Neutral"
+      ],
+      "overview": "This commitment spans both Trainium3 and next-generation Trainium4 chips and will power a broad range of advanced AI workloads. Trainium4, expected to begin delivery in 2027, will provide another major performance gain, including significantly higher FP4 compute performance, expanded memory bandwidth, and increased high-bandwidth memory capacity to support increasingly capable AI systems at scale. Custom models available to power Amazon\u2019s customer-facing applications [...] \u2014 Sam Altman, co-founder and CEO of OpenAI 2026 Partnerships Author OpenAI Keep reading View all Image 1: Scaling AI for everyone > Cover Scaling AI for everyone Company Feb 27, 2026 Image 2: Stateful Runtime > Cover Intro...",
+      "key_findings": [
+        "No structured findings extracted for citation [4]"
+      ],
+      "strategic_analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "why_it_matters": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "business_impact": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "practical_significance": "Generated with non-LLM fallback due to temporary LLM rate limit. [4]",
+      "technical_context": "",
+      "source_url": "https://openai.com/index/amazon-partnership/"
+    },
+    {
+      "title": "OpenAI and Broadcom announce strategic collaboration to deploy 10 gigawatts of OpenAI-designed AI accelerators - OpenAI",
+      "brief_summary": "\u201cOur partnership with OpenAI continues to set new industry benchmarks for the design and deployment of open, scalable and power-efficient AI clusters,\u201d said Charlie Kawwas, Ph. D., President of the Semiconductor Solutions Group for Broadcom. \u201cCustom accelerators combine remarkably well with standards-based Ethernet scale-up and scale-out networking solutions to provide cost and performance optimized next generation AI infrastructure. The racks include Broadcom\u2019s end-to-end portfolio of Ethernet, PCIe and optical connectivity solutions, reaffirming our AI infrastructure portfolio leadership.\u201d For Broadcom, this collaboration reinforces the imp...",
+      "citation_id": 5,
+      "detailed_summary": "\u201cOur partnership with OpenAI continues to set new industry benchmarks for the design and deployment of open, scalable and power-efficient AI clusters,\u201d said Charlie Kawwas, Ph. D., President of the Semiconductor Solutions Group for Broadcom. \u201cCustom accelerators combine remarkably well with standards-based Ethernet scale-up and scale-out networking solutions to provide cost and performance optimized next generation AI infrastructure. The racks include Broadcom\u2019s end-to-end portfolio of Ethernet, PCIe and optical connectivity solutions, reaffirming our AI infrastructure portfolio leadership.\u201d For Broadcom, this collaboration reinforces the importance of custom accelerators and the choice of Ethernet as the technology for scale-up and scale-out networking in AI datacenters. [...] \u201cBroadcom\u2019s collaboration with OpenAI signifies a pivotal moment in the pursuit of artificial general intellige... [5]",
+      "reasoning": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "sentiment": "Neutral",
+      "key_metrics": [],
+      "key_features": [],
+      "tags": [
+        "#Sentiment:Neutral"
+      ],
+      "overview": "\u201cOur partnership with OpenAI continues to set new industry benchmarks for the design and deployment of open, scalable and power-efficient AI clusters,\u201d said Charlie Kawwas, Ph. D., President of the Semiconductor Solutions Group for Broadcom. \u201cCustom accelerators combine remarkably well with standards-based Ethernet scale-up and scale-out networking solutions to provide cost and performance optimized next generation AI infrastructure. The racks include Broadcom\u2019s end-to-end portfolio of Ethernet, PCIe and optical connectivity solutions, reaffirming our AI infrastructure portfolio leadership.\u201d For Broadcom, this collaboration reinforces the importance of custom accelerators and the choice of E...",
+      "key_findings": [
+        "No structured findings extracted for citation [5]"
+      ],
+      "strategic_analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "analysis": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "why_it_matters": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "business_impact": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "practical_significance": "Generated with non-LLM fallback due to temporary LLM rate limit. [5]",
+      "technical_context": "",
+      "source_url": "https://openai.com/index/openai-and-broadcom-announce-strategic-collaboration/"
+    }
+  ],
+  "cross_source_analysis": "Official sources emphasize first-party announcements and strategic intent, while trusted sources add external interpretation and market context. Consensus exists on key development themes, with differences mainly in framing and impact emphasis.",
+  "conclusion": "Overall direction appears consistent with expansion and competitive positioning through selected strategic actions.",
+  "analysis_summary": "The aggregate signal indicates a coordinated strategy supported by multiple source types.",
+  "official_strategic_signals": "First-party communications emphasize planned capabilities and strategic initiatives.",
+  "independent_market_assessment": "Third-party narratives generally support the direction while adding risk/opportunity interpretation.",
+  "temporal_significance": "Recency of selected items indicates active, ongoing execution rather than historical-only positioning.",
+  "key_takeaways": [
+    "Selected official and trusted insights are directionally aligned.",
+    "External framing complements first-party strategic messaging."
+  ],
+  "recommended_actions": [
+    "Track follow-on announcements and execution milestones.",
+    "Benchmark competitor responses over the next review cycle."
+  ],
+  "references": [
+    {
+      "title": "Introducing Aardvark: OpenAI\u2019s agentic security researcher - OpenAI",
+      "url": "https://openai.com/index/introducing-aardvark/",
+      "snippet": "Latest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Foundation\n   Careers\n   Brand\n\nSupport\n\nMore\n   News\n   Stories\n   Livestreams\n   Podcast [...] We\u2019re looking to validate performance across a variety of environments. If your organization or open source project is interested in joining, you can apply here\u2060.\n\n   2025\n\nAuthor\n\nOpenAI\n\nContributors\n\nAkshay Bhat, Andy Nguyen, Dave Aitel, Harold Nguyen, Ian Brelinsky, Tiffany Citra, Xin Hu, Matt Knight\n\nKeep reading\n\nView all\n\nImage 2:  Scaling security > Cover image\n\nScaling security with responsible disclosure Security Jun 9, 2025\n\nImage 3: response-to-nyt-data-demands > cover image\n\nHow we\u2019re responding to The New York Times\u2019 data demands in order to protect user privacy Security Jun 5, 2025\n\nImage 4: Security on the path to AGI > Media\n\nSecurity on the path to AGI Security Mar 26, 2025\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency",
+      "published_date": "Thu, 30 Oct 2025 17:55:05 GMT",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.6405
+    },
+    {
+      "title": "OpenAI acquires Software Applications Incorporated, maker of Sky - OpenAI",
+      "url": "https://openai.com/index/openai-acquires-software-applications-incorporated/",
+      "snippet": "For Developers\n\nBack to main menu  \n\n       API Platform\n       API Pricing\n       Agents\n       Codex\n       Open Models\n       Community(opens in a new window)\n\n   ChatGPT\n\nBack to main menu  \n\n       Explore ChatGPT\n       Business\n       Enterprise\n       Education\n       Pricing\n       Download\n\n   Sora\n\nBack to main menu  \n\n       Sora Overview\n       Help Center(opens in a new window)\n       Sora Log in(opens in a new window)\n\n   Stories\n   Company\n\nBack to main menu  \n\n       About Us\n       Our Charter\n       Careers\n       Brand Guidelines\n\n   News\n\nLog in\n\nOpenAI\n\nOctober 23, 2025\n\nCompany\n\nOpenAI acquires Software Applications Incorporated, maker of Sky\n\nEnhancing how people use AI on their computers. [...] Our Research\n   Research Index\n   Research Overview\n   Research Residency\n\nLatest Advancements\n   GPT-5\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency\n\nChatGPT\n   Explore ChatGPT(opens in a new window)\n   Business\n   Enterprise\n   Education\n   Pricing(opens in a new window)\n   Download(opens in a new window)\n\nSora\n   Sora Overview\n   Features\n   Pricing\n   Sora log in(opens in a new window)\n\nAPI Platform\n   Platform Overview\n   Pricing\n   API log in(opens in a new window)\n   Documentation(opens in a new window)\n   Developer Forum(opens in a new window)\n\nFor Business\n   Business Overview\n   Solutions\n   Contact Sales\n\nCompany\n   About Us\n   Our Charter\n   Careers\n   Brand\n\nSupport [...] OpenAI acquires Software Applications Incorporated, maker of Sky | OpenAI\n\nSkip to main content\n\nLog in\n\n\n   Sora(opens in a new window)\n   API Platform(opens in a new window)\n\n   Research \n   Safety \n   For Business \n   For Developers \n   ChatGPT \n   Sora \n   Stories \n   Company \n   News \n\n   Research\n\nBack to main menu  \n\n       Research Index\n       Research Overview\n       Research Residency\n       Latest Advancements\n       Sora 2\n       GPT-5\n       OpenAI o3 and o4-mini\n       GPT-4.5\n       OpenAI o1\n       GPT-4o\n\n   Safety\n\nBack to main menu  \n\n       Safety Approach\n       Security & Privacy\n\n   For Business\n\nBack to main menu  \n\n       Business Overview\n       Startups\n       Solutions\n       ChatGPT Pricing\n       API Pricing\n       Contact Sales\n\n   For Developers",
+      "published_date": "Thu, 23 Oct 2025 17:04:10 GMT",
+      "source_type": "official",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.6268
+    },
+    {
+      "title": "Introducing GPT-5.2 - OpenAI",
+      "url": "https://openai.com/index/introducing-gpt-5-2/",
+      "snippet": "GPT\u20115.2 Thinking is also better at front-end software engineering than GPT\u20115.1 Thinking. Early testers found it significantly stronger at front-end development and complex or unconventional UI work\u2014especially involving 3D elements\u2014making it a powerful daily partner for engineers across the stack. See a few examples of what it can produce from a single prompt:\n\n`Prompt:` `Create a single-page app in a single HTML file with the following requirements:  \n- Name: Ocean Wave Simulation  \n- Goal: Display realistic animated waves.  \n- Features: Change wind speed, wave height, lighting.  \n- The UI should be calming and realistic.`\n\nEarly testers shared their feedback on GPT\u20115.2\u2019s coding capabilities: [...] Side-by-side comparisons show improved sophistication and formatting in spreadsheets and slides generated by GPT\u20115.2 Thinking:\n\nPrompt: Create a workforce planning model: headcount, hiring plan, attrition, and budget impact. Include engineering, marketing, legal, and sales departments.\n\nTo use the new spreadsheet and presentation capabilities in ChatGPT, you must be on a paid plan (Plus, Pro, Business, Enterprise) and select either GPT\u20115.2 Thinking or Pro. Complex generations can take many minutes to produce.\n\n#### Coding [...] ##### Vision\n\n| GPT-5.2 Thinking | GPT-5.2 Pro | GPT-5.1 Thinking |\n --- \n| CharXiv reasoning (no tools) | 82.1%  67.0% |\n| CharXiv reasoning (w/ Python) | 88.7%  80.3% |\n| MMMU Pro (no tools) | 79.5%  - |\n| MMMU Pro (w/ Python) | 80.4%  79.0% |\n| Video MMMU (no tools) | 85.9%  82.9% |\n| Screenspot Pro (w/ Python) | 86.3%  64.2% |\n\n##### Tool usage\n\n| GPT-5.2 Thinking | GPT-5.2 Pro | GPT-5.1 Thinking |\n --- \n| Tau2-bench Telecom | 98.7%  95.6% |\n| Tau2-bench Retail | 82.0%  77.9% |\n| BrowseComp | 65.8% | 77.9% | 50.8% |\n| Scale MCP-Atlas | 60.6%  44.5% |\n| Toolathlon | 46.3%  36.1% |\n\n##### Academic",
+      "published_date": "Thu, 11 Dec 2025 18:22:09 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8227
+    },
+    {
+      "title": "OpenAI and Amazon announce strategic partnership - OpenAI",
+      "url": "https://openai.com/index/amazon-partnership/",
+      "snippet": "This commitment spans both Trainium3 and next-generation Trainium4 chips and will power a broad range of advanced AI workloads. Trainium4, expected to begin delivery in 2027, will provide another major performance gain, including significantly higher FP4 compute performance, expanded memory bandwidth, and increased high-bandwidth memory capacity to support increasingly capable AI systems at scale.\n\nCustom models available to power Amazon\u2019s customer-facing applications [...] \u2014 Sam Altman, co-founder and CEO of OpenAI\n\n   2026\n   Partnerships\n\nAuthor\n\nOpenAI\n\nKeep reading\n\nView all\n\nImage 1: Scaling AI for everyone > Cover\n\nScaling AI for everyone Company Feb 27, 2026\n\nImage 2: Stateful Runtime > Cover\n\nIntroducing the Stateful Runtime Environment for Agents in Amazon Bedrock Company Feb 27, 2026\n\nImage 3: microsoft > cover\n\nJoint Statement from OpenAI and Microsoft Company Feb 27, 2026\n\nOur Research\n   Research Index\n   Research Overview\n   Research Residency\n   OpenAI for Science\n   Economic Research\n\nLatest Advancements\n   GPT-5\n   Codex\n   OpenAI o3\n   OpenAI o4-mini\n   GPT-4o\n   GPT-4o mini\n   Sora\n\nSafety\n   Safety Approach\n   Security & Privacy\n   Trust & Transparency [...] (opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)(opens in a new window)\n\nOpenAI \u00a9 2015\u20132026 Manage Cookies\n\nEnglish United States",
+      "published_date": "Fri, 27 Feb 2026 13:35:37 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.8027
+    },
+    {
+      "title": "OpenAI and Broadcom announce strategic collaboration to deploy 10 gigawatts of OpenAI-designed AI accelerators - OpenAI",
+      "url": "https://openai.com/index/openai-and-broadcom-announce-strategic-collaboration/",
+      "snippet": "\u201cOur partnership with OpenAI continues to set new industry benchmarks for the design and deployment of open, scalable and power-efficient AI clusters,\u201d said Charlie Kawwas, Ph. D., President of the Semiconductor Solutions Group for Broadcom. \u201cCustom accelerators combine remarkably well with standards-based Ethernet scale-up and scale-out networking solutions to provide cost and performance optimized next generation AI infrastructure. The racks include Broadcom\u2019s end-to-end portfolio of Ethernet, PCIe and optical connectivity solutions, reaffirming our AI infrastructure portfolio leadership.\u201d\n\nFor Broadcom, this collaboration reinforces the importance of custom accelerators and the choice of Ethernet as the technology for scale-up and scale-out networking in AI datacenters. [...] \u201cBroadcom\u2019s collaboration with OpenAI signifies a pivotal moment in the pursuit of artificial general intelligence,\u201d said Hock Tan, President and CEO of Broadcom. \u201cOpenAI has been in the forefront of the AI revolution since the ChatGPT moment, and we are thrilled to co-develop and deploy 10 gigawatts of next generation accelerators and network systems to pave the way for the future of AI.\u201d\n\n\u201cOur collaboration with Broadcom will power breakthroughs in AI and bring the technology\u2019s full potential closer to reality,\u201d said OpenAI co-founder and President, Greg Brockman. \u201cBy building our own chip, we can embed what we\u2019ve learned from creating frontier models and products directly into the hardware, unlocking new levels of capability and intelligence.\u201d [...] For Business\n\nBack to main menu  \n\n       Business Overview\n       Startups\n       Solutions\n       ChatGPT Pricing\n       API Pricing\n       Contact Sales\n\n   For Developers\n\nBack to main menu  \n\n       API Platform\n       API Pricing\n       Agents\n       Codex\n       Open Models\n       Community(opens in a new window)\n\n   ChatGPT\n\nBack to main menu  \n\n       Explore ChatGPT\n       Business\n       Enterprise\n       Education\n       Pricing\n       Download\n\n   Sora\n\nBack to main menu  \n\n       Sora Overview\n       Features\n       Pricing\n       Help Center(opens in a new window)\n       Sora Log in(opens in a new window)\n\n   Stories\n   Company\n\nBack to main menu  \n\n       About Us\n       Our Charter\n       Careers\n       Brand Guidelines\n\n   News\n\nLog in",
+      "published_date": "Mon, 13 Oct 2025 13:05:17 GMT",
+      "source_type": "trusted",
+      "domain": "openai.com",
+      "priority": true,
+      "score": 0.6398
+    }
+  ]
+}
