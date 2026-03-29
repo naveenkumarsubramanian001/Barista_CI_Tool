@@ -8,12 +8,16 @@ from typing import Any, Dict, List, Optional
 import tldextract
 
 from models.schemas import ResearchState, Article
+from config import SERPER_API_KEY as CONFIG_SERPER_API_KEY
 from utils.date_utils import is_within_range
 from utils.query_builder import build_site_query
 
 
-SERPER_API_KEY = (os.getenv("SERPER_API_KEY") or "").strip()
 SERPER_BASE_URL = (os.getenv("SERPER_BASE_URL") or "https://google.serper.dev").rstrip("/")
+
+
+def _get_serper_api_key() -> str:
+    return (CONFIG_SERPER_API_KEY or os.getenv("SERPER_API_KEY") or "").strip()
 
 
 def _iso_today() -> str:
@@ -31,7 +35,8 @@ def _extract_domain(url: str) -> Optional[str]:
 
 def _serper_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
     """Blocking HTTP request to Serper. Call via asyncio.to_thread."""
-    if not SERPER_API_KEY:
+    api_key = _get_serper_api_key()
+    if not api_key:
         raise RuntimeError("SERPER_API_KEY is not set")
 
     url = f"{SERPER_BASE_URL}/{path.lstrip('/')}"
@@ -42,7 +47,7 @@ def _serper_post(path: str, payload: Dict[str, Any]) -> Dict[str, Any]:
         data=data,
         method="POST",
         headers={
-            "X-API-KEY": SERPER_API_KEY,
+            "X-API-KEY": api_key,
             "Content-Type": "application/json",
         },
     )
@@ -142,7 +147,7 @@ async def serper_search_agent(state: ResearchState) -> ResearchState:
     company_domains = state.get("company_domains", [])[:5]
     trusted_domains = state.get("trusted_domains", [])[:5]
 
-    search_days = int(state.get("search_days", 180))
+    search_days = int(state.get("search_days_used") or 180)
 
     def process_results(search_results_list: List[List[Dict[str, Any]]], source_type: str) -> List[Article]:
         all_articles: List[Article] = []

@@ -99,3 +99,131 @@ def test_analyzer_upload_and_status_contract(client):
     assert body["session_id"] == session_id
     assert "status" in body
     assert "progress_percentage" in body
+
+
+@pytest.fixture()
+def temp_company_db(tmp_path, monkeypatch):
+    import database
+
+    db_path = tmp_path / "company_test.sqlite"
+    monkeypatch.setattr(database, "DB_PATH", str(db_path))
+    database.create_db_and_tables()
+    return database
+
+
+def test_company_scrape_contract(client, temp_company_db, monkeypatch):
+    import routers.companies as companies_router
+    import services.company_tracking as company_tracking
+
+    def _drop_task(coro):
+        # Avoid background task leakage during tests.
+        coro.close()
+        return None
+
+    async def _fake_scan(company_id: int, *, search_days: int, trigger: str, create_notifications: bool):
+        return {
+            "company_id": company_id,
+            "company_name": "OpenAI",
+            "trigger": trigger,
+            "search_days": search_days,
+            "total_ranked": 4,
+            "new_insights": 2,
+        }
+
+    monkeypatch.setattr(companies_router.asyncio, "create_task", _drop_task)
+    monkeypatch.setattr(company_tracking, "run_company_tracking_scan", _fake_scan)
+
+    created = client.post(
+        "/api/companies/",
+        json={"name": "OpenAI", "url": "https://openai.com"},
+    )
+    assert created.status_code == 200
+    company_id = created.json()["id"]
+
+    scrape = client.post(f"/api/companies/{company_id}/scrape")
+    assert scrape.status_code == 200
+    payload = scrape.json()
+    assert payload["status"] == "ok"
+    assert payload["company_id"] == company_id
+    assert payload["trigger"] == "manual"
+    assert payload["new_insights"] == 2
+
+
+def test_company_update_read_and_notifications_contract(client, temp_company_db):
+    company = temp_company_db.add_company("Anthropic", "https://anthropic.com")
+    company_id = int(company["id"])
+
+    update = temp_company_db.add_company_update(
+        company_id,
+        {
+            "title": "New launch",
+            "url": "https://example.com/news-1",
+            "snippet": "Launch details",
+            "source_type": "trusted",
+            "published_date": "2026-03-29",
+            "is_read": False,
+            "metadata": {},
+        },
+    )
+    assert update is not None
+    update_id = int(update["id"])
+
+    notification = temp_company_db.add_notification(
+        title="New intelligence found",
+        message="1 new insight",
+        company_id=company_id,
+    )
+    notification_id = int(notification["id"])
+
+    mark_update = client.post(f"/api/companies/{company_id}/updates/{update_id}/read")
+    assert mark_update.status_code == 200
+    assert mark_update.json() == {"status": "ok"}
+
+    company_after = client.get(f"/api/companies/{company_id}")
+    assert company_after.status_code == 200
+    assert company_after.json()["unread_count"] == 0
+
+    notifications = client.get("/api/companies/notifications?limit=10")
+    assert notifications.status_code == 200
+    body = notifications.json()
+    assert "notifications" in body
+    assert any(n["id"] == notification_id for n in body["notifications"])
+
+    mark_notification = client.post(f"/api/companies/notifications/{notification_id}/read")
+    assert mark_notification.status_code == 200
+    assert mark_notification.json() == {"status": "ok"}
+
+
+def test_company_generate_report_contract(client, temp_company_db, monkeypatch):
+    import services.company_tracking as company_tracking
+
+    async def _fake_generate(company_id: int, update_ids: list[int]):
+        return {
+            "company_id": company_id,
+            "session_id": "company_1_abc123",
+            "report": {"report_title": "Mock Report"},
+            "pdf_url": "/api/pdf/download/company_1_abc123",
+        }
+
+    monkeypatch.setattr(company_tracking, "generate_company_report", _fake_generate)
+
+    company = temp_company_db.add_company("Perplexity", "https://perplexity.ai")
+    company_id = int(company["id"])
+
+    empty_selection = client.post(
+        f"/api/companies/{company_id}/generate-report",
+        json={"update_ids": []},
+    )
+    assert empty_selection.status_code == 400
+    assert empty_selection.json()["detail"] == "Select at least one insight"
+
+    generated = client.post(
+        f"/api/companies/{company_id}/generate-report",
+        json={"update_ids": [1, 2]},
+    )
+    assert generated.status_code == 200
+    payload = generated.json()
+    assert payload["status"] == "ok"
+    assert payload["company_id"] == company_id
+    assert payload["session_id"] == "company_1_abc123"
+    assert payload["pdf_url"] == "/api/pdf/download/company_1_abc123"

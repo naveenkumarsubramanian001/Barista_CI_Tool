@@ -19,7 +19,8 @@ from config import (
 
 from contextlib import asynccontextmanager
 from database import create_db_and_tables
-from scheduler import start_scheduler
+from scheduler import start_scheduler, register_scan_handler
+from services.company_tracking import run_company_tracking_scan
 
 _checkpointer_cm = None
 checkpointer = None
@@ -31,6 +32,7 @@ async def lifespan(app: FastAPI):
     global checkpointer, graph_app, analyzer_app
 
     create_db_and_tables()
+    register_scan_handler(run_company_tracking_scan)
     start_scheduler()
 
     existing_graph = getattr(app.state, "graph_app", None)
