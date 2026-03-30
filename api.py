@@ -1,8 +1,6 @@
 import asyncio
 import os
 import secrets
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -12,63 +10,50 @@ from typing import List
 from langgraph.checkpoint.memory import MemorySaver
 from graph.workflow import build_graph
 from graph.analyzer_workflow import build_analyzer_graph
-
-from database import create_db_and_tables
-from scheduler import start_scheduler
-from models.schemas import ApiError, SearchStartResponse, WorkflowStatusResponse
 from config import (
     CORS_ALLOWED_ORIGINS,
+    CORS_ALLOW_CREDENTIALS,
     CHECKPOINTER_BACKEND,
-    CHECKPOINT_DB_PATH,
-    STRICT_STARTUP_VALIDATION,
-    validate_runtime_config,
+    CHECKPOINTER_SQLITE_PATH,
 )
 
+from contextlib import asynccontextmanager
+from database import create_db_and_tables
+from scheduler import start_scheduler, register_scan_handler
+from services.company_tracking import run_company_tracking_scan
 
-_CHECKPOINTER_CONTEXT = None
-
-
-def _create_checkpointer():
-    """Create checkpointer backend with persistence when available."""
-    global _CHECKPOINTER_CONTEXT
-
-    if CHECKPOINTER_BACKEND == "sqlite":
-        try:
-            from langgraph.checkpoint.sqlite import SqliteSaver
-
-            _CHECKPOINTER_CONTEXT = SqliteSaver.from_conn_string(CHECKPOINT_DB_PATH)
-            return _CHECKPOINTER_CONTEXT.__enter__()
-        except Exception as exc:
-            print(f"[startup] sqlite checkpointer unavailable ({exc}); falling back to MemorySaver")
-
-    return MemorySaver()
+_checkpointer_cm = None
+checkpointer = None
+graph_app = None
+analyzer_app = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    config_report = validate_runtime_config(strict=STRICT_STARTUP_VALIDATION)
-    if config_report.get("errors"):
-        for startup_error in config_report["errors"]:
-            print(f"[startup][config error] {startup_error}")
-    if config_report.get("warnings"):
-        for warning in config_report["warnings"]:
-            print(f"[startup][config warning] {warning}")
+    global checkpointer, graph_app, analyzer_app
 
     create_db_and_tables()
+    register_scan_handler(run_company_tracking_scan)
     start_scheduler()
 
-    app.state.checkpointer = checkpointer
-    app.state.graph_app = graph_app
-    app.state.analyzer_app = analyzer_app
-    app.state.get_config = get_config
+    existing_graph = getattr(app.state, "graph_app", None)
+    existing_analyzer = getattr(app.state, "analyzer_app", None)
+    if existing_graph is None or existing_analyzer is None:
+        checkpointer = await _build_checkpointer()
+        graph_app = build_graph(checkpointer=checkpointer)
+        analyzer_app = build_analyzer_graph(checkpointer=checkpointer)
+        app.state.graph_app = graph_app
+        app.state.analyzer_app = analyzer_app
+    else:
+        graph_app = existing_graph
+        analyzer_app = existing_analyzer
 
-    yield
-
-    global _CHECKPOINTER_CONTEXT
-    if _CHECKPOINTER_CONTEXT is not None:
-        try:
-            _CHECKPOINTER_CONTEXT.__exit__(None, None, None)
-        except Exception:
-            pass
+    try:
+        yield
+    finally:
+        global _checkpointer_cm
+        if _checkpointer_cm is not None:
+            await _checkpointer_cm.__aexit__(None, None, None)
+            _checkpointer_cm = None
 
 app = FastAPI(title="Barista CI API", lifespan=lifespan)
 
@@ -76,23 +61,52 @@ app = FastAPI(title="Barista CI API", lifespan=lifespan)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ALLOWED_ORIGINS,
-    allow_credentials=True,
+    allow_credentials=CORS_ALLOW_CREDENTIALS,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-from routers import analyze, companies
+
+async def _build_checkpointer():
+    """Choose checkpointer backend from env, with safe fallback to in-memory."""
+    if CHECKPOINTER_BACKEND == "sqlite":
+        try:
+            from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+
+            candidate = AsyncSqliteSaver.from_conn_string(CHECKPOINTER_SQLITE_PATH)
+            if hasattr(candidate, "__aenter__") and hasattr(candidate, "__aexit__"):
+                global _checkpointer_cm
+                _checkpointer_cm = candidate
+                return await _checkpointer_cm.__aenter__()
+            return candidate
+        except Exception as exc:
+            print(
+                f"[startup] Could not initialize sqlite checkpointer ({exc}). "
+                "Falling back to MemorySaver."
+            )
+
+    if CHECKPOINTER_BACKEND != "memory":
+        print(
+            f"[startup] Unsupported CHECKPOINTER_BACKEND='{CHECKPOINTER_BACKEND}'. "
+            "Falling back to MemorySaver."
+        )
+
+    return MemorySaver()
+
+from routers import companies, analyze
 app.include_router(companies.router)
 app.include_router(analyze.router)
 
-# Backward-compatible globals (also mirrored in app.state for DI)
-checkpointer = _create_checkpointer()
-graph_app = build_graph(checkpointer=checkpointer)
-analyzer_app = build_analyzer_graph(checkpointer=checkpointer)
 
-app.state.checkpointer = checkpointer
-app.state.graph_app = graph_app
-app.state.analyzer_app = analyzer_app
+def _default_stages():
+    return [
+        {"id": "understand", "label": "Understanding your query", "status": "pending"},
+        {"id": "identify", "label": "Identifying topic & domain", "status": "pending"},
+        {"id": "collect", "label": "Collecting source candidates", "status": "pending"},
+        {"id": "filter", "label": "Filtering & ranking content", "status": "pending"},
+        {"id": "analyze", "label": "Analyzing selected documents", "status": "pending"},
+        {"id": "prepare", "label": "Preparing results for review", "status": "pending"},
+    ]
 
 
 # --- Pydantic Models for API ---
@@ -109,7 +123,28 @@ def get_config(session_id: str):
     return {"configurable": {"thread_id": session_id}}
 
 
-app.state.get_config = get_config
+async def _get_graph_state(graph, config):
+    """Support both async LangGraph APIs and sync test doubles."""
+    if hasattr(graph, "aget_state"):
+        return await graph.aget_state(config)
+    return graph.get_state(config)
+
+
+async def _update_graph_state(graph, config, values):
+    """Support both async LangGraph APIs and sync test doubles."""
+    if hasattr(graph, "aupdate_state"):
+        return await graph.aupdate_state(config, values)
+    return graph.update_state(config, values)
+
+
+async def _ainvoke_graph(graph, input_value, config, **kwargs):
+    """Invoke graph with optional advanced kwargs, with test-double compatibility."""
+    if hasattr(graph, "ainvoke"):
+        try:
+            return await graph.ainvoke(input_value, config=config, **kwargs)
+        except TypeError:
+            return await graph.ainvoke(input_value, config=config)
+    return graph.invoke(input_value, config=config)
 
 
 def _map_article(a, category: str, session_id: str, idx: int, total_per_category: int):
@@ -173,7 +208,7 @@ async def get_tips():
     }
 
 
-@app.post("/api/search", response_model=SearchStartResponse)
+@app.post("/api/search")
 async def start_search(request: SearchRequest):
     session_id = f"sess_{secrets.token_hex(8)}"
 
@@ -187,81 +222,66 @@ async def start_search(request: SearchRequest):
         "company_domains": [],
         "trusted_domains": [],
         "validation_feedback": "",
+        "validation_passed": False,
+        "validation_metrics": {},
+        "decomposition_score": 0.0,
+        "redundancy_pairs": [],
+        "coverage_gaps": [],
+        "semantic_warnings": [],
         "retry_counts": {"decomposer": 0, "search": 0, "summariser": 0},
         "error": None,
         "search_days_used": None,
         "selected_articles": [],
         "logs": [],
+        "stages": _default_stages(),
+        "current_stage": "understand",
+        "progress_percentage": 5,
     }
 
     async def run_phase_1():
         print(
             f"[{session_id}] 🚀 Starting LangGraph Workflow Phase 1 (Search & Filter)..."
         )
-        await app.state.graph_app.ainvoke(initial_state, config=get_config(session_id))
+        await _ainvoke_graph(
+            graph_app,
+            initial_state,
+            config=get_config(session_id),
+            interrupt_before=["summariser"],
+        )
         print(
             f"[{session_id}] ⏳ Phase 1 paused. Waiting for human-in-the-loop selection..."
         )
 
     asyncio.create_task(run_phase_1())
 
-    return {"api_version": "v1", "session_id": session_id, "status": "started", "error": None}
+    return {"session_id": session_id, "status": "started"}
 
 
-@app.get("/api/workflow/status/{session_id}", response_model=WorkflowStatusResponse)
+@app.get("/api/workflow/status/{session_id}")
 async def get_workflow_status(session_id: str):
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
 
     if not state or not state.values:
+        stages = _default_stages()
+        stages[0]["status"] = "running"
         return {
-            "api_version": "v1",
             "session_id": session_id,
             "status": "pending",
             "current_stage": "initializing",
             "progress_percentage": 0,
-            "stages": [
-                {
-                    "id": "understand",
-                    "label": "Understanding your query",
-                    "status": "running",
-                },
-                {
-                    "id": "identify",
-                    "label": "Identifying topic & domain",
-                    "status": "pending",
-                },
-                {
-                    "id": "collect",
-                    "label": "Collecting source candidates",
-                    "status": "pending",
-                },
-                {
-                    "id": "filter",
-                    "label": "Filtering & ranking content",
-                    "status": "pending",
-                },
-                {
-                    "id": "analyze",
-                    "label": "Analyzing selected documents",
-                    "status": "pending",
-                },
-                {
-                    "id": "prepare",
-                    "label": "Preparing results for review",
-                    "status": "pending",
-                },
-            ],
+            "stages": stages,
             "logs": [],
-            "error": None,
         }
 
     next_tasks = state.next
     is_paused_for_human = "summariser" in next_tasks
     has_final_report = bool(state.values.get("final_report"))
-    state_error = state.values.get("error")
 
     logs = state.values.get("logs", [])
+    stages = state.values.get("stages", _default_stages())
+    progress = int(state.values.get("progress_percentage", 0) or 0)
+    current_stage = state.values.get("current_stage", "searching")
 
     # Determine overall status and progress
     if has_final_report:
@@ -269,124 +289,40 @@ async def get_workflow_status(session_id: str):
         progress = 100
         current_stage = "finished"
         stages = [
-            {
-                "id": "understand",
-                "label": "Understanding your query",
-                "status": "completed",
-            },
-            {
-                "id": "identify",
-                "label": "Identifying topic & domain",
-                "status": "completed",
-            },
-            {
-                "id": "collect",
-                "label": "Collecting source candidates",
-                "status": "completed",
-            },
-            {
-                "id": "filter",
-                "label": "Filtering & ranking content",
-                "status": "completed",
-            },
-            {
-                "id": "analyze",
-                "label": "Analyzing selected documents",
-                "status": "completed",
-            },
-            {
-                "id": "prepare",
-                "label": "Preparing results for review",
-                "status": "completed",
-            },
+            {"id": s["id"], "label": s["label"], "status": "completed"}
+            for s in _default_stages()
         ]
     elif is_paused_for_human:
         status = "completed"
-        progress = 100
+        progress = max(progress, 100)
         current_stage = "select"
         stages = [
             {
-                "id": "understand",
-                "label": "Understanding your query",
-                "status": "completed",
-            },
-            {
-                "id": "identify",
-                "label": "Identifying topic & domain",
-                "status": "completed",
-            },
-            {
-                "id": "collect",
-                "label": "Collecting source candidates",
-                "status": "completed",
-            },
-            {
-                "id": "filter",
-                "label": "Filtering & ranking content",
-                "status": "completed",
-            },
-            {
-                "id": "analyze",
-                "label": "Analyzing selected documents",
-                "status": "completed",
-            },
-            {
-                "id": "prepare",
-                "label": "Preparing results for review",
-                "status": "completed",
-            },
+                "id": stage.get("id"),
+                "label": stage.get("label"),
+                "status": "completed" if stage.get("status") != "failed" else "failed",
+            }
+            for stage in stages
         ]
-    elif state_error:
-        status = "failed"
-        progress = state.values.get("progress_percentage", 10)
-        current_stage = "failed"
-        stages = _build_running_stages(len(logs))
     else:
-        # Workflow is still running — estimate progress from logs count
-        n_logs = len(logs)
-        progress = min(10 + n_logs * 8, 85)
         status = "running"
-        current_stage = "searching"
-
-        # Derive stage statuses based on log count heuristic
-        stages = _build_running_stages(n_logs)
+        if progress <= 0:
+            progress = 10
 
     return {
-        "api_version": "v1",
         "session_id": session_id,
         "status": status,
         "current_stage": current_stage,
         "progress_percentage": progress,
         "stages": stages,
         "logs": logs,
-        "error": ({"code": "WORKFLOW_FAILED", "message": str(state_error)} if state_error else None),
     }
-
-
-def _build_running_stages(n_logs: int) -> list:
-    """Build stage objects based on estimated progress from log count."""
-
-    def s(label_idx):
-        if n_logs > label_idx * 2 + 2:
-            return "completed"
-        elif n_logs > label_idx * 2:
-            return "running"
-        return "pending"
-
-    return [
-        {"id": "understand", "label": "Understanding your query", "status": s(0)},
-        {"id": "identify", "label": "Identifying topic & domain", "status": s(1)},
-        {"id": "collect", "label": "Collecting source candidates", "status": s(2)},
-        {"id": "filter", "label": "Filtering & ranking content", "status": s(3)},
-        {"id": "analyze", "label": "Analyzing selected documents", "status": s(4)},
-        {"id": "prepare", "label": "Preparing results for review", "status": s(5)},
-    ]
 
 
 @app.get("/api/articles/{session_id}")
 async def get_scored_articles(session_id: str):
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
 
     if not state or not state.values:
         raise HTTPException(
@@ -417,7 +353,7 @@ async def get_scored_articles(session_id: str):
 @app.get("/api/session/{session_id}")
 async def get_session_info(session_id: str):
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
 
@@ -432,7 +368,7 @@ async def get_session_info(session_id: str):
 async def get_report(session_id: str):
     """Return the final_report JSON for inline rendering in the frontend."""
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
 
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -449,11 +385,25 @@ async def get_report(session_id: str):
         else:
             raise HTTPException(status_code=404, detail="Report not yet generated.")
 
+    # Ensure a downloadable PDF exists for completed sessions.
+    report_pdf_path = f"report_{session_id}.pdf"
+    if final_report and not os.path.exists(report_pdf_path):
+        try:
+            import json
+            from utils.pdf_report import generate_pdf as gen_pdf_file
+
+            report_json_name = f"report_{session_id}.json"
+            with open(report_json_name, "w", encoding="utf-8") as f:
+                json.dump(final_report, f, indent=2)
+            gen_pdf_file(report_json_name, report_pdf_path)
+        except Exception as exc:
+            print(f"[{session_id}] Could not generate missing PDF in /api/report: {exc}")
+
     return {
         "session_id": session_id,
         "report": final_report,
         "pdf_url": f"/api/pdf/download/{session_id}"
-        if os.path.exists(f"report_{session_id}.pdf")
+        if os.path.exists(report_pdf_path)
         else None,
     }
 
@@ -461,15 +411,42 @@ async def get_report(session_id: str):
 @app.post("/api/generate-pdf/{session_id}")
 async def generate_pdf(session_id: str, request: GeneratePdfRequest):
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
 
     if not state:
         raise HTTPException(status_code=404, detail="Session not found.")
 
+    # Idempotent behavior: if report is already generated, return/download it
+    # instead of failing with a workflow-state error.
+    existing_report = state.values.get("final_report") if state.values else None
+    existing_pdf = f"report_{session_id}.pdf"
+    if existing_report:
+        if not os.path.exists(existing_pdf):
+            import json
+            from utils.pdf_report import generate_pdf as gen_pdf_file
+
+            report_json_name = f"report_{session_id}.json"
+            with open(report_json_name, "w", encoding="utf-8") as f:
+                json.dump(existing_report, f, indent=2)
+            gen_pdf_file(report_json_name, existing_pdf)
+
+        return {
+            "session_id": session_id,
+            "status": "success",
+            "message": "Report already generated.",
+            "pdf_url": f"/api/pdf/download/{session_id}",
+        }
+
     if not state.next or "summariser" not in state.next:
         raise HTTPException(
             status_code=400,
-            detail="Workflow is not currently paused waiting for article selection.",
+            detail="Workflow is not paused at article-selection stage yet. Wait for source review to finish, then retry.",
+        )
+
+    if not request.selected_article_urls:
+        raise HTTPException(
+            status_code=400,
+            detail="Please select at least one insight before generating the final report.",
         )
 
     print(
@@ -477,10 +454,17 @@ async def generate_pdf(session_id: str, request: GeneratePdfRequest):
     )
 
     # Update state with the selected URLs
-    app.state.graph_app.update_state(config, {"selected_articles": request.selected_article_urls})
+    await _update_graph_state(
+        graph_app, config, {"selected_articles": request.selected_article_urls}
+    )
 
     print(f"[{session_id}] 🚀 Starting Phase 2 (Summarise & PDF)...")
-    final_output = await app.state.graph_app.ainvoke(None, config=config)
+    final_output = await _ainvoke_graph(
+        graph_app,
+        None,
+        config=config,
+        interrupt_before=[],
+    )
 
     if final_output.get("final_report"):
         import json
@@ -510,7 +494,7 @@ async def generate_pdf(session_id: str, request: GeneratePdfRequest):
 @app.get("/api/pdf-status/{session_id}")
 async def get_pdf_status(session_id: str):
     config = get_config(session_id)
-    state = app.state.graph_app.get_state(config)
+    state = await _get_graph_state(graph_app, config)
 
     if not state or not state.values:
         raise HTTPException(status_code=404, detail="Session not found")
@@ -520,29 +504,18 @@ async def get_pdf_status(session_id: str):
 
     if has_report and pdf_exists:
         return {
-            "api_version": "v1",
             "session_id": session_id,
             "status": "completed",
             "download_url": f"/api/pdf/download/{session_id}",
-            "error": None,
         }
     elif has_report:
-        return {"api_version": "v1", "session_id": session_id, "status": "generating", "error": None}
+        return {"session_id": session_id, "status": "generating"}
 
     next_tasks = state.next
     if next_tasks and "summariser" in next_tasks:
-        return {"api_version": "v1", "session_id": session_id, "status": "pending", "error": None}
+        return {"session_id": session_id, "status": "pending"}
 
-    state_error = state.values.get("error") if state.values else None
-    if state_error:
-        return {
-            "api_version": "v1",
-            "session_id": session_id,
-            "status": "failed",
-            "error": {"code": "PDF_WORKFLOW_FAILED", "message": str(state_error)},
-        }
-
-    return {"api_version": "v1", "session_id": session_id, "status": "generating", "error": None}
+    return {"session_id": session_id, "status": "generating"}
 
 
 @app.get("/api/pdf/download/{session_id}")

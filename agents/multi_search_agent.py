@@ -7,18 +7,11 @@ produces a single combined article pool for the discriminator.
 """
 
 import asyncio
-from typing import Any, List, Optional, Tuple
+import os
+from typing import Dict, List, Tuple
 
 from models.schemas import ResearchState, Article
-from config import (
-    TAVILY_API_KEY,
-    SERPER_API_KEY,
-    BING_SEARCH_API_KEY,
-    GOOGLE_API_KEY,
-    GOOGLE_CSE_ID,
-    SEARCH_PROVIDER,
-    SEARCH_STRATEGY,
-)
+from config import TAVILY_API_KEY, SERPER_API_KEY, BING_SEARCH_API_KEY, GOOGLE_API_KEY
 from utils.logger import (
     console, banner, section, info, success, warning, error,
     detail, provider_table, article_table, merge_summary, phase_progress
@@ -37,7 +30,7 @@ def _get_available_providers() -> List[Tuple[str, callable]]:
         from agents.serper_search_agent import serper_search_agent
         providers.append(("Serper", serper_search_agent))
 
-    if GOOGLE_API_KEY and GOOGLE_CSE_ID:
+    if GOOGLE_API_KEY:
         from agents.google_search_agent import google_search_agent
         providers.append(("Google", google_search_agent))
 
@@ -46,43 +39,6 @@ def _get_available_providers() -> List[Tuple[str, callable]]:
         providers.append(("Bing", bing_search_agent))
 
     return providers
-
-
-def _provider_order(providers: List[Tuple[str, callable]]) -> List[Tuple[str, callable]]:
-    """Return provider order honoring configured primary provider."""
-    if not providers:
-        return []
-
-    name_map = {name.lower(): (name, fn) for name, fn in providers}
-    ordered: List[Tuple[str, callable]] = []
-
-    primary = name_map.get(SEARCH_PROVIDER)
-    if primary:
-        ordered.append(primary)
-
-    for name, fn in providers:
-        pair = (name, fn)
-        if pair not in ordered:
-            ordered.append(pair)
-
-    return ordered
-
-
-def _as_article(item: Any, source_type: Optional[str] = None) -> Optional[Article]:
-    """Normalize provider output item to Article."""
-    if isinstance(item, Article):
-        if source_type and not item.source_type:
-            item.source_type = source_type
-        return item
-    if isinstance(item, dict):
-        payload = dict(item)
-        if source_type and not payload.get("source_type"):
-            payload["source_type"] = source_type
-        try:
-            return Article(**payload)
-        except Exception:
-            return None
-    return None
 
 
 def _dedup_by_url(articles: List[Article]) -> List[Article]:
@@ -137,21 +93,17 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
     Multi-Source Search Aggregator.
     Runs ALL available search providers in parallel, merges, and deduplicates.
     """
-    providers = _provider_order(_get_available_providers())
+    providers = _get_available_providers()
 
     if not providers:
         error("No search API keys configured! Cannot search.")
         state["error"] = "No search API keys available."
-        state.setdefault("logs", []).append("❌ No search providers configured.")
         return state
 
     provider_names = [name for name, _ in providers]
     
     section("Multi-Source Search", "🔎")
     provider_table(provider_names)
-    state.setdefault("logs", []).append(
-        f"🔧 Search strategy: {SEARCH_STRATEGY} (primary: {SEARCH_PROVIDER}, available: {', '.join(provider_names)})"
-    )
 
     async def run_provider(name: str, agent_func) -> Tuple[str, List[Article], List[Article]]:
         try:
@@ -159,37 +111,18 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
             provider_state["official_sources"] = []
             provider_state["trusted_sources"] = []
             result_state = await agent_func(provider_state)
-            official_raw = result_state.get("official_sources", [])
-            trusted_raw = result_state.get("trusted_sources", [])
-
-            official = [a for a in (_as_article(x, "official") for x in official_raw) if a]
-            trusted = [a for a in (_as_article(x, "trusted") for x in trusted_raw) if a]
-
+            official = result_state.get("official_sources", [])
+            trusted = result_state.get("trusted_sources", [])
             success(f"{name}: {len(official)} official + {len(trusted)} trusted")
             return (name, official, trusted)
         except Exception as e:
             error(f"{name} failed: {e}")
             return (name, [], [])
 
-    results: List[Tuple[str, List[Article], List[Article]]] = []
-    strategy = SEARCH_STRATEGY if SEARCH_STRATEGY in {"parallel", "single", "fallback"} else "parallel"
-
-    if strategy == "single":
-        name, func = providers[0]
-        with phase_progress(f"Running single provider: {name}"):
-            results = [await run_provider(name, func)]
-    elif strategy == "fallback":
-        with phase_progress("Running providers in fallback mode"):
-            for name, func in providers:
-                current = await run_provider(name, func)
-                results.append(current)
-                _, off, tr = current
-                if off or tr:
-                    state["logs"].append(f"✅ Fallback succeeded with provider: {name}")
-                    break
-    else:
-        with phase_progress("Running all search providers in parallel"):
-            results = await asyncio.gather(*[run_provider(name, func) for name, func in providers])
+    with phase_progress("Running all search providers in parallel"):
+        results = await asyncio.gather(
+            *[run_provider(name, func) for name, func in providers]
+        )
 
     all_official = []
     all_trusted = []
@@ -218,10 +151,6 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
     if all_combined:
         article_table(all_combined, "📰 Combined Article Pool")
 
-    state["official_sources"] = [a.model_dump() for a in all_official]
-    state["trusted_sources"] = [a.model_dump() for a in all_trusted]
-
-    if not all_official and not all_trusted:
-        state.setdefault("logs", []).append("⚠️ Providers ran, but no results survived dedup/filtering.")
-
+    state["official_sources"] = all_official
+    state["trusted_sources"] = all_trusted
     return state

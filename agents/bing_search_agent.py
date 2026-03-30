@@ -7,7 +7,6 @@ Falls back gracefully if no BING_SEARCH_API_KEY is set.
 import asyncio
 import json
 import os
-import urllib.parse
 import urllib.request
 from datetime import datetime
 from typing import Any, Dict, List, Optional

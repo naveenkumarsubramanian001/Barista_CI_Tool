@@ -1,12 +1,14 @@
 openai
 tavily-python
+fastapi
 pydantic
 python-dotenv
+requests
+beautifulsoup4
 playwright
 langchain-core
 langchain-community
 langgraph
-langgraph-checkpoint-sqlite
 langchain-ollama
 spacy
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl
@@ -15,17 +17,6 @@ transformers
 typing
 langchain-groq
 tldextract
-requests
-beautifulsoup4
-fastapi
-uvicorn
-sqlmodel
-apscheduler
-fpdf2
-python-multipart
-pymupdf
-pypdf
 scikit-fuzzy
 rich
 pytest
-httpx

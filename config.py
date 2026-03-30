@@ -17,6 +17,11 @@ def _env_flag(name: str, default: bool = False) -> bool:
     return raw.strip().lower() in {"1", "true", "yes", "on"}
 
 
+def _parse_csv_env(name: str, default: str) -> list[str]:
+    raw_value = os.getenv(name, default)
+    return [item.strip() for item in raw_value.split(",") if item.strip()]
+
+
 # --- LLM Instance ---
 def get_llm(temperature=None):
     if temperature is None:
@@ -59,15 +64,21 @@ SEARCH_PROVIDER = (os.getenv("SEARCH_PROVIDER") or "tavily").strip().lower()
 SEARCH_STRATEGY = (os.getenv("SEARCH_STRATEGY") or "parallel").strip().lower()
 
 # --- CORS ---
-CORS_ALLOWED_ORIGINS = [
-    origin.strip()
-    for origin in (os.getenv("CORS_ALLOWED_ORIGINS") or "http://localhost:3000,http://localhost:5173").split(",")
-    if origin.strip()
-]
+CORS_ALLOWED_ORIGINS = _parse_csv_env(
+    "CORS_ALLOWED_ORIGINS",
+    "http://localhost:3000,http://localhost:5173",
+)
+CORS_ALLOW_CREDENTIALS = _env_flag("CORS_ALLOW_CREDENTIALS", default=True)
 
 # --- Checkpoint Persistence ---
 CHECKPOINTER_BACKEND = (os.getenv("CHECKPOINTER_BACKEND") or "sqlite").strip().lower()
-CHECKPOINT_DB_PATH = (os.getenv("CHECKPOINT_DB_PATH") or "checkpoints.sqlite").strip()
+# Keep both names for compatibility across modules.
+CHECKPOINTER_SQLITE_PATH = (
+    os.getenv("CHECKPOINTER_SQLITE_PATH")
+    or os.getenv("CHECKPOINT_DB_PATH")
+    or "barista_checkpoints.sqlite"
+).strip()
+CHECKPOINT_DB_PATH = CHECKPOINTER_SQLITE_PATH
 STRICT_STARTUP_VALIDATION = _env_flag("STRICT_STARTUP_VALIDATION", default=False)
 
 # --- Discriminator Feature Flags ---

@@ -2,14 +2,15 @@ import json
 import asyncio
 import sys
 import os
-from typing import List, Dict
+from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, Field
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 
 # Import shared LLM factory from config
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 from config import get_llm
-from models.schemas import DecomposedQueries
+from models.schemas import DecomposedQueries,SubQuery
 
 # Import QueryAnalyzer from Step 1 (entity.py)
 sys.path.append(os.path.dirname(__file__))
@@ -20,44 +21,66 @@ from models.schemas import ResearchState
 # LangGraph Node Interface
 # ---------------------------------------------------------------------------
 
-
 def decomposer_agent(state: ResearchState) -> ResearchState:
     """
     LangGraph Node for Query Decomposition.
+    Includes relevance alignment validation to ensure subqueries
+    are semantically relevant to the original query.
     """
     query = state.get("original_query", "")
     if not query:
         state["error"] = "No original query found in state."
         return state
 
-    state.setdefault("logs", [])
-    state["logs"].append("🔍 Analyzing query for entities and intent...")
-
     # Step 1: Analyze (Entities/Intent)
     analyzer = QueryAnalyzer()
     analysis = analyzer.analyze(query)
 
-    state["logs"].append(f"💡 Detected intent: {analysis.get('top_intent', 'unknown')}")
-
     decomposer = QueryDecomposer()
-
+    
     # Inject feedback from state into analysis for the decomposer
     analysis["feedback"] = state.get("validation_feedback", "")
-
-    state["logs"].append("🧩 Generating optimized search subqueries...")
+    
     result = decomposer.decompose(analysis)
 
     # Update State
-    subqueries = [
-        sq.get("subquery") if isinstance(sq, dict) else sq
-        for sq in result.get("subqueries", [])
-    ]
+    subqueries = [sq.get("subquery") if isinstance(sq, dict) else sq for sq in result.get("subqueries", [])]
+    
+    # =====================================================
+    # Relevance Alignment Validation
+    # Ensures search agents get queries relevant to the original,
+    # not random tangents.
+    # =====================================================
+    try:
+        from config import get_embedding_model
+        import numpy as np
+        from sklearn.metrics.pairwise import cosine_similarity
+        
+        embed_model = get_embedding_model()
+        query_emb = np.array(embed_model.embed_documents([query]))
+        sub_embs = np.array(embed_model.embed_documents(subqueries))
+        
+        sims = cosine_similarity(query_emb, sub_embs)[0]
+        
+        RELEVANCE_THRESHOLD = 0.4
+        aligned = []
+        for i, sq in enumerate(subqueries):
+            if sims[i] >= RELEVANCE_THRESHOLD:
+                aligned.append(sq)
+            else:
+                print(f"   ⚠️ Removed divergent subquery (sim={sims[i]:.3f}): {sq}")
+        
+        if len(aligned) >= 3:
+            subqueries = aligned
+        else:
+            print(f"   ⚠️ Only {len(aligned)} aligned subqueries — keeping all to avoid data loss")
+            
+    except Exception as e:
+        print(f"   ⚠️ Relevance alignment check failed: {e} — using all subqueries")
+    
     state["subqueries"] = subqueries
-
-    state["logs"].append(f"✅ Decomposed into {len(subqueries)} focused search tasks.")
-
+    
     return state
-
 
 # ---------------------------------------------------------------------------
 # Pydantic Output Schema
@@ -67,7 +90,6 @@ def decomposer_agent(state: ResearchState) -> ResearchState:
 # ---------------------------------------------------------------------------
 # QueryDecomposer
 # ---------------------------------------------------------------------------
-
 
 class QueryDecomposer:
     """
@@ -80,11 +102,11 @@ class QueryDecomposer:
 
     INTENT_STRATEGY = {
         "recommendation": "Break into: criteria subquery, top-options subquery, region/constraint subquery, review/rating subquery",
-        "comparison": "Break into: one subquery per item being compared, plus a head-to-head/benchmark subquery",
-        "explanation": "Break into: definition subquery, use-case subquery, code/example subquery, limitations subquery",
-        "search": "Break into: broad overview subquery, specific detail subqueries per entity",
-        "analysis": "Break into: data/stats subquery, expert-opinion subquery, trend subquery",
-        "purchase": "Break into: pricing subquery, availability subquery, review subquery, alternative subquery",
+        "comparison":     "Break into: one subquery per item being compared, plus a head-to-head/benchmark subquery",
+        "explanation":    "Break into: definition subquery, use-case subquery, code/example subquery, limitations subquery",
+        "search":         "Break into: broad overview subquery, specific detail subqueries per entity",
+        "analysis":       "Break into: data/stats subquery, expert-opinion subquery, trend subquery",
+        "purchase":       "Break into: pricing subquery, availability subquery, review subquery, alternative subquery",
     }
 
     def __init__(self):
@@ -102,7 +124,6 @@ class QueryDecomposer:
             "Your job: decompose a user query into 3-5 focused, NON-OVERLAPPING subqueries "
             "that together comprehensively cover the original intent.\n\n"
             "Rules:\n"
-            "- CRITICAL: ALWAYS prepend or include the main company name / subject in EVERY subquery explicitly so context is not lost in isolated searches.\n"
             "- Each subquery must target a DIFFERENT aspect of the original query\n"
             "- Subqueries must be web-search-optimised (concise, specific, no filler words)\n"
             "- Use the provided strategy hint to guide the decomposition\n"
@@ -125,12 +146,10 @@ class QueryDecomposer:
             "Generate 3-5 focused subqueries as valid JSON."
         )
 
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                ("system", system_prompt),
-                ("user", user_prompt),
-            ]
-        )
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("user",   user_prompt),
+        ])
 
         return prompt | self.llm | self.parser
 
@@ -149,9 +168,7 @@ class QueryDecomposer:
             if isinstance(ent, (list, tuple)) and len(ent) >= 2:
                 out.append({"text": ent[0], "label": ent[1]})
             elif isinstance(ent, dict):
-                out.append(
-                    {"text": ent.get("text", ""), "label": ent.get("label", "UNKNOWN")}
-                )
+                out.append({"text": ent.get("text", ""), "label": ent.get("label", "UNKNOWN")})
         return out
 
     def _extract_key_terms(self, pos_tags: List) -> List[str]:
@@ -178,23 +195,17 @@ class QueryDecomposer:
 
         # Edge case: no entities and no key terms → use raw query as fallback entity
         if not entities and not key_terms:
-            entities = [
-                {"text": entity_output.get("original_query", ""), "label": "QUERY"}
-            ]
+            entities = [{"text": entity_output.get("original_query", ""), "label": "QUERY"}]
 
         return {
-            "original_query": entity_output.get("original_query", ""),
-            "top_intent": top_intent,
+            "original_query":    entity_output.get("original_query", ""),
+            "top_intent":        top_intent,
             "intent_confidence": entity_output.get("intent_confidence", 0.5),
-            "strategy": self.INTENT_STRATEGY.get(
-                top_intent, "Break into distinct focused subqueries"
-            ),
-            "entities": json.dumps(entities, indent=2),
-            "constraints": json.dumps(entity_output.get("constraints") or {}, indent=2),
-            "key_terms": ", ".join(key_terms) if key_terms else "none detected",
-            "feedback": entity_output.get(
-                "feedback", "None. This is the first attempt."
-            ),
+            "strategy":          self.INTENT_STRATEGY.get(top_intent, "Break into distinct focused subqueries"),
+            "entities":          json.dumps(entities, indent=2),
+            "constraints":       json.dumps(entity_output.get("constraints") or {}, indent=2),
+            "key_terms":         ", ".join(key_terms) if key_terms else "none detected",
+            "feedback":          entity_output.get("feedback", "None. This is the first attempt."),
             "format_instructions": self.parser.get_format_instructions(),
         }
 
@@ -205,14 +216,14 @@ class QueryDecomposer:
     def decompose(self, entity_output: Dict) -> Dict:
         """Synchronously decompose a single entity.py output."""
         payload = self._build_invoke_payload(entity_output)
-        result = self.chain.invoke(payload)
+        result  = self.chain.invoke(payload)
         result["original_query"] = entity_output.get("original_query", "")
         return result
 
     async def _decompose_async(self, entity_output: Dict) -> Dict:
         """Async decomposition for a single query (used in parallel batch)."""
         payload = self._build_invoke_payload(entity_output)
-        result = await self.chain.ainvoke(payload)
+        result  = await self.chain.ainvoke(payload)
         result["original_query"] = entity_output.get("original_query", "")
         return result
 
@@ -227,14 +238,12 @@ class QueryDecomposer:
         results: List[Dict] = []
         for i, res in enumerate(raw_results):
             if isinstance(res, Exception):
-                results.append(
-                    {
-                        "original_query": entity_outputs[i].get("original_query", ""),
-                        "error": str(res),
-                        "subqueries": [],
-                        "strategy": "N/A",
-                    }
-                )
+                results.append({
+                    "original_query": entity_outputs[i].get("original_query", ""),
+                    "error": str(res),
+                    "subqueries": [],
+                    "strategy": "N/A",
+                })
             else:
                 results.append(res)
         return results
@@ -261,9 +270,7 @@ if __name__ == "__main__":
         result = analyzer.analyze(q)
         entity_outputs.append(result)
         print(f"\n  Query       : {q}")
-        print(
-            f"  Intent      : {result['top_intent']} (confidence: {result['intent_confidence']})"
-        )
+        print(f"  Intent      : {result['top_intent']} (confidence: {result['intent_confidence']})")
         print(f"  Entities    : {[(e[0], e[1]) for e in result['entities']]}")
         print(f"  Constraints : {result['constraints']}")
 
@@ -289,3 +296,4 @@ if __name__ == "__main__":
                 if sq.get("entity_focus"):
                     print(f"       Entity Focus : {sq['entity_focus']}")
         print("-" * 80)
+

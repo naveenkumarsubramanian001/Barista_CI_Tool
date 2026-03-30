@@ -1,82 +1,127 @@
-# Barista CI Tool
+# Barista CI — AI-Powered Competitive Intelligence
 
-Competitive intelligence backend with LangGraph workflow orchestration, human-in-the-loop article selection, analyzer upload flow, and PDF report generation.
+> A full-stack research platform that generates comprehensive, citation-grounded competitive intelligence reports using multi-agent AI workflows.
 
-## Source of Truth for Dependencies
+## Architecture
 
-`pyproject.toml` is the canonical dependency source.
-`requirements.txt` is a compatibility mirror for environments that still use `pip -r`.
-
-## Quick Setup (Recommended)
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -e .
-cp .env.example .env
+```
+┌─────────────────────────────────────────────────┐
+│                  Frontend                        │
+│  React + Vite + Tailwind CSS + Framer Motion    │
+│  (pnpm monorepo)                                │
+└──────────────────────┬──────────────────────────┘
+                       │ REST API
+┌──────────────────────▼──────────────────────────┐
+│               Python Backend                     │
+│           FastAPI + LangGraph                    │
+│                                                  │
+│  ┌─────────────┐  ┌──────────┐  ┌────────────┐ │
+│  │   Query      │→│  Multi   │→│  Hybrid    │ │
+│  │ Decomposer  │  │ Search   │  │ Fuzzy      │ │
+│  └─────────────┘  │ Agent    │  │Discrimin.  │ │
+│                    └──────────┘  └─────┬──────┘ │
+│                                        ▼        │
+│       ┌──────────────┐  ┌─────────────────────┐ │
+│       │ Rank + Filter│→│  Summariser (Groq)  │ │
+│       └──────────────┘  │  Anti-hallucination │ │
+│                         │  Constrained Prompt │ │
+│                         └─────────────────────┘ │
+└─────────────────────────────────────────────────┘
 ```
 
-## Alternative Setup (requirements mirror)
+## Key Features
+
+- **Multi-source search** — Tavily, Serper, Bing, Google CSE
+- **Hybrid Fuzzy Discriminator** — Mamdani fuzzy inference + weighted scoring for unbiased article evaluation
+- **Anti-hallucination guardrails** — temperature=0, citation-only constraints, post-generation validation
+- **Full report rendering** — Executive summary, key findings, cross-source analysis, official/trusted insights
+- **Clickable inline citations** — `[N]` references scroll to the sources section
+- **Company Tracker** — Monitor competitor news over time
+- **PDF export** — Generate downloadable research reports
+
+## Quick Start
+
+### Prerequisites
+
+- Python 3.11+
+- Node.js 20+
+- pnpm 9+
+
+### Backend Setup
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install --upgrade pip
-python -m pip install -r requirements.txt
+# 1. Copy environment file
 cp .env.example .env
-```
+# Fill in your API keys (GROQ_API_KEY required at minimum)
 
-## Environment Configuration
+# 2. Install dependencies
+pip install -r requirements.txt
+# or with uv:
+uv sync
 
-Key runtime options in `.env`:
-
-- `SEARCH_STRATEGY=parallel|single|fallback`
-- `SEARCH_PROVIDER=tavily|serper|google|bing`
-- `ENABLE_FUZZY_SCORING=true|false`
-- `STRICT_STARTUP_VALIDATION=true|false`
-- `CHECKPOINTER_BACKEND=sqlite|memory`
-- `CHECKPOINT_DB_PATH=checkpoints.sqlite`
-- `CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:5173`
-
-At least one search provider key must be configured.
-
-## Run API
-
-```bash
-source .venv/bin/activate
+# 3. Start the server
 uvicorn api:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-## Tests
-
-Contract tests:
+### Frontend Setup
 
 ```bash
-source .venv/bin/activate
-python -m pytest -q tests/test_api_contract_e2e.py
+cd Frontend
+
+# 1. Install dependencies
+pnpm install
+
+# 2. Start development server
+pnpm dev
 ```
 
-PDF regression tests:
+The frontend runs on `http://localhost:5173` by default and proxies API calls to the Python backend on port 8000.
 
-```bash
-source .venv/bin/activate
-python -m pytest -q tests/test_comparative_pdf_report.py
+## Environment Variables
+
+| Variable | Required | Description |
+|---|---|---|
+| `GROQ_API_KEY` | ✅ | Groq API key for LLM access |
+| `GROQ_MODEL` | | Model name (default: `llama-3.3-70b-versatile`) |
+| `TAVILY_API_KEY` | ✅ | Tavily search API key |
+| `SERPER_API_KEY` | | Serper Google search API |
+| `BING_SEARCH_API_KEY` | | Bing Search API key |
+| `GOOGLE_API_KEY` | | Google custom search API key |
+| `GOOGLE_CSE_ID` | | Google custom search engine ID |
+
+## Project Structure
+
+```
+├── api.py                    # FastAPI server entry point
+├── config.py                 # LLM, embedding, and search config
+├── database.py               # Database stub (in-memory)
+├── scheduler.py              # Scheduler stub
+├── agents/
+│   ├── QueryDecomposer.py    # Query decomposition + embedding alignment
+│   ├── multi_search_agent.py # Parallel multi-provider search
+│   ├── discriminators.py     # Hybrid fuzzy scoring + LLM evaluation
+│   ├── fuzzy_discriminator.py# Mamdani fuzzy inference system
+│   ├── summariser.py         # Report generation with anti-hallucination
+│   └── analyzer_agents.py    # Competitor analysis agents
+├── graph/
+│   ├── workflow.py           # Main LangGraph research workflow
+│   └── analyzer_workflow.py  # Sub-workflow for document analysis
+├── nodes/
+│   └── rank_filter.py        # Article ranking and filtering
+├── routers/
+│   ├── analyze.py            # Document upload + analysis
+│   └── companies.py          # Company tracker CRUD
+├── utils/
+│   └── json_utils.py         # Robust JSON extraction from LLM output
+├── Frontend/
+│   ├── artifacts/
+│   │   ├── research-platform/ # React frontend app
+│   │   └── api-server/        # Express mock API (dev only)
+│   └── lib/
+│       └── api-spec/          # OpenAPI specification
+└── .env.example              # Environment variable template
 ```
 
-Live integration tests (may skip when optional runtime deps are unavailable):
+## License
 
-```bash
-source .venv/bin/activate
-python -m pytest -q tests/test_integration_live_paths.py
-```
-
-## CI Quality Gates
-
-CI runs on every push/PR and executes:
-
-- `ruff check .`
-- Python compile check
-- API contract tests
-- PDF regression tests
-- Integration tests (allowed to skip when optional deps are not available)
+MIT

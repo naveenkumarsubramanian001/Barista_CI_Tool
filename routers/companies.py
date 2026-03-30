@@ -1,172 +1,183 @@
-import asyncio
-from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks
-from sqlmodel import Session, select
+"""
+Companies router for the Company Tracker feature.
+Provides CRUD endpoints for tracking competitor companies.
+"""
 
-from database import Company, CompanyUpdate, get_session
+import asyncio
+import logging
+
+from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
-import secrets
+from typing import Optional
 
 router = APIRouter(prefix="/api/companies", tags=["companies"])
+logger = logging.getLogger(__name__)
 
-class CompanyCreate(BaseModel):
+
+class CreateCompanyRequest(BaseModel):
     name: str
     url: Optional[str] = None
 
-class CompanyResponse(BaseModel):
-    id: int
-    name: str
-    url: Optional[str]
-    unread_count: int
-    last_scanned_at: Optional[str]
-    next_scanned_at: Optional[str]
 
-@router.post("/", response_model=CompanyResponse)
-async def create_company(company_in: CompanyCreate, background_tasks: BackgroundTasks, session: Session = Depends(get_session)):
-    # Check if company exists
-    company = session.exec(select(Company).where(Company.name == company_in.name)).first()
-    if company:
-        raise HTTPException(status_code=400, detail="Company already registered")
-    
-    new_company = Company(name=company_in.name, url=company_in.url)
-    session.add(new_company)
-    session.commit()
-    session.refresh(new_company)
-    
-    # Trigger the background 60 days scraping job here
-    from scheduler import scrape_company
-    background_tasks.add_task(scrape_company, new_company.id)
-    
-    return CompanyResponse(
-        id=new_company.id,
-        name=new_company.name,
-        url=new_company.url,
-        unread_count=0,
-        last_scanned_at=None,
-        next_scanned_at=None
-    )
+class GenerateCompanyReportRequest(BaseModel):
+    update_ids: list[int]
 
-@router.get("/", response_model=List[CompanyResponse])
-def get_companies(session: Session = Depends(get_session)):
-    companies = session.exec(select(Company)).all()
-    results = []
-    for c in companies:
-        unread = session.exec(select(CompanyUpdate).where(CompanyUpdate.company_id == c.id, CompanyUpdate.is_read == False)).all()
-        
-        last_scan = c.last_scanned_at.isoformat() if c.last_scanned_at else None
-        
-        from datetime import timedelta
-        next_scan = (c.last_scanned_at + timedelta(days=7)).isoformat() if c.last_scanned_at else None
-        
-        results.append(CompanyResponse(
-            id=c.id, 
-            name=c.name, 
-            url=c.url, 
-            unread_count=len(unread),
-            last_scanned_at=last_scan,
-            next_scanned_at=next_scan
-        ))
-    return results
 
-@router.get("/{company_id}/updates", response_model=List[CompanyUpdate])
-def get_company_updates(company_id: int, session: Session = Depends(get_session)):
-    updates = session.exec(select(CompanyUpdate).where(CompanyUpdate.company_id == company_id).order_by(CompanyUpdate.created_at.desc())).all()
-    return updates
+async def _run_initial_company_scan(company_id: int, company_name: str):
+    from database import add_notification
+    from services.company_tracking import run_company_tracking_scan
 
-@router.post("/{company_id}/scrape")
-def trigger_manual_scrape(company_id: int, background_tasks: BackgroundTasks, session: Session = Depends(get_session)):
-    company = session.get(Company, company_id)
+    try:
+        await run_company_tracking_scan(
+            company_id=company_id,
+            search_days=30,
+            trigger="initial",
+            create_notifications=True,
+        )
+    except Exception as exc:
+        logger.exception("Initial company scan failed for company_id=%s", company_id)
+        add_notification(
+            title=f"Initial scan failed for {company_name}",
+            message=f"{type(exc).__name__}: {exc}",
+            company_id=company_id,
+        )
+
+
+@router.get("/")
+async def list_companies():
+    """List all tracked companies."""
+    from database import get_companies
+    return get_companies()
+
+
+@router.post("/")
+async def create_company(request: CreateCompanyRequest):
+    """Add a new company to track."""
+    from database import add_company
+    company = add_company(name=request.name, url=request.url)
+
+    # Initial intelligence collection (last 30 days) starts immediately.
+    asyncio.create_task(_run_initial_company_scan(int(company["id"]), company["name"]))
+
+    return company
+
+
+@router.get("/notifications")
+async def list_notifications(limit: int = 50, unread_only: bool = False):
+    from database import get_notifications, get_unread_notification_count
+
+    notifications = get_notifications(limit=limit, unread_only=unread_only)
+    return {
+        "notifications": notifications,
+        "unread_count": get_unread_notification_count(),
+    }
+
+
+@router.post("/notifications/{notification_id}/read")
+async def mark_notification_as_read(notification_id: int):
+    from database import mark_notification_read
+
+    if not mark_notification_read(notification_id):
+        raise HTTPException(status_code=404, detail="Notification not found")
+    return {"status": "ok"}
+
+
+@router.get("/{company_id}")
+async def get_company_detail(company_id: int):
+    """Get details for a specific tracked company."""
+    from database import get_company
+    company = get_company(company_id)
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
-    
-    from scheduler import scrape_company
-    background_tasks.add_task(scrape_company, company.id)
-    return {"status": "started", "company_id": company.id}
+    return company
+
+
+@router.get("/{company_id}/updates")
+async def get_updates(company_id: int):
+    """Get news/updates for a specific company."""
+    from database import get_company, get_company_updates
+    company = get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    updates = get_company_updates(company_id)
+    return {"company": company, "updates": updates}
+
+
+@router.get("/{company_id}/reports")
+async def get_reports(company_id: int):
+    """Get generated report events for a specific company."""
+    from database import get_company, get_company_report_events
+
+    company = get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    reports = get_company_report_events(company_id)
+    return {"company": company, "reports": reports}
+
+
+@router.post("/{company_id}/mark-read")
+async def mark_read(company_id: int):
+    """Mark all updates for a company as read."""
+    from database import get_company, mark_updates_read
+    company = get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+    mark_updates_read(company_id)
+    return {"status": "ok"}
+
 
 @router.post("/{company_id}/updates/{update_id}/read")
-def mark_update_read(company_id: int, update_id: int, session: Session = Depends(get_session)):
-    update = session.get(CompanyUpdate, update_id)
-    if not update or update.company_id != company_id:
-        raise HTTPException(status_code=404, detail="Update not found")
-    
-    update.is_read = True
-    session.add(update)
-    session.commit()
-    return {"status": "success"}
+async def mark_single_update_read(company_id: int, update_id: int):
+    from database import get_company, mark_update_read
 
-class GenerateReportRequest(BaseModel):
-    update_ids: List[int]
-
-@router.post("/{company_id}/generate-report")
-async def generate_report_for_company(company_id: int, request: GenerateReportRequest, background_tasks: BackgroundTasks, session: Session = Depends(get_session)):
-    company = session.get(Company, company_id)
+    company = get_company(company_id)
     if not company:
         raise HTTPException(status_code=404, detail="Company not found")
-    
+
+    updated = mark_update_read(company_id, update_id)
+    if not updated:
+        raise HTTPException(status_code=404, detail="Update not found")
+
+    return {"status": "ok"}
+
+
+@router.post("/{company_id}/scrape")
+async def trigger_company_search(company_id: int):
+    from database import get_company
+    from services.company_tracking import run_company_tracking_scan
+
+    company = get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
+    result = await run_company_tracking_scan(
+        company_id=company_id,
+        search_days=30,
+        trigger="manual",
+        create_notifications=True,
+    )
+    return {"status": "ok", **result}
+
+
+@router.post("/{company_id}/generate-report")
+async def generate_report_from_updates(company_id: int, request: GenerateCompanyReportRequest):
+    from database import get_company
+    from services.company_tracking import generate_company_report
+
+    company = get_company(company_id)
+    if not company:
+        raise HTTPException(status_code=404, detail="Company not found")
+
     if not request.update_ids:
-        raise HTTPException(status_code=400, detail="No updates selected")
-        
-    updates = session.exec(select(CompanyUpdate).where(CompanyUpdate.id.in_(request.update_ids))).all()
-    if not updates:
-        raise HTTPException(status_code=400, detail="Invalid updates selected")
+        raise HTTPException(status_code=400, detail="Select at least one insight")
 
-    session_id = f"sess_{secrets.token_hex(8)}"
-    config = {"configurable": {"thread_id": session_id}}
-    
-    official_articles = []
-    trusted_articles = []
-    for u in updates:
-        domain = u.url.split("/")[2] if "//" in u.url else u.url
-        art_dict = {
-            "url": str(u.url), 
-            "title": str(u.title), 
-            "snippet": str(u.snippet), 
-            "domain": domain,
-            "published_date": str(u.published_date) if hasattr(u, "published_date") and u.published_date else "Recent",
-            "source_type": str(u.source_type) if hasattr(u, "source_type") and u.source_type else "trusted"
-        }
-        
-        if art_dict["source_type"] == "official":
-            official_articles.append(art_dict)
-        else:
-            trusted_articles.append(art_dict)
-        
-    state = {
-        "original_query": f"Company Intelligence Report: {company.name}",
-        "final_ranked_output": {
-            "official_sources": official_articles,
-            "trusted_sources": trusted_articles
-        },
-        "official_sources": official_articles,
-        "trusted_sources": trusted_articles,
-        "selected_articles": [u.url for u in updates]
-    }
-    
-    from api import graph_app
-    # Set the state as if the 'ranker' node just finished.
-    # Because of interrupt_before=["summariser"], this will leave the graph paused at summariser.
-    graph_app.update_state(config, state, as_node="ranker")
-    
-    async def run_report_generation():
-        print(f"[{session_id}] 🚀 Starting Phase 2 (Summarise & PDF) for Company Tracker...")
-        try:
-            final_output = await graph_app.ainvoke(None, config=config)
-            if final_output and final_output.get("final_report"):
-                import json
-                report_json_name = f"report_{session_id}.json"
-                report_pdf_name = f"report_{session_id}.pdf"
-                
-                with open(report_json_name, "w") as f:
-                    json.dump(final_output["final_report"], f, indent=2)
-                
-                from utils.pdf_report import generate_pdf as gen_pdf_file
-                gen_pdf_file(report_json_name, report_pdf_name)
-                print(f"[{session_id}] ✅ Report generated successfully.")
-            else:
-                print(f"[{session_id}] ❌ Failed to generate report data.")
-        except Exception as e:
-            print(f"[{session_id}] ❌ Error generating report: {e}")
+    try:
+        result = await generate_company_report(company_id, request.update_ids)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc))
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Report generation failed: {exc}")
 
-    background_tasks.add_task(run_report_generation)
+    return {"status": "ok", **result}
 
-    return {"status": "started", "session_id": session_id, "company_id": company.id}
+
