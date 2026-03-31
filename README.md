@@ -61,6 +61,13 @@ uv sync
 
 # 3. Start the server
 uvicorn api:app --host 0.0.0.0 --port 8000 --reload
+
+# 4. (Optional) Run pipeline test via CLI
+# Run with the default query
+python main.py
+
+# Or test a custom query
+python main.py --query "Latest advancements in Tesla's Optimus Robot"
 ```
 
 ### Frontend Setup

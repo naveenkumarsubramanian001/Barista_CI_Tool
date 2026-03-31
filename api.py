@@ -1,3 +1,10 @@
+"""
+Main FastAPI application entry point for the Barista CI backend.
+This file sets up the API routes, CORS middleware, checkpointer state management,
+and orchestrates the asynchronous execution of the LangGraph workflows (`graph_app`, `analyzer_app`).
+It handles REST endpoints for starting searches, getting workflow status, retrieving articles,
+and generating final PDF reports.
+"""
 import asyncio
 import os
 import secrets
