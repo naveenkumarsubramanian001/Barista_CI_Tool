@@ -1,7 +1,8 @@
 import asyncio
 import tldextract
 import os
-from typing import List
+from typing import List, Optional
+from pydantic import BaseModel, Field
 from tavily import TavilyClient
 from models.schemas import ResearchState, CompanyCheck, CompanyList, SuggestedCompanies, OfficialDomainSelection
 from config import TAVILY_API_KEY, get_llm
@@ -35,6 +36,35 @@ selection_prompt = ChatPromptTemplate.from_messages([
     ("user", "Company: {company}\nCandidates:\n{candidates}\n\n{format_instructions}")
 ])
 selection_chain = selection_prompt | llm | selection_parser
+
+# --- Primary Entity Extraction Chain ---
+# Identifies the SINGLE primary company a query is explicitly focused ON.
+# Uses no external search context — query text only — to prevent competitor
+# names from leaking into the official-domain list.
+class PrimaryEntity(BaseModel):
+    primary_company: Optional[str] = Field(
+        None,
+        description="The single primary company/brand the query is focused ON, or null if no single company is clearly targeted"
+    )
+
+primary_entity_parser = JsonOutputParser(pydantic_object=PrimaryEntity)
+primary_entity_prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        "You are an entity extraction expert.\n"
+        "Given a user query, identify the SINGLE primary company or brand that the query is ABOUT.\n"
+        "STRICT RULES:\n"
+        "1. Only return a company if the query is clearly and explicitly focused on ONE specific company.\n"
+        "2. 'Anthropic competitors' → primary_company: 'Anthropic' (the user is researching Anthropic)\n"
+        "3. 'OpenAI latest products' → primary_company: 'OpenAI'\n"
+        "4. 'best AI companies 2025' → primary_company: null (no single primary company)\n"
+        "5. 'iPhone vs Android' → primary_company: null (multiple brands, no clear single primary)\n"
+        "6. DO NOT return competitors, market leaders, or companies inferred from context.\n"
+        "7. Return null if you are not highly confident a single primary company is targeted.",
+    ),
+    ("user", "Query: {query}\n\n{format_instructions}")
+])
+primary_entity_chain = primary_entity_prompt | llm | primary_entity_parser
 
 async def validate_companies_batch(entities: List[str]) -> List[str]:
     """Validates a list of entities as companies in a single LLM call."""
@@ -119,19 +149,64 @@ async def suggest_companies_dynamic(query: str) -> List[str]:
         print(f"   - Error in dynamic suggestion for '{query}': {e}")
         return []
 
+async def extract_primary_entity(query: str) -> Optional[str]:
+    """
+    Identifies the single primary company the query is explicitly focused ON.
+
+    This uses only the raw query text (no external search context) to prevent
+    competitor company names from contaminating the official-domain list.
+
+    Examples:
+      'Anthropic competitors'  → 'Anthropic'
+      'OpenAI latest products' → 'OpenAI'
+      'best AI companies'      → None
+
+    Returns the company name string, or None if no single primary entity is found.
+    """
+    try:
+        result = await primary_entity_chain.ainvoke({
+            "query": query,
+            "format_instructions": primary_entity_parser.get_format_instructions()
+        })
+        primary = result.get("primary_company")
+        if primary and isinstance(primary, str) and primary.strip():
+            print(f"   - Primary entity extracted: '{primary.strip()}'")
+            return primary.strip()
+        print("   - No single primary entity found in query.")
+        return None
+    except Exception as e:
+        print(f"   - Primary entity extraction failed: {e}")
+        return None
+
+
 async def extract_companies(query: str, entities: List[str] = None) -> List[str]:
     """
-    Extracts and validates companies. 
-    1. If specific entities are provided, validates them.
-    2. If no companies found, dynamically suggests them based on query intent.
+    Extracts and validates the primary company entities from a query.
+
+    Resolution order:
+      1. Try to identify a single primary entity from the query text (no search
+         context). This prevents competitor names from leaking into the
+         official-domain list for queries like 'Anthropic competitors'.
+      2. If specific NER entities are provided, validate them as companies.
+      3. If still nothing, fall back to dynamic suggestion via web search + LLM.
     """
     companies = []
 
-    # 1. Batch validate entities if present
+    # 1. Primary entity extraction — query-text only, no external context.
+    #    For queries like 'Anthropic competitors' this returns ['Anthropic'] only,
+    #    ensuring openai.com is never added as an official domain.
+    primary = await extract_primary_entity(query)
+    if primary:
+        validated = await validate_companies_batch([primary])
+        if validated:
+            print(f"   - Using primary entity: {validated}")
+            return list(dict.fromkeys(validated))[:5]
+
+    # 2. Batch validate NER entities if present (fallback)
     if entities:
         companies = await validate_companies_batch(entities)
 
-    # 2. Dynamic Suggestion if no companies identified yet
+    # 3. Dynamic Suggestion if no companies identified yet
     if not companies:
         print("   - Using LLM to dynamically suggest relevant companies...")
         companies = await suggest_companies_dynamic(query)
@@ -366,8 +441,18 @@ async def url_discovery(state: ResearchState) -> ResearchState:
     trusted_domains = get_domains_by_category(category)
     info(f"Category: {category} → {len(trusted_domains)} trusted domains")
     
+    # Bug Fix: Remove official company domains from the trusted_domains list.
+    # This prevents a domain like 'openai.com' from appearing in BOTH
+    # company_domains (official lane) and trusted_domains (industry-news lane),
+    # which would cause redundant searches and inflated result counts.
+    official_set = set(company_domains)
+    trusted_domains_filtered = [d for d in trusted_domains if d not in official_set]
+    if len(trusted_domains_filtered) < len(trusted_domains):
+        removed = [d for d in trusted_domains if d in official_set]
+        print(f"   ✂️  Removed {len(removed)} domain(s) from trusted list (already in official): {removed}")
+
     state["company_domains"] = company_domains
-    state["trusted_domains"] = trusted_domains[:5]
-    
+    state["trusted_domains"] = trusted_domains_filtered[:5]
+
     return state
 
