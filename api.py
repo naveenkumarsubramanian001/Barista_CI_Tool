@@ -228,7 +228,7 @@ async def start_search(request: SearchRequest):
         "redundancy_pairs": [],
         "coverage_gaps": [],
         "semantic_warnings": [],
-        "retry_counts": {"decomposer": 0, "search": 0, "summariser": 0},
+        "retry_counts": {"decomposer": 0, "search": 0, "summariser": 0, "report_guardrail": 0},
         "error": None,
         "search_days_used": None,
         "selected_articles": [],
@@ -236,6 +236,12 @@ async def start_search(request: SearchRequest):
         "stages": _default_stages(),
         "current_stage": "understand",
         "progress_percentage": 5,
+        # Guardrail AI — initialised to safe defaults
+        "guardrail_status": "unchecked",
+        "guardrail_reason": "",
+        "guardrail_blocked": False,
+        # Entity anchoring — populated by url_discovery node
+        "primary_entity": "",
     }
 
     async def run_phase_1():
@@ -277,6 +283,7 @@ async def get_workflow_status(session_id: str):
     next_tasks = state.next
     is_paused_for_human = "summariser" in next_tasks
     has_final_report = bool(state.values.get("final_report"))
+    is_blocked = bool(state.values.get("guardrail_blocked"))
 
     logs = state.values.get("logs", [])
     stages = state.values.get("stages", _default_stages())
@@ -284,7 +291,22 @@ async def get_workflow_status(session_id: str):
     current_stage = state.values.get("current_stage", "searching")
 
     # Determine overall status and progress
-    if has_final_report:
+    if is_blocked:
+        # Query was blocked by the guardrail — surface this cleanly
+        return {
+            "session_id": session_id,
+            "status": "blocked",
+            "current_stage": "guardrail",
+            "progress_percentage": 0,
+            "stages": _default_stages(),
+            "logs": logs,
+            "guardrail_reason": state.values.get("guardrail_reason", "Query blocked by security guardrail."),
+            "message": "Your query was blocked: " + state.values.get(
+                "guardrail_reason",
+                "This query is outside the scope of the system or violates security guidelines."
+            ),
+        }
+    elif has_final_report:
         status = "completed"
         progress = 100
         current_stage = "finished"

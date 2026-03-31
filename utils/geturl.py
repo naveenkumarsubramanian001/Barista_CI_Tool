@@ -453,6 +453,13 @@ async def url_discovery(state: ResearchState) -> ResearchState:
 
     state["company_domains"] = company_domains
     state["trusted_domains"] = trusted_domains_filtered[:5]
+    # Store primary entity for entity-anchored trusted search queries.
+    # extract_companies() already called extract_primary_entity() internally;
+    # use the first company name as the primary entity. This is the company
+    # that all trusted-source queries will be anchored to.
+    state["primary_entity"] = companies[0] if companies else ""
+    if state["primary_entity"]:
+        info(f"Primary entity for trusted search: '{state['primary_entity']}'")
 
     return state
 

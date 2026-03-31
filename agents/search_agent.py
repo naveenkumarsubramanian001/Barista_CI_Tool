@@ -6,7 +6,7 @@ from tavily import TavilyClient
 from models.schemas import ResearchState, Article
 from config import TAVILY_API_KEY
 from utils.date_utils import is_within_range
-from utils.query_builder import build_site_query
+from utils.query_builder import build_site_query, build_trusted_query
 
 # Initialize client at module level
 tavily_client = TavilyClient(api_key=TAVILY_API_KEY)
@@ -42,6 +42,7 @@ async def search_agent(state: ResearchState) -> ResearchState:
         
     company_domains = state.get("company_domains", [])[:5]
     trusted_domains = state.get("trusted_domains", [])[:5]
+    primary_entity = state.get("primary_entity", "")
     
     # Dynamic Date Range: use state override when present.
     search_days = int(state.get("search_days_used") or 180)
@@ -106,7 +107,17 @@ async def search_agent(state: ResearchState) -> ResearchState:
     async def search_trusted():
         if not trusted_domains:
             return []
-        tasks_trusted = [perform_single_search(q, trusted_domains, search_days, "trusted") for q in subqueries[:5]]
+        # Entity-anchored queries: "Company Name" site:domain1 OR site:domain2 subquery
+        # This prevents broad topic-only results like 'AI startup funding rounds'
+        tasks_trusted = [
+            perform_single_search(
+                build_trusted_query(primary_entity, q, trusted_domains),
+                [],          # domains already embedded in the query by build_trusted_query
+                search_days,
+                "trusted"
+            )
+            for q in subqueries[:5]
+        ]
         search_results_trusted = await asyncio.gather(*tasks_trusted)
         return process_results(search_results_trusted, "trusted")
     

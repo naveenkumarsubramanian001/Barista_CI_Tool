@@ -2,6 +2,8 @@
 LangGraph workflow with multi-source search aggregation.
 All available search APIs run in parallel, results merged and deduped,
 then passed through hybrid fuzzy discriminator.
+Now includes Guardrail AI at input (before decomposer) and output
+(after summariser) to block malicious queries and validate reports.
 """
 
 import inspect
@@ -11,6 +13,7 @@ from models.schemas import ResearchState
 from agents.QueryDecomposer import decomposer_agent
 from agents.multi_search_agent import multi_search_agent
 from agents.summariser import summariser_agent
+from agents.guardrails import query_guardrail, report_guardrail
 from agents.discriminators import (
     decomposer_discriminator, 
     search_discriminator, 
@@ -78,6 +81,14 @@ async def _run_node(fn, state: ResearchState):
     return result
 
 
+async def query_guardrail_stage(state: ResearchState) -> ResearchState:
+    """Guardrail Layer 1: classify query before decomposition."""
+    _mark_stage(state, "understand", "running", current_stage="understand", progress=5,
+                log_message="Running query safety guardrail...")
+    result = await _run_node(query_guardrail, state)
+    return result
+
+
 async def decomposer_stage(state: ResearchState) -> ResearchState:
     _mark_stage(state, "understand", "running", current_stage="understand", progress=12)
     result = await _run_node(decomposer_agent, state)
@@ -137,10 +148,19 @@ async def summariser_validator_stage(state: ResearchState) -> ResearchState:
     return result
 
 
+async def report_guardrail_stage(state: ResearchState) -> ResearchState:
+    """Guardrail Layer 2: validate report before delivery."""
+    _mark_stage(state, "prepare", "running", current_stage="prepare", progress=100,
+                log_message="Running report safety guardrail...")
+    result = await _run_node(report_guardrail, state)
+    return result
+
+
 def build_graph(checkpointer=None):
     workflow = StateGraph(ResearchState)
 
     # Add Nodes
+    workflow.add_node("query_guardrail", query_guardrail_stage)   # NEW: Layer 1 guardrail
     workflow.add_node("decomposer", decomposer_stage)
     workflow.add_node("decomposer_validator", decomposer_discriminator)
     workflow.add_node("url_discovery", url_discovery_stage)
@@ -149,12 +169,23 @@ def build_graph(checkpointer=None):
     workflow.add_node("ranker", ranker_stage)
     workflow.add_node("summariser", summariser_stage)
     workflow.add_node("summariser_validator", summariser_validator_stage)
+    workflow.add_node("report_guardrail", report_guardrail_stage)  # NEW: Layer 2 guardrail
 
-    # Add Edges
-    workflow.add_edge(START, "decomposer")
+    # --- Edges ---
+
+    # Start → Query Guardrail → (blocked? END : decomposer)
+    workflow.add_edge(START, "query_guardrail")
+
+    def after_query_guardrail(state: ResearchState):
+        if state.get("guardrail_blocked"):
+            return END
+        return "decomposer"
+
+    workflow.add_conditional_edges("query_guardrail", after_query_guardrail)
+
     workflow.add_edge("decomposer", "decomposer_validator")
-    
-    # Conditional Edges for Retries
+
+    # Conditional Edges for Decomposer Retries
     def after_decomposer(state: ResearchState):
         if state.get("validation_feedback") == "APPROVED":
             return "url_discovery"
@@ -181,11 +212,22 @@ def build_graph(checkpointer=None):
 
     def after_summariser(state: ResearchState):
         if state.get("validation_feedback") == "APPROVED":
-            return END
+            return "report_guardrail"  # proceed to Layer 2 guardrail
         if state["retry_counts"]["summariser"] >= 2:
-            return END
+            return "report_guardrail"  # allow partial report through guardrail
         return "summariser"
 
     workflow.add_conditional_edges("summariser_validator", after_summariser)
+
+    # Report Guardrail → (retry summariser if report cleared, else END)
+    def after_report_guardrail(state: ResearchState):
+        # report_guardrail clears final_report on first failure to trigger retry
+        if state.get("final_report") is None and not state.get("guardrail_blocked"):
+            retry_counts = state.get("retry_counts") or {}
+            if retry_counts.get("report_guardrail", 0) <= 1:
+                return "summariser"
+        return END
+
+    workflow.add_conditional_edges("report_guardrail", after_report_guardrail)
 
     return workflow.compile(checkpointer=checkpointer)

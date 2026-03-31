@@ -10,7 +10,7 @@ import tldextract
 from models.schemas import ResearchState, Article
 from config import SERPER_API_KEY as CONFIG_SERPER_API_KEY
 from utils.date_utils import is_within_range
-from utils.query_builder import build_site_query
+from utils.query_builder import build_site_query, build_trusted_query
 
 
 SERPER_BASE_URL = (os.getenv("SERPER_BASE_URL") or "https://google.serper.dev").rstrip("/")
@@ -146,6 +146,7 @@ async def serper_search_agent(state: ResearchState) -> ResearchState:
 
     company_domains = state.get("company_domains", [])[:5]
     trusted_domains = state.get("trusted_domains", [])[:5]
+    primary_entity = state.get("primary_entity", "")
 
     search_days = int(state.get("search_days_used") or 180)
 
@@ -210,8 +211,14 @@ async def serper_search_agent(state: ResearchState) -> ResearchState:
 
     trusted_articles: List[Article] = []
     if trusted_domains:
+        # Entity-anchored queries anchor results to the primary company name
         tasks_trusted = [
-            perform_single_serper_search(q, trusted_domains, search_days, "trusted")
+            perform_single_serper_search(
+                build_trusted_query(primary_entity, q, trusted_domains),
+                [],          # domains already baked into the query string
+                search_days,
+                "trusted"
+            )
             for q in subqueries[:5]
         ]
         search_results_trusted = await asyncio.gather(*tasks_trusted)

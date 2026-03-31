@@ -135,6 +135,14 @@ class ResearchState(TypedDict):
     current_stage: str
     progress_percentage: int
 
+    # Guardrail AI
+    guardrail_status: str        # 'valid' | 'malicious' | 'out_of_scope' | 'pass' | 'fail' | 'unchecked'
+    guardrail_reason: str        # human-readable explanation for the guardrail decision
+    guardrail_blocked: bool      # True if workflow should halt due to query or report violation
+
+    # Entity anchoring
+    primary_entity: str          # Primary company entity extracted from query (e.g. "Hugging Face")
+
 # --- Analyzer Workflow State ---
 
 class CompetitorProfile(BaseModel):

@@ -16,6 +16,7 @@ from utils.logger import (
     console, banner, section, info, success, warning, error,
     detail, provider_table, article_table, merge_summary, phase_progress
 )
+from utils.query_builder import is_entity_relevant
 
 
 def _get_available_providers() -> List[Tuple[str, callable]]:
@@ -142,6 +143,23 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
         all_official = _dedup_by_similarity(all_official)
     if len(all_trusted) > 1:
         all_trusted = _dedup_by_similarity(all_trusted)
+
+    # Stage 3: Post-retrieval entity relevance filter (trusted lane only)
+    # Discards any trusted article where the primary company name does not appear
+    # in the title or snippet. This is a safety net for edge cases where the
+    # entity-anchored query still returns a broad off-topic result.
+    entity = state.get("primary_entity", "")
+    if entity and all_trusted:
+        before_filter = len(all_trusted)
+        all_trusted = [
+            a for a in all_trusted
+            if is_entity_relevant(entity, a.title or "", a.snippet or "")
+        ]
+        removed = before_filter - len(all_trusted)
+        if removed:
+            info(f"Entity filter '{entity}': removed {removed} irrelevant trusted article(s) ({before_filter} → {len(all_trusted)})")
+        else:
+            info(f"Entity filter '{entity}': all {before_filter} trusted article(s) are relevant ✓")
 
     final_total = len(all_official) + len(all_trusted)
     merge_summary(raw_total, after_url, final_total)

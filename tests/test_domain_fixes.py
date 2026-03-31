@@ -125,7 +125,7 @@ class TestExtractPrimaryEntity:
             self._make_chain_mock("Anthropic")
         )
 
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             geturl_mod.extract_primary_entity("Anthropic competitors")
         )
 
@@ -141,7 +141,7 @@ class TestExtractPrimaryEntity:
             self._make_chain_mock(None)
         )
 
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             geturl_mod.extract_primary_entity("best AI companies 2025")
         )
 
@@ -157,7 +157,7 @@ class TestExtractPrimaryEntity:
 
         monkeypatch.setattr(geturl_mod, "primary_entity_chain", BrokenChain())
 
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             geturl_mod.extract_primary_entity("OpenAI competitors")
         )
 
@@ -199,7 +199,7 @@ class TestExtractCompaniesResolutionOrder:
             raise AssertionError("suggest_companies_dynamic was called but should not have been")
         monkeypatch.setattr(geturl_mod, "suggest_companies_dynamic", should_not_be_called)
 
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             geturl_mod.extract_companies("Anthropic competitors")
         )
 
@@ -221,7 +221,7 @@ class TestExtractCompaniesResolutionOrder:
         async def fake_validate(entities): return entities
         monkeypatch.setattr(geturl_mod, "validate_companies_batch", fake_validate)
 
-        result = asyncio.get_event_loop().run_until_complete(
+        result = asyncio.run(
             geturl_mod.extract_companies("best AI companies for enterprise")
         )
 

@@ -23,7 +23,7 @@ import tldextract
 
 from models.schemas import ResearchState, Article
 from utils.date_utils import is_within_range
-from utils.query_builder import build_site_query
+from utils.query_builder import build_site_query, build_trusted_query
 
 GOOGLE_API_KEY = (os.getenv("GOOGLE_API_KEY") or "").strip()
 GOOGLE_CSE_ID = (os.getenv("GOOGLE_CSE_ID") or "").strip()
@@ -146,6 +146,7 @@ async def google_search_agent(state: ResearchState) -> ResearchState:
 
     company_domains = state.get("company_domains", [])[:5]
     trusted_domains = state.get("trusted_domains", [])[:5]
+    primary_entity = state.get("primary_entity", "")
 
     search_days = int(state.get("search_days_used") or 180)
 
@@ -212,8 +213,14 @@ async def google_search_agent(state: ResearchState) -> ResearchState:
     async def search_trusted():
         if not trusted_domains:
             return []
+        # Entity-anchored queries anchor results to the primary company name
         tasks = [
-            perform_single_google_search(q, trusted_domains, search_days, "trusted")
+            perform_single_google_search(
+                build_trusted_query(primary_entity, q, trusted_domains),
+                [],          # domains already baked into the query string
+                search_days,
+                "trusted"
+            )
             for q in subqueries[:5]
         ]
         results = await asyncio.gather(*tasks)
