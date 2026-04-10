@@ -45,7 +45,7 @@ async def search_agent(state: ResearchState) -> ResearchState:
     primary_entity = state.get("primary_entity", "")
     
     # Dynamic Date Range: use state override when present.
-    search_days = int(state.get("search_days_used") or 180)
+    search_days = int(state.get("search_days_used") or 15)
     
     # helper for processing a batch of results
     def process_results(search_results_list, source_type: str) -> List[Article]:

@@ -89,20 +89,29 @@ def _dedup_by_similarity(articles: List[Article], threshold: float = 0.92) -> Li
         return articles
 
 
-async def multi_search_agent(state: ResearchState) -> ResearchState:
-    """
-    Multi-Source Search Aggregator.
-    Runs ALL available search providers in parallel, merges, and deduplicates.
-    """
+def _candidate_search_windows(initial_days: int | None) -> List[int]:
+    if initial_days is None:
+        windows = [15, 30, 60, 90, 180]
+    else:
+        start = int(initial_days)
+        if start < 15:
+            windows = [start, 15, 30, 60, 90, 180]
+        elif start == 15:
+            windows = [15, 30, 60, 90, 180]
+        else:
+            windows = [start, 30, 60, 90, 180]
+
+    ordered: List[int] = []
+    for days in windows:
+        if days not in ordered:
+            ordered.append(days)
+    return ordered
+
+
+async def _run_provider_pass(state: ResearchState, search_days: int) -> ResearchState:
     providers = _get_available_providers()
 
-    if not providers:
-        error("No search API keys configured! Cannot search.")
-        state["error"] = "No search API keys available."
-        return state
-
     provider_names = [name for name, _ in providers]
-    
     section("Multi-Source Search", "🔎")
     provider_table(provider_names)
 
@@ -111,6 +120,7 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
             provider_state = dict(state)
             provider_state["official_sources"] = []
             provider_state["trusted_sources"] = []
+            provider_state["search_days_used"] = search_days
             result_state = await agent_func(provider_state)
             official = result_state.get("official_sources", [])
             trusted = result_state.get("trusted_sources", [])
@@ -120,34 +130,28 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
             error(f"{name} failed: {e}")
             return (name, [], [])
 
-    with phase_progress("Running all search providers in parallel"):
+    with phase_progress(f"Running all search providers in parallel (last {search_days} days)"):
         results = await asyncio.gather(
             *[run_provider(name, func) for name, func in providers]
         )
 
     all_official = []
     all_trusted = []
-    for name, official, trusted in results:
+    for _, official, trusted in results:
         all_official.extend(official)
         all_trusted.extend(trusted)
 
     raw_total = len(all_official) + len(all_trusted)
 
-    # Stage 1: URL dedup
     all_official = _dedup_by_url(all_official)
     all_trusted = _dedup_by_url(all_trusted)
     after_url = len(all_official) + len(all_trusted)
 
-    # Stage 2: Similarity dedup
     if len(all_official) > 1:
         all_official = _dedup_by_similarity(all_official)
     if len(all_trusted) > 1:
         all_trusted = _dedup_by_similarity(all_trusted)
 
-    # Stage 3: Post-retrieval entity relevance filter (trusted lane only)
-    # Discards any trusted article where the primary company name does not appear
-    # in the title or snippet. This is a safety net for edge cases where the
-    # entity-anchored query still returns a broad off-topic result.
     entity = state.get("primary_entity", "")
     if entity and all_trusted:
         before_filter = len(all_trusted)
@@ -164,11 +168,35 @@ async def multi_search_agent(state: ResearchState) -> ResearchState:
     final_total = len(all_official) + len(all_trusted)
     merge_summary(raw_total, after_url, final_total)
 
-    # Show combined article table
     all_combined = all_official + all_trusted
     if all_combined:
-        article_table(all_combined, "📰 Combined Article Pool")
+        article_table(all_combined, f"📰 Combined Article Pool (last {search_days} days)")
 
-    state["official_sources"] = all_official
-    state["trusted_sources"] = all_trusted
+    next_state = dict(state)
+    next_state["search_days_used"] = search_days
+    next_state["official_sources"] = all_official
+    next_state["trusted_sources"] = all_trusted
+    return next_state
+
+
+async def multi_search_agent(state: ResearchState) -> ResearchState:
+    """
+    Multi-Source Search Aggregator.
+    Runs ALL available search providers in parallel, merges, and deduplicates.
+    """
+    providers = _get_available_providers()
+
+    if not providers:
+        error("No search API keys configured! Cannot search.")
+        state["error"] = "No search API keys available."
+        return state
+
+    for search_days in _candidate_search_windows(state.get("search_days_used") or 15):
+        next_state = await _run_provider_pass(state, search_days)
+        if next_state.get("official_sources") or next_state.get("trusted_sources"):
+            return next_state
+
+    state["search_days_used"] = _candidate_search_windows(state.get("search_days_used") or 15)[-1]
+    state["official_sources"] = []
+    state["trusted_sources"] = []
     return state

@@ -145,7 +145,7 @@ async def bing_search_agent(state: ResearchState) -> ResearchState:
     company_domains = state.get("company_domains", [])[:5]
     trusted_domains = state.get("trusted_domains", [])[:5]
 
-    search_days = int(state.get("search_days_used") or 180)
+    search_days = int(state.get("search_days_used") or 15)
 
     def process_results(
         search_results_list: List[List[Dict[str, Any]]], source_type: str

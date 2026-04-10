@@ -30,7 +30,7 @@ async def _run_initial_company_scan(company_id: int, company_name: str):
     try:
         await run_company_tracking_scan(
             company_id=company_id,
-            search_days=30,
+            search_days=15,
             trigger="initial",
             create_notifications=True,
         )
@@ -56,7 +56,7 @@ async def create_company(request: CreateCompanyRequest):
     from database import add_company
     company = add_company(name=request.name, url=request.url)
 
-    # Initial intelligence collection (last 30 days) starts immediately.
+    # Initial intelligence collection (last 15 days) starts immediately.
     asyncio.create_task(_run_initial_company_scan(int(company["id"]), company["name"]))
 
     return company
@@ -152,7 +152,7 @@ async def trigger_company_search(company_id: int):
 
     result = await run_company_tracking_scan(
         company_id=company_id,
-        search_days=30,
+        search_days=15,
         trigger="manual",
         create_notifications=True,
     )
